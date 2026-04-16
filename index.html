@@ -5,12 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="OneiRoam 夢遊 — 獨立設計女裝品牌，蕾絲、歐根紗、手染布料，打造屬於妳的夢境穿搭">
   <title>OneiRoam — 夢遊</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- SEO / Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="OneiRoam — 夢遊">
+  <meta property="og:description" content="獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料，每件都是限量手作。">
+  <meta property="og:image"       content="images/hero-1.jpg">
+  <meta property="og:url"         content="https://p88chome.github.io/OneiRoam-/">
+  <meta property="og:site_name"   content="OneiRoam">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="OneiRoam — 夢遊">
+  <meta name="twitter:description" content="獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料。">
+  <meta name="twitter:image"      content="images/hero-1.jpg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-lang="zh">
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div id="loader">
+    <div class="loader-inner">
+      <span class="loader-brand">OneiRoam</span>
+      <span class="loader-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+      <div class="loader-line"></div>
+    </div>
+  </div>
+
+  <!-- ===== ANNOUNCEMENT BANNER ===== -->
+  <div id="announce-bar">
+    <div class="announce-inner">
+      <span class="announce-text" data-zh="✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦" data-en="✦ Pre-order Now · Limited Handcraft · Message us on LINE ✦">✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦</span>
+    </div>
+    <button class="announce-close" id="announceClose" aria-label="關閉">×</button>
+  </div>
 
   <!-- ===== HEADER ===== -->
   <header id="header">
@@ -139,11 +172,16 @@
       <div class="product-grid">
 
         <!-- 1. White Lace Organza Dress -->
-        <div class="product-card" data-category="dress">
+        <div class="product-card" data-category="dress"
+          data-modal-img="images/products/dress-white-lace.jpg"
+          data-modal-name-zh="花嫁之夢" data-modal-name-en="Bridal Dream"
+          data-modal-desc-zh="白色蕾絲歐根紗洋裝，澎袖馬甲設計，背後蝴蝶結綁帶。手工刺繡花卉歐根紗，仙氣十足。"
+          data-modal-desc-en="White lace organza dress with puff sleeves, corset bodice and back bow tie. Hand-embroidered floral organza overlay."
+          data-modal-cat-zh="洋裝" data-modal-cat-en="Dress">
           <div class="product-img-wrap">
-            <img src="images/products/dress-white-lace.jpg" alt="花嫁之夢蕾絲洋裝" class="product-img" onerror="this.style.display='none'">
+            <img src="images/products/dress-white-lace.jpg" alt="花嫁之夢蕾絲洋裝" class="product-img" loading="lazy" onerror="this.style.display='none'">
             <div class="product-hover">
-              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
             <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
           </div>
@@ -155,11 +193,16 @@
         </div>
 
         <!-- 2. Pink Watercolor Mesh Top -->
-        <div class="product-card" data-category="top">
+        <div class="product-card" data-category="top"
+          data-modal-img="images/products/top-mesh-pink.jpg"
+          data-modal-name-zh="夢雲網紗上衣" data-modal-name-en="Dream Cloud Mesh Top"
+          data-modal-desc-zh="粉紫水彩暈染長袖網紗上衣，搭配手工草莓刺繡點綴。每件手染，顏色略有差異，獨一無二。"
+          data-modal-desc-en="Pink purple watercolor long sleeve mesh top with hand-embroidered strawberry details. Each piece is hand-dyed — color may slightly vary."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
           <div class="product-img-wrap">
-            <img src="images/products/top-mesh-pink.jpg" alt="夢雲網紗上衣 粉色" class="product-img" onerror="this.style.display='none'">
+            <img src="images/products/top-mesh-pink.jpg" alt="夢雲網紗上衣 粉色" class="product-img" loading="lazy" onerror="this.style.display='none'">
             <div class="product-hover">
-              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
             <span class="product-badge" data-zh="手染獨款" data-en="Hand-dyed">手染獨款</span>
           </div>
@@ -171,11 +214,16 @@
         </div>
 
         <!-- 3. Blue Watercolor Mesh Top -->
-        <div class="product-card" data-category="top">
+        <div class="product-card" data-category="top"
+          data-modal-img="images/products/top-mesh-blue.jpg"
+          data-modal-name-zh="夢雲網紗上衣" data-modal-name-en="Dream Cloud Mesh Top"
+          data-modal-desc-zh="霧藍水彩暈染長袖網紗上衣，朦朧感如夢似幻。每件手染，顏色略有差異，獨一無二。"
+          data-modal-desc-en="Misty blue watercolor long sleeve mesh top. Dreamy and ethereal. Each piece is hand-dyed — color may slightly vary."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
           <div class="product-img-wrap">
-            <img src="images/products/top-mesh-blue.jpg" alt="夢雲網紗上衣 霧藍" class="product-img" onerror="this.style.display='none'">
+            <img src="images/products/top-mesh-blue.jpg" alt="夢雲網紗上衣 霧藍" class="product-img" loading="lazy" onerror="this.style.display='none'">
             <div class="product-hover">
-              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
             <span class="product-badge" data-zh="手染獨款" data-en="Hand-dyed">手染獨款</span>
           </div>
@@ -187,11 +235,16 @@
         </div>
 
         <!-- 4. White Ruffle Organza Bag -->
-        <div class="product-card" data-category="bag">
+        <div class="product-card" data-category="bag"
+          data-modal-img="images/products/bag-ruffle-white.jpg"
+          data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
+          data-modal-desc-zh="純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。輕盈柔軟，是少女感配件的極致。"
+          data-modal-desc-en="Pure white organza ruffle tote bag. Soft and voluminous like a cloud. The perfect feminine accessory."
+          data-modal-cat-zh="包款" data-modal-cat-en="Bag">
           <div class="product-img-wrap">
-            <img src="images/products/bag-ruffle-white.jpg" alt="雲朵荷葉包 白色" class="product-img" onerror="this.style.display='none'">
+            <img src="images/products/bag-ruffle-white.jpg" alt="雲朵荷葉包 白色" class="product-img" loading="lazy" onerror="this.style.display='none'">
             <div class="product-hover">
-              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
             <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
           </div>
@@ -203,11 +256,16 @@
         </div>
 
         <!-- 5. Blue Ruffle Organza Bag -->
-        <div class="product-card" data-category="bag">
+        <div class="product-card" data-category="bag"
+          data-modal-img="images/products/bag-ruffle-blue.jpg"
+          data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
+          data-modal-desc-zh="水藍漸層歐根紗荷葉手提包，清透的水藍色澤帶來清新夢幻感。與白色款同款設計，不同色系。"
+          data-modal-desc-en="Aqua blue gradient organza ruffle tote bag. Fresh, dreamy and ethereal. Same design as white version, different colorway."
+          data-modal-cat-zh="包款" data-modal-cat-en="Bag">
           <div class="product-img-wrap">
-            <img src="images/products/bag-ruffle-blue.jpg" alt="雲朵荷葉包 水藍" class="product-img" onerror="this.style.display='none'">
+            <img src="images/products/bag-ruffle-blue.jpg" alt="雲朵荷葉包 水藍" class="product-img" loading="lazy" onerror="this.style.display='none'">
             <div class="product-hover">
-              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
             <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
           </div>
@@ -219,11 +277,16 @@
         </div>
 
         <!-- 6. Lace Set -->
-        <div class="product-card" data-category="top">
+        <div class="product-card" data-category="top"
+          data-modal-img="images/products/top-lace-set.jpg"
+          data-modal-name-zh="蕾絲花圃套裝" data-modal-name-en="Lace Garden Set"
+          data-modal-desc-zh="白色蕾絲花卉上衣搭配歐根紗裙，整套穿搭仙氣滿分。上衣立領設計，裙擺輕盈飄逸。"
+          data-modal-desc-en="White lace floral top paired with organza skirt. Complete ethereal look. High collar top with a flowing organza skirt."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
           <div class="product-img-wrap">
-            <img src="images/products/top-lace-set.jpg" alt="蕾絲花圃套裝" class="product-img" onerror="this.style.display='none'">
+            <img src="images/products/top-lace-set.jpg" alt="蕾絲花圃套裝" class="product-img" loading="lazy" onerror="this.style.display='none'">
             <div class="product-hover">
-              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
             <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
           </div>
@@ -352,6 +415,29 @@
       <p class="footer-copy" data-zh="© 2025 OneiRoam. 保留所有權利。" data-en="© 2025 OneiRoam. All rights reserved.">© 2025 OneiRoam. 保留所有權利。</p>
     </div>
   </footer>
+
+  <!-- ===== PRODUCT MODAL ===== -->
+  <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-label="商品詳情">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="關閉">×</button>
+      <div class="modal-grid">
+        <div class="modal-img-wrap">
+          <img id="modalImg" src="" alt="">
+        </div>
+        <div class="modal-info">
+          <p class="section-label" id="modalCategory"></p>
+          <h2 id="modalName"></h2>
+          <p id="modalDesc"></p>
+          <p class="modal-note" data-zh="✦ 限量手作，售完即止" data-en="✦ Limited handcraft, while stocks last">✦ 限量手作，售完即止</p>
+          <a href="https://line.me/R/ti/p/@547hgbaz" class="btn-line modal-line" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 .999C5.926.999 1 5.4 1 10.827c0 4.73 4.195 8.687 9.866 9.44.384.083.907.253 1.04.581.119.298.078.764.038 1.065l-.168.994c-.051.297-.237 1.163 1.028.634 1.264-.528 6.817-4 9.297-6.855C23.22 14.851 24 12.928 24 10.827 24 5.4 18.075.999 12 .999zm-4.667 13.5H5.167a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.333a.833.833 0 1 1 0 1.666zm2.5-.833a.833.833 0 1 1-1.666 0V9.499a.833.833 0 1 1 1.666 0v4.167zm5.167 0a.833.833 0 0 1-.815-.658l-1.685-3.342v3.167a.833.833 0 1 1-1.667 0V9.499a.833.833 0 0 1 1.648-.174l1.685 3.342V9.499a.833.833 0 1 1 1.667 0v4.167a.833.833 0 0 1-.833.833zm3.667 0h-2.5a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.667a.833.833 0 1 1 0 1.666z"/></svg>
+            <span data-zh="立即詢問購買" data-en="Inquire via LINE">立即詢問購買</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
