@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OneiRoam 夢境漫遊 — 獨立設計女裝品牌，蕾絲、歐根紗、手染布料，打造屬於妳的夢境穿搭">
+  <title>OneiRoam — 夢境漫遊</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-lang="zh">
+
+  <!-- ===== HEADER ===== -->
+  <header id="header">
+    <div class="header-inner">
+      <button class="hamburger" id="hamburger" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="#hero" class="logo">
+        <span class="logo-brand">OneiRoam</span>
+        <span class="logo-sub" data-zh="夢境漫遊" data-en="Wander Through Dreams">夢境漫遊</span>
+      </a>
+      <nav id="main-nav">
+        <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
+        <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
+        <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
+        <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+      </nav>
+      <button class="lang-toggle" id="langToggle" aria-label="語言切換">
+        <span class="l-zh active">中</span>
+        <span class="l-div">|</span>
+        <span class="l-en">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Overlay Nav -->
+  <div class="mobile-overlay" id="mobileOverlay">
+    <nav class="mobile-nav">
+      <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
+      <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
+      <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
+      <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+    </nav>
+    <div class="mobile-overlay-lang">
+      <button class="lang-toggle-mobile" id="langToggleMobile">
+        <span class="l-zh active">中</span>
+        <span class="l-div">|</span>
+        <span class="l-en">EN</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-bg">
+      <img src="images/hero-1.jpg" alt="OneiRoam" class="hero-img h-img-1" onerror="this.style.display='none'">
+      <img src="images/hero-2.jpg" alt="OneiRoam" class="hero-img h-img-2" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-zh="獨立設計 · 手作限量" data-en="Independent Design · Limited Handcraft">獨立設計 · 手作限量</p>
+      <h1 class="hero-title">OneiRoam</h1>
+      <p class="hero-tagline" data-zh="夢境漫遊" data-en="Wander Through Dreams">夢境漫遊</p>
+      <p class="hero-desc" data-zh="以夢為靈感，每一件都是穿在身上的詩" data-en="Inspired by dreams — every piece is poetry you wear">以夢為靈感，每一件都是穿在身上的詩</p>
+      <a href="#collections" class="btn-primary">
+        <span data-zh="探索系列" data-en="Explore Collections">探索系列</span>
+      </a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span data-zh="向下探索" data-en="Scroll">向下探索</span>
+    </div>
+  </section>
+
+  <!-- ===== MARQUEE STRIP ===== -->
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <span>OneiRoam</span><span class="mdot">·</span>
+      <span>夢境漫遊</span><span class="mdot">·</span>
+      <span>Dream Aesthetic</span><span class="mdot">·</span>
+      <span>手作限量</span><span class="mdot">·</span>
+      <span>Ethereal Fashion</span><span class="mdot">·</span>
+      <span>蕾絲歐根紗</span><span class="mdot">·</span>
+      <span>Handcrafted with Love</span><span class="mdot">·</span>
+      <!-- duplicate for seamless loop -->
+      <span>OneiRoam</span><span class="mdot">·</span>
+      <span>夢境漫遊</span><span class="mdot">·</span>
+      <span>Dream Aesthetic</span><span class="mdot">·</span>
+      <span>手作限量</span><span class="mdot">·</span>
+      <span>Ethereal Fashion</span><span class="mdot">·</span>
+      <span>蕾絲歐根紗</span><span class="mdot">·</span>
+      <span>Handcrafted with Love</span><span class="mdot">·</span>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-img-wrap fade-left">
+          <img src="images/about.jpg" alt="About OneiRoam" onerror="this.style.display='none'">
+          <div class="img-deco"></div>
+        </div>
+        <div class="about-text fade-right">
+          <p class="section-label" data-zh="關於品牌" data-en="About">關於品牌</p>
+          <h2 data-zh="我們相信，穿衣是一種夢境的延伸" data-en="We believe dressing is an extension of dreams">我們相信，穿衣是一種夢境的延伸</h2>
+          <p data-zh="OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。" data-en="OneiRoam was born from a fascination with dreams — those light, ethereal, poetic moments. We transform this feeling into each garment, weaving your personal dreamscape through lace, organza, and hand-dyed fabrics.">OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。</p>
+          <p data-zh="每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。" data-en="Each piece is handcrafted in limited quantities — one-of-a-kind. We believe fashion, like dreams, should let you forget the ordinary and wander freely through beauty.">每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。</p>
+          <div class="about-tags">
+            <span data-zh="手作限量" data-en="Handcrafted Limited">手作限量</span>
+            <span data-zh="獨立設計" data-en="Independent Design">獨立設計</span>
+            <span data-zh="夢境美學" data-en="Dream Aesthetic">夢境美學</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COLLECTIONS ===== -->
+  <section id="collections">
+    <div class="container">
+      <div class="section-header fade-up">
+        <p class="section-label" data-zh="系列商品" data-en="Collections">系列商品</p>
+        <h2 data-zh="夢境衣櫥" data-en="The Dream Wardrobe">夢境衣櫥</h2>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs fade-up">
+        <button class="filter-btn active" data-filter="all" data-zh="全部" data-en="All">全部</button>
+        <button class="filter-btn" data-filter="dress" data-zh="洋裝" data-en="Dresses">洋裝</button>
+        <button class="filter-btn" data-filter="top" data-zh="上衣" data-en="Tops">上衣</button>
+        <button class="filter-btn" data-filter="bag" data-zh="包款" data-en="Bags">包款</button>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="product-grid">
+
+        <!-- 1. White Lace Organza Dress -->
+        <div class="product-card" data-category="dress">
+          <div class="product-img-wrap">
+            <img src="images/products/dress-white-lace.jpg" alt="花嫁之夢蕾絲洋裝" class="product-img" onerror="this.style.display='none'">
+            <div class="product-hover">
+              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+            </div>
+            <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="花嫁之夢" data-en="Bridal Dream">花嫁之夢</h3>
+            <p data-zh="白色蕾絲歐根紗洋裝" data-en="White Lace Organza Dress">白色蕾絲歐根紗洋裝</p>
+            <span class="product-tag dress-tag" data-zh="洋裝" data-en="Dress">洋裝</span>
+          </div>
+        </div>
+
+        <!-- 2. Pink Watercolor Mesh Top -->
+        <div class="product-card" data-category="top">
+          <div class="product-img-wrap">
+            <img src="images/products/top-mesh-pink.jpg" alt="夢雲網紗上衣 粉色" class="product-img" onerror="this.style.display='none'">
+            <div class="product-hover">
+              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+            </div>
+            <span class="product-badge" data-zh="手染獨款" data-en="Hand-dyed">手染獨款</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="夢雲網紗上衣" data-en="Dream Cloud Mesh Top">夢雲網紗上衣</h3>
+            <p data-zh="粉紫水彩暈染 · 長袖網紗" data-en="Pink Purple Watercolor · Long Sleeve Mesh">粉紫水彩暈染 · 長袖網紗</p>
+            <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+          </div>
+        </div>
+
+        <!-- 3. Blue Watercolor Mesh Top -->
+        <div class="product-card" data-category="top">
+          <div class="product-img-wrap">
+            <img src="images/products/top-mesh-blue.jpg" alt="夢雲網紗上衣 霧藍" class="product-img" onerror="this.style.display='none'">
+            <div class="product-hover">
+              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+            </div>
+            <span class="product-badge" data-zh="手染獨款" data-en="Hand-dyed">手染獨款</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="夢雲網紗上衣" data-en="Dream Cloud Mesh Top">夢雲網紗上衣</h3>
+            <p data-zh="霧藍水彩暈染 · 長袖網紗" data-en="Misty Blue Watercolor · Long Sleeve Mesh">霧藍水彩暈染 · 長袖網紗</p>
+            <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+          </div>
+        </div>
+
+        <!-- 4. White Ruffle Organza Bag -->
+        <div class="product-card" data-category="bag">
+          <div class="product-img-wrap">
+            <img src="images/products/bag-ruffle-white.jpg" alt="雲朵荷葉包 白色" class="product-img" onerror="this.style.display='none'">
+            <div class="product-hover">
+              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+            </div>
+            <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="雲朵荷葉包" data-en="Cloud Ruffle Bag">雲朵荷葉包</h3>
+            <p data-zh="純白歐根紗荷葉托特包" data-en="Pure White Organza Ruffle Tote">純白歐根紗荷葉托特包</p>
+            <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+          </div>
+        </div>
+
+        <!-- 5. Blue Ruffle Organza Bag -->
+        <div class="product-card" data-category="bag">
+          <div class="product-img-wrap">
+            <img src="images/products/bag-ruffle-blue.jpg" alt="雲朵荷葉包 水藍" class="product-img" onerror="this.style.display='none'">
+            <div class="product-hover">
+              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+            </div>
+            <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="雲朵荷葉包" data-en="Cloud Ruffle Bag">雲朵荷葉包</h3>
+            <p data-zh="水藍漸層歐根紗荷葉托特包" data-en="Aqua Blue Gradient Organza Ruffle Tote">水藍漸層歐根紗荷葉托特包</p>
+            <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+          </div>
+        </div>
+
+        <!-- 6. Lace Set -->
+        <div class="product-card" data-category="top">
+          <div class="product-img-wrap">
+            <img src="images/products/top-lace-set.jpg" alt="蕾絲花圃套裝" class="product-img" onerror="this.style.display='none'">
+            <div class="product-hover">
+              <a href="#order" class="btn-inquire" data-zh="詢問購買" data-en="Inquire">詢問購買</a>
+            </div>
+            <span class="product-badge" data-zh="限量手作" data-en="Limited">限量手作</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="蕾絲花圃套裝" data-en="Lace Garden Set">蕾絲花圃套裝</h3>
+            <p data-zh="白色蕾絲花卉上衣 + 歐根紗裙" data-en="White Lace Floral Top + Organza Skirt">白色蕾絲花卉上衣 + 歐根紗裙</p>
+            <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+          </div>
+        </div>
+
+      </div><!-- /product-grid -->
+    </div>
+  </section>
+
+  <!-- ===== LOOKBOOK ===== -->
+  <section id="lookbook">
+    <div class="container">
+      <div class="section-header fade-up">
+        <p class="section-label" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</p>
+        <h2 data-zh="夢境裡的她" data-en="Her in the Dream">夢境裡的她</h2>
+        <p class="section-sub" data-zh="← 拖曳瀏覽 →" data-en="← Drag to explore →">← 拖曳瀏覽 →</p>
+      </div>
+    </div>
+    <div class="lookbook-scroll" id="lookbookScroll">
+      <div class="lookbook-track">
+        <div class="lookbook-item">
+          <img src="images/lookbook/look-1.jpg" alt="Lookbook 1" onerror="this.style.display='none'">
+        </div>
+        <div class="lookbook-item tall">
+          <img src="images/lookbook/look-2.jpg" alt="Lookbook 2" onerror="this.style.display='none'">
+        </div>
+        <div class="lookbook-item">
+          <img src="images/lookbook/look-3.jpg" alt="Lookbook 3" onerror="this.style.display='none'">
+        </div>
+        <div class="lookbook-item tall">
+          <img src="images/lookbook/look-4.jpg" alt="Lookbook 4" onerror="this.style.display='none'">
+        </div>
+        <div class="lookbook-item">
+          <img src="images/lookbook/look-5.jpg" alt="Lookbook 5" onerror="this.style.display='none'">
+        </div>
+        <div class="lookbook-item tall">
+          <img src="images/lookbook/look-6.jpg" alt="Lookbook 6" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW TO ORDER ===== -->
+  <section id="order">
+    <div class="container">
+      <div class="section-header fade-up">
+        <p class="section-label" data-zh="如何訂購" data-en="How to Order">如何訂購</p>
+        <h2 data-zh="讓夢境成真" data-en="Make the Dream Real">讓夢境成真</h2>
+      </div>
+
+      <div class="order-steps">
+        <div class="step fade-up">
+          <div class="step-num">01</div>
+          <h4 data-zh="選擇喜愛的款式" data-en="Choose Your Style">選擇喜愛的款式</h4>
+          <p data-zh="在系列頁面找到心儀商品，記下名稱與顏色" data-en="Browse Collections and note the item name and color you love">在系列頁面找到心儀商品，記下名稱與顏色</p>
+        </div>
+        <div class="step-arrow fade-up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+        <div class="step fade-up">
+          <div class="step-num">02</div>
+          <h4 data-zh="LINE 私訊詢問" data-en="Message via LINE">LINE 私訊詢問</h4>
+          <p data-zh="加入我們的 LINE，告知商品名稱與尺寸需求" data-en="Add our LINE and tell us the item and size you need">加入我們的 LINE，告知商品名稱與尺寸需求</p>
+        </div>
+        <div class="step-arrow fade-up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+        <div class="step fade-up">
+          <div class="step-num">03</div>
+          <h4 data-zh="確認庫存與細節" data-en="Confirm Details">確認庫存與細節</h4>
+          <p data-zh="我們確認庫存、運費，並提供匯款帳號" data-en="We confirm availability, shipping, and provide payment info">我們確認庫存、運費，並提供匯款帳號</p>
+        </div>
+        <div class="step-arrow fade-up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+        <div class="step fade-up">
+          <div class="step-num">04</div>
+          <h4 data-zh="匯款完成訂購" data-en="Complete Payment">匯款完成訂購</h4>
+          <p data-zh="完成匯款後傳送收據，訂單即成立，夢境即將出發" data-en="Send us the receipt after transfer — your dream is on its way">完成匯款後傳送收據，訂單即成立，夢境即將出發</p>
+        </div>
+      </div>
+
+      <!-- Contact Block -->
+      <div class="contact-block fade-up">
+        <p class="contact-label" data-zh="立即聯絡" data-en="Contact Us Now">立即聯絡</p>
+        <a href="https://line.me/ti/p/YOUR_LINE_ID" class="btn-line" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2C6.48 2 2 6.145 2 11.243c0 4.062 2.694 7.523 6.618 8.943.484.088.661-.21.661-.467 0-.23-.008-.843-.013-1.656-2.694.586-3.263-1.299-3.263-1.299-.44-1.119-1.075-1.416-1.075-1.416-.879-.601.067-.589.067-.589.972.068 1.484.998 1.484.998.863 1.478 2.265 1.051 2.818.804.088-.625.338-1.051.615-1.292-2.15-.244-4.41-1.075-4.41-4.784 0-1.057.378-1.921.998-2.599-.1-.244-.433-1.229.095-2.563 0 0 .814-.261 2.667.994A9.3 9.3 0 0 1 12 6.836a9.3 9.3 0 0 1 2.43.327c1.852-1.255 2.665-.994 2.665-.994.53 1.334.196 2.319.096 2.563.622.678.997 1.542.997 2.599 0 3.719-2.263 4.537-4.42 4.777.347.299.657.891.657 1.797 0 1.297-.012 2.343-.012 2.661 0 .259.175.561.666.466C19.31 18.762 22 15.303 22 11.243 22 6.145 17.52 2 12 2z"/></svg>
+          <span data-zh="加入 LINE 詢問" data-en="Contact via LINE">加入 LINE 詢問</span>
+        </a>
+        <p class="contact-note" data-zh="通常於 24 小時內回覆 · 也歡迎 Instagram DM 洽詢" data-en="Usually replies within 24 hours · Instagram DM also welcome">通常於 24 小時內回覆 · 也歡迎 Instagram DM 洽詢</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo-en">OneiRoam</span>
+        <span class="footer-logo-zh" data-zh="夢境漫遊" data-en="Wander Through Dreams">夢境漫遊</span>
+      </div>
+      <nav class="footer-nav">
+        <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
+        <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
+        <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
+        <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+      </nav>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://line.me/ti/p/YOUR_LINE_ID" aria-label="LINE" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2C6.48 2 2 6.145 2 11.243c0 4.062 2.694 7.523 6.618 8.943.484.088.661-.21.661-.467 0-.23-.008-.843-.013-1.656-2.694.586-3.263-1.299-3.263-1.299-.44-1.119-1.075-1.416-1.075-1.416-.879-.601.067-.589.067-.589.972.068 1.484.998 1.484.998.863 1.478 2.265 1.051 2.818.804.088-.625.338-1.051.615-1.292-2.15-.244-4.41-1.075-4.41-4.784 0-1.057.378-1.921.998-2.599-.1-.244-.433-1.229.095-2.563 0 0 .814-.261 2.667.994A9.3 9.3 0 0 1 12 6.836a9.3 9.3 0 0 1 2.43.327c1.852-1.255 2.665-.994 2.665-.994.53 1.334.196 2.319.096 2.563.622.678.997 1.542.997 2.599 0 3.719-2.263 4.537-4.42 4.777.347.299.657.891.657 1.797 0 1.297-.012 2.343-.012 2.661 0 .259.175.561.666.466C19.31 18.762 22 15.303 22 11.243 22 6.145 17.52 2 12 2z"/></svg>
+        </a>
+      </div>
+      <p class="footer-copy" data-zh="© 2025 OneiRoam. 保留所有權利。" data-en="© 2025 OneiRoam. All rights reserved.">© 2025 OneiRoam. 保留所有權利。</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
