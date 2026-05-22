@@ -618,6 +618,40 @@ button { cursor: pointer; }
 .top-tag   { background: rgba(200, 189, 208, 0.5); color: #8B7DA0; }
 .bag-tag   { background: rgba(184, 196, 208, 0.5); color: #7090A0; }
 
+/* Price */
+.product-price {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+
+/* Tag + status row */
+.product-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Status badge */
+.product-status {
+  display: inline-block;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+}
+.status-instock  { background: rgba(180, 220, 180, 0.5); color: #4a8a4a; }
+.status-preorder { background: rgba(232, 210, 170, 0.5); color: #a07030; }
+.status-soldout  { background: rgba(200, 200, 200, 0.5); color: #888; }
+
+/* Sold-out card */
+.product-card.is-sold-out .product-img   { opacity: 0.4; }
+.product-card.is-sold-out .product-hover { display: none; }
+.product-card.is-sold-out .product-price { color: var(--text-mid); text-decoration: line-through; }
+
 /* =============================================
    LOOKBOOK
    ============================================= */
