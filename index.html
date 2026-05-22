@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="OneiRoam 夢遊 — 獨立設計女裝品牌，蕾絲、歐根紗、手染布料，打造屬於妳的夢境穿搭">
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <title>OneiRoam — 夢遊</title>
 
   <!-- Favicon -->
@@ -90,8 +91,8 @@
   <!-- ===== HERO ===== -->
   <section id="hero">
     <div class="hero-bg">
-      <img src="images/hero-1.jpg" alt="OneiRoam" class="hero-img h-img-1" onerror="this.style.display='none'">
-      <img src="images/hero-2.jpg" alt="OneiRoam" class="hero-img h-img-2" onerror="this.style.display='none'">
+      <img src="images/hero-1.jpg" alt="OneiRoam" class="hero-img h-img-1">
+      <img src="images/hero-2.jpg" alt="OneiRoam" class="hero-img h-img-2">
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -135,7 +136,7 @@
     <div class="container">
       <div class="about-grid">
         <div class="about-img-wrap fade-left">
-          <img src="images/about.jpg" alt="About OneiRoam" onerror="this.style.display='none'">
+          <img src="images/about.jpg" alt="About OneiRoam">
           <div class="img-deco"></div>
         </div>
         <div class="about-text fade-right">
@@ -180,7 +181,7 @@
           data-modal-desc-en="White lace organza dress with puff sleeves, corset bodice and back bow tie. Hand-embroidered floral organza overlay."
           data-modal-cat-zh="洋裝" data-modal-cat-en="Dress">
           <div class="product-img-wrap">
-            <img src="images/products/dress-white-lace.jpg" alt="花嫁之夢蕾絲洋裝" class="product-img" loading="lazy" onerror="this.style.display='none'">
+            <img src="images/products/dress-white-lace.jpg" alt="花嫁之夢蕾絲洋裝" class="product-img" loading="lazy">
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
@@ -189,7 +190,11 @@
           <div class="product-info">
             <h3 data-zh="花嫁之夢" data-en="Bridal Dream">花嫁之夢</h3>
             <p data-zh="白色蕾絲歐根紗洋裝" data-en="White Lace Organza Dress">白色蕾絲歐根紗洋裝</p>
-            <span class="product-tag dress-tag" data-zh="洋裝" data-en="Dress">洋裝</span>
+            <span class="product-price">NT$ 1,690</span>
+            <div class="product-meta">
+              <span class="product-tag dress-tag" data-zh="洋裝" data-en="Dress">洋裝</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
           </div>
         </div>
 
@@ -201,7 +206,7 @@
           data-modal-desc-en="Pink purple watercolor long sleeve mesh top with hand-embroidered strawberry details. Each piece is hand-dyed — color may slightly vary."
           data-modal-cat-zh="上衣" data-modal-cat-en="Top">
           <div class="product-img-wrap">
-            <img src="images/products/top-mesh-pink.jpg" alt="夢雲網紗上衣 粉色" class="product-img" loading="lazy" onerror="this.style.display='none'">
+            <img src="images/products/top-mesh-pink.jpg" alt="夢雲網紗上衣 粉色" class="product-img" loading="lazy">
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
@@ -210,7 +215,11 @@
           <div class="product-info">
             <h3 data-zh="夢雲網紗上衣" data-en="Dream Cloud Mesh Top">夢雲網紗上衣</h3>
             <p data-zh="粉紫水彩暈染 · 長袖網紗" data-en="Pink Purple Watercolor · Long Sleeve Mesh">粉紫水彩暈染 · 長袖網紗</p>
-            <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+            <span class="product-price">NT$ 1,690</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
           </div>
         </div>
 
@@ -222,7 +231,7 @@
           data-modal-desc-en="Misty blue watercolor long sleeve mesh top. Dreamy and ethereal. Each piece is hand-dyed — color may slightly vary."
           data-modal-cat-zh="上衣" data-modal-cat-en="Top">
           <div class="product-img-wrap">
-            <img src="images/products/top-mesh-blue.jpg" alt="夢雲網紗上衣 霧藍" class="product-img" loading="lazy" onerror="this.style.display='none'">
+            <img src="images/products/top-mesh-blue.jpg" alt="夢雲網紗上衣 霧藍" class="product-img" loading="lazy">
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
@@ -231,7 +240,11 @@
           <div class="product-info">
             <h3 data-zh="夢雲網紗上衣" data-en="Dream Cloud Mesh Top">夢雲網紗上衣</h3>
             <p data-zh="霧藍水彩暈染 · 長袖網紗" data-en="Misty Blue Watercolor · Long Sleeve Mesh">霧藍水彩暈染 · 長袖網紗</p>
-            <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+            <span class="product-price">NT$ 1,690</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
           </div>
         </div>
 
@@ -243,7 +256,7 @@
           data-modal-desc-en="Pure white organza ruffle tote bag. Soft and voluminous like a cloud. The perfect feminine accessory."
           data-modal-cat-zh="包款" data-modal-cat-en="Bag">
           <div class="product-img-wrap">
-            <img src="images/products/bag-ruffle-white.jpg" alt="雲朵荷葉包 白色" class="product-img" loading="lazy" onerror="this.style.display='none'">
+            <img src="images/products/bag-ruffle-white.jpg" alt="雲朵荷葉包 白色" class="product-img" loading="lazy">
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
@@ -252,7 +265,11 @@
           <div class="product-info">
             <h3 data-zh="雲朵荷葉包" data-en="Cloud Ruffle Bag">雲朵荷葉包</h3>
             <p data-zh="純白歐根紗荷葉托特包" data-en="Pure White Organza Ruffle Tote">純白歐根紗荷葉托特包</p>
-            <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+            <span class="product-price">NT$ 690</span>
+            <div class="product-meta">
+              <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
           </div>
         </div>
 
@@ -264,7 +281,7 @@
           data-modal-desc-en="Aqua blue gradient organza ruffle tote bag. Fresh, dreamy and ethereal. Same design as white version, different colorway."
           data-modal-cat-zh="包款" data-modal-cat-en="Bag">
           <div class="product-img-wrap">
-            <img src="images/products/bag-ruffle-blue.jpg" alt="雲朵荷葉包 水藍" class="product-img" loading="lazy" onerror="this.style.display='none'">
+            <img src="images/products/bag-ruffle-blue.jpg" alt="雲朵荷葉包 水藍" class="product-img" loading="lazy">
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
@@ -273,7 +290,11 @@
           <div class="product-info">
             <h3 data-zh="雲朵荷葉包" data-en="Cloud Ruffle Bag">雲朵荷葉包</h3>
             <p data-zh="水藍漸層歐根紗荷葉托特包" data-en="Aqua Blue Gradient Organza Ruffle Tote">水藍漸層歐根紗荷葉托特包</p>
-            <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+            <span class="product-price">NT$ 690</span>
+            <div class="product-meta">
+              <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
           </div>
         </div>
 
@@ -285,7 +306,7 @@
           data-modal-desc-en="White lace floral top paired with organza skirt. Complete ethereal look. High collar top with a flowing organza skirt."
           data-modal-cat-zh="上衣" data-modal-cat-en="Top">
           <div class="product-img-wrap">
-            <img src="images/products/top-lace-set.jpg" alt="蕾絲花圃套裝" class="product-img" loading="lazy" onerror="this.style.display='none'">
+            <img src="images/products/top-lace-set.jpg" alt="蕾絲花圃套裝" class="product-img" loading="lazy">
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
@@ -294,7 +315,11 @@
           <div class="product-info">
             <h3 data-zh="蕾絲花圃套裝" data-en="Lace Garden Set">蕾絲花圃套裝</h3>
             <p data-zh="白色蕾絲花卉上衣 + 歐根紗裙" data-en="White Lace Floral Top + Organza Skirt">白色蕾絲花卉上衣 + 歐根紗裙</p>
-            <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+            <span class="product-price">NT$ 1,690</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
           </div>
         </div>
 
@@ -314,22 +339,22 @@
     <div class="lookbook-scroll" id="lookbookScroll">
       <div class="lookbook-track">
         <div class="lookbook-item">
-          <img src="images/lookbook/look-1.jpg" alt="Lookbook 1" onerror="this.style.display='none'">
+          <img src="images/lookbook/look-1.jpg" alt="Lookbook 1">
         </div>
         <div class="lookbook-item tall">
-          <img src="images/lookbook/look-2.jpg" alt="Lookbook 2" onerror="this.style.display='none'">
+          <img src="images/lookbook/look-2.jpg" alt="Lookbook 2">
         </div>
         <div class="lookbook-item">
-          <img src="images/lookbook/look-3.jpg" alt="Lookbook 3" onerror="this.style.display='none'">
+          <img src="images/lookbook/look-3.jpg" alt="Lookbook 3">
         </div>
         <div class="lookbook-item tall">
-          <img src="images/lookbook/look-4.jpg" alt="Lookbook 4" onerror="this.style.display='none'">
+          <img src="images/lookbook/look-4.jpg" alt="Lookbook 4">
         </div>
         <div class="lookbook-item">
-          <img src="images/lookbook/look-5.jpg" alt="Lookbook 5" onerror="this.style.display='none'">
+          <img src="images/lookbook/look-5.jpg" alt="Lookbook 5">
         </div>
         <div class="lookbook-item tall">
-          <img src="images/lookbook/look-6.jpg" alt="Lookbook 6" onerror="this.style.display='none'">
+          <img src="images/lookbook/look-6.jpg" alt="Lookbook 6">
         </div>
       </div>
     </div>
