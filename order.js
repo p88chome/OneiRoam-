@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="cart-row-info">
           <span class="cart-row-name">${esc(it.name)}</span>
           <span class="cart-row-size">${currentLang === 'zh' ? '尺寸' : 'Size'}: ${esc(it.size)}</span>
-          <span class="cart-row-price">NT$ ${it.price}</span>
+          <span class="cart-row-price">NT$ ${it.price.toLocaleString()}</span>
         </div>
         <div class="cart-row-qty">
           <button type="button" class="qminus" aria-label="減少">−</button>
@@ -149,9 +149,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   applyLang(currentLang);
   render();
-
-  // 供 Task 8 使用
-  window.__orderRender = render;
-  window.__orderEsc = esc;
-  window.__getLang = () => currentLang;
 });
