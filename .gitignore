@@ -3,3 +3,6 @@ package-lock.json
 package.json
 .DS_Store
 *.tmp
+
+# internal planning docs (keep local only)
+docs/superpowers/
