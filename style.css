@@ -1208,3 +1208,9 @@ body.has-banner #header  { top: 32px; }
 .success-note { font-size: .9rem; color: var(--text-light); margin: 1rem 0; }
 .order-success .btn-line { margin: .5rem auto; }
 .back-home { display: inline-block; margin-top: 1rem; font-size: .9rem; color: var(--text-light); }
+
+/* ===== MODAL PRICE & CHECKOUT (cart UX) ===== */
+.modal-price { margin: .6rem 0 .2rem; font-size: .95rem; color: var(--text-mid); }
+.modal-price .mp-label { color: var(--text-light); font-size: .85rem; }
+.modal-price .mp-sep { margin: 0 .5rem; color: var(--blush-deep); }
+.modal-checkout { display: inline-flex; margin-top: .8rem; }

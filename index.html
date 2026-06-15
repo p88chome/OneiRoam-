@@ -384,32 +384,32 @@
       <div class="order-steps">
         <div class="step fade-up">
           <div class="step-num">01</div>
-          <h4 data-zh="選擇喜愛的款式" data-en="Choose Your Style">選擇喜愛的款式</h4>
-          <p data-zh="在系列頁面找到心儀商品，記下名稱與顏色" data-en="Browse Collections and note the item name and color you love">在系列頁面找到心儀商品，記下名稱與顏色</p>
+          <h4 data-zh="選擇商品加入訂單" data-en="Add Items to Your Order">選擇商品加入訂單</h4>
+          <p data-zh="挑選喜愛的款式，選好尺寸與數量，按「加入訂單」" data-en="Pick your favorites, choose size and quantity, then tap “Add to Order”">挑選喜愛的款式，選好尺寸與數量，按「加入訂單」</p>
         </div>
         <div class="step-arrow fade-up">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </div>
         <div class="step fade-up">
           <div class="step-num">02</div>
-          <h4 data-zh="LINE 私訊詢問" data-en="Message via LINE">LINE 私訊詢問</h4>
-          <p data-zh="加入我們的 LINE，告知商品名稱與尺寸需求" data-en="Add our LINE and tell us the item and size you need">加入我們的 LINE，告知商品名稱與尺寸需求</p>
+          <h4 data-zh="前往結帳填寫資料" data-en="Checkout & Fill Details">前往結帳填寫資料</h4>
+          <p data-zh="點右上購物袋前往結帳，填寫收件資訊後送出" data-en="Open the cart, fill in your delivery info and submit">點右上購物袋前往結帳，填寫收件資訊後送出</p>
         </div>
         <div class="step-arrow fade-up">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </div>
         <div class="step fade-up">
           <div class="step-num">03</div>
-          <h4 data-zh="確認庫存與細節" data-en="Confirm Details">確認庫存與細節</h4>
-          <p data-zh="我們確認庫存、運費，並提供匯款帳號" data-en="We confirm availability, shipping, and provide payment info">我們確認庫存、運費，並提供匯款帳號</p>
+          <h4 data-zh="匯款並備註訂單編號" data-en="Transfer & Note Order Number">匯款並備註訂單編號</h4>
+          <p data-zh="依畫面顯示的銀行帳號完成匯款，備註填入訂單編號" data-en="Transfer to the bank account shown, noting your order number">依畫面顯示的銀行帳號完成匯款，備註填入訂單編號</p>
         </div>
         <div class="step-arrow fade-up">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </div>
         <div class="step fade-up">
           <div class="step-num">04</div>
-          <h4 data-zh="匯款完成訂購" data-en="Complete Payment">匯款完成訂購</h4>
-          <p data-zh="完成匯款後傳送收據，訂單即成立，夢境即將出發" data-en="Send us the receipt after transfer — your dream is on its way">完成匯款後傳送收據，訂單即成立，夢境即將出發</p>
+          <h4 data-zh="LINE 傳收據確認出貨" data-en="Send Receipt via LINE">LINE 傳收據確認出貨</h4>
+          <p data-zh="匯款後 LINE 傳送收據與訂單編號，確認後即出貨" data-en="Send the receipt and order number via LINE; we ship once confirmed">匯款後 LINE 傳送收據與訂單編號，確認後即出貨</p>
         </div>
       </div>
 
@@ -468,6 +468,11 @@
           <p class="section-label" id="modalCategory"></p>
           <h2 id="modalName"></h2>
           <p id="modalDesc"></p>
+          <p class="modal-price">
+            <span class="mp-label" data-zh="單價" data-en="Unit">單價</span> NT$ <span id="modalUnit"></span>
+            <span class="mp-sep">·</span>
+            <span class="mp-label" data-zh="小計" data-en="Subtotal">小計</span> NT$ <span id="modalSubtotal"></span>
+          </p>
           <div class="modal-order">
             <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
             <select id="modalSize" class="modal-size-select"></select>
@@ -483,11 +488,9 @@
             <span id="modalAdded" class="modal-added" style="display:none"
                   data-zh="已加入 ✓" data-en="Added ✓">已加入 ✓</span>
           </div>
+          <a href="order.html" id="modalCheckout" class="btn-primary modal-checkout" style="display:none"
+             data-zh="前往結帳 →" data-en="Go to Checkout →">前往結帳 →</a>
           <p class="modal-note" data-zh="✦ 限量手作，售完即止" data-en="✦ Limited handcraft, while stocks last">✦ 限量手作，售完即止</p>
-          <a href="https://line.me/R/ti/p/@547hgbaz" class="btn-line modal-line" target="_blank" rel="noopener noreferrer">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 .999C5.926.999 1 5.4 1 10.827c0 4.73 4.195 8.687 9.866 9.44.384.083.907.253 1.04.581.119.298.078.764.038 1.065l-.168.994c-.051.297-.237 1.163 1.028.634 1.264-.528 6.817-4 9.297-6.855C23.22 14.851 24 12.928 24 10.827 24 5.4 18.075.999 12 .999zm-4.667 13.5H5.167a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.333a.833.833 0 1 1 0 1.666zm2.5-.833a.833.833 0 1 1-1.666 0V9.499a.833.833 0 1 1 1.666 0v4.167zm5.167 0a.833.833 0 0 1-.815-.658l-1.685-3.342v3.167a.833.833 0 1 1-1.667 0V9.499a.833.833 0 0 1 1.648-.174l1.685 3.342V9.499a.833.833 0 1 1 1.667 0v4.167a.833.833 0 0 1-.833.833zm3.667 0h-2.5a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.667a.833.833 0 1 1 0 1.666z"/></svg>
-            <span data-zh="立即詢問購買" data-en="Inquire via LINE">立即詢問購買</span>
-          </a>
         </div>
       </div>
     </div>
