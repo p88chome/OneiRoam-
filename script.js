@@ -108,7 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
      ------------------------------------------ */
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', e => {
-      const target = document.querySelector(anchor.getAttribute('href'));
+      const href = anchor.getAttribute('href');
+      if (!href || !href.startsWith('#') || href.length < 2) return;
+      const target = document.querySelector(href);
       if (!target) return;
       e.preventDefault();
       const bannerH = announceBar.classList.contains('hidden') ? 0 : 32;
@@ -165,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openModal(card) {
     const lang = currentLang;
+    modalImg.style.display = '';
     modalImg.src    = card.dataset.modalImg || '';
     modalImg.alt    = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     modalName.textContent = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
@@ -206,6 +209,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
   animateEls.forEach(el => observer.observe(el));
+
+  /* ------------------------------------------
+     IMAGE ERROR FALLBACK
+     ------------------------------------------ */
+  document.querySelectorAll('img').forEach(img => {
+    const hide = () => { img.style.display = 'none'; };
+    img.addEventListener('error', hide);
+    if (img.complete && img.naturalWidth === 0) hide();
+  });
+
 
   productCards.forEach((card, i) => {
     card.classList.add('fade-up');
