@@ -176,7 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalName    = document.getElementById('modalName');
   const modalDesc    = document.getElementById('modalDesc');
   const modalCat     = document.getElementById('modalCategory');
-  const modalLineBtn = modal.querySelector('.modal-line span');
+
+  function updateModalSubtotal() {
+    const price = parseInt(modal.dataset.curPrice, 10) || 0;
+    const qty = parseInt(document.getElementById('modalQty').textContent, 10) || 1;
+    document.getElementById('modalSubtotal').textContent = (price * qty).toLocaleString();
+  }
 
   function openModal(card) {
     const lang = currentLang;
@@ -186,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
     modalName.textContent = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     modalDesc.textContent = lang === 'zh' ? card.dataset.modalDescZh : card.dataset.modalDescEn;
     modalCat.textContent  = lang === 'zh' ? card.dataset.modalCatZh  : card.dataset.modalCatEn;
-    if (modalLineBtn) modalLineBtn.textContent = lang === 'zh' ? '立即詢問購買' : 'Inquire via LINE';
     // 尺寸選項
     const sizeSel = document.getElementById('modalSize');
     const sizes = (card.dataset.sizes || 'S,M,L,XL').split(',');
@@ -198,11 +202,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalQty').textContent = '1';
     document.getElementById('modalAdded').style.display = 'none';
     document.getElementById('modalAdd').style.display = '';
+    document.getElementById('modalCheckout').style.display = 'none';
     // 暫存目前商品供加入鈕使用
     modal.dataset.curId = card.dataset.id;
     modal.dataset.curName = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     const priceText = card.querySelector('.product-price').textContent;
     modal.dataset.curPrice = priceText.replace(/[^0-9]/g, '');
+    // 價格與小計
+    document.getElementById('modalUnit').textContent = (parseInt(modal.dataset.curPrice, 10) || 0).toLocaleString();
+    updateModalSubtotal();
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -232,9 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const qtyEl = document.getElementById('modalQty');
   document.getElementById('modalQtyMinus').addEventListener('click', () => {
     qtyEl.textContent = Math.max(1, parseInt(qtyEl.textContent, 10) - 1);
+    updateModalSubtotal();
   });
   document.getElementById('modalQtyPlus').addEventListener('click', () => {
     qtyEl.textContent = parseInt(qtyEl.textContent, 10) + 1;
+    updateModalSubtotal();
   });
   // 加入訂單
   document.getElementById('modalAdd').addEventListener('click', () => {
@@ -254,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartBadge();
     document.getElementById('modalAdd').style.display = 'none';
     document.getElementById('modalAdded').style.display = '';
+    document.getElementById('modalCheckout').style.display = '';
   });
 
 
