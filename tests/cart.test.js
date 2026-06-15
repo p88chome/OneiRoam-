@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { createCart } = require('../cart.js');
+const { createCart, makeOrderNo } = require('../cart.js');
 
 function memStorage() {
   let store = {};
@@ -91,4 +91,15 @@ test('壞掉的 JSON 不爆，回空陣列', () => {
   s.setItem('oneiRoamCart', '{not json');
   const cart = createCart(s);
   assert.deepStrictEqual(cart.getItems(), []);
+});
+
+test('訂單編號格式 OR-YYYYMMDD-XXX', () => {
+  const no = makeOrderNo(new Date('2026-06-15T10:00:00'));
+  assert.match(no, /^OR-20260615-[0-9A-Z]{3}$/);
+});
+
+test('連續產生不重複（機率）', () => {
+  const d = new Date('2026-06-15T10:00:00');
+  const set = new Set(Array.from({ length: 50 }, () => makeOrderNo(d)));
+  assert.ok(set.size > 45);
 });

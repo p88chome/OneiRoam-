@@ -52,11 +52,19 @@
     };
   }
 
+  function makeOrderNo(date = new Date()) {
+    const p = n => String(n).padStart(2, '0');
+    const d = `${date.getFullYear()}${p(date.getMonth() + 1)}${p(date.getDate())}`;
+    const rnd = Math.random().toString(36).slice(2, 5).toUpperCase().padEnd(3, 'X');
+    return `OR-${d}-${rnd}`;
+  }
+
   if (typeof window !== 'undefined') {
     global.Cart = createCart(window.localStorage);
     global.createCart = createCart;
+    global.makeOrderNo = makeOrderNo;
   }
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { createCart };
+    module.exports = { createCart, makeOrderNo };
   }
 })(typeof window !== 'undefined' ? window : globalThis);
