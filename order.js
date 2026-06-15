@@ -67,6 +67,86 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
   });
 
+  /* ---- 送出 ---- */
+  const WEB3FORMS_KEY = '4145687f-468f-489d-ab01-6e1d95d5f5b9';
+
+  function buildItemsText(items) {
+    return items.map(it =>
+      `- ${it.name} / ${currentLang === 'zh' ? '尺寸' : 'Size'} ${it.size} x${it.qty} = NT$ ${it.price * it.qty}`
+    ).join('\n');
+  }
+
+  async function submitOrder(payload) {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: `新訂單 ${payload.orderNo}`,
+        from_name: 'OneiRoam 訂單',
+        replyto: payload.email,
+        order_no: payload.orderNo,
+        items: payload.itemsText,
+        total: payload.total,
+        name: payload.name,
+        address: payload.address,
+        contact: payload.contact,
+        email: payload.email,
+        notes: payload.notes,
+      }),
+    });
+    if (!res.ok) throw new Error('submit failed');
+    const data = await res.json();
+    if (!data.success) throw new Error('web3forms error');
+    return data;
+  }
+
+  const form = document.getElementById('orderForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formError = document.getElementById('formError');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    formError.style.display = 'none';
+
+    const items = Cart.getItems();
+    if (items.length === 0) return;
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    const fd = new FormData(form);
+    const orderNo = makeOrderNo();
+    const payload = {
+      orderNo,
+      itemsText: buildItemsText(items),
+      total: Cart.total(),
+      name: fd.get('name').trim(),
+      address: fd.get('address').trim(),
+      contact: fd.get('contact').trim(),
+      email: fd.get('email').trim(),
+      notes: (fd.get('notes') || '').trim(),
+    };
+
+    submitBtn.disabled = true;
+    const orig = submitBtn.textContent;
+    submitBtn.textContent = currentLang === 'zh' ? '送出中…' : 'Sending…';
+    try {
+      await submitOrder(payload);
+      document.getElementById('resultOrderNo').textContent = orderNo;
+      document.getElementById('cartArea').style.display = 'none';
+      document.getElementById('orderSuccess').style.display = '';
+      Cart.clear();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      formError.textContent = currentLang === 'zh'
+        ? '送出失敗，請改用 LINE 直接聯絡我們。'
+        : 'Submission failed. Please contact us via LINE.';
+      formError.style.display = '';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = orig;
+    }
+  });
+
   applyLang(currentLang);
   render();
 
