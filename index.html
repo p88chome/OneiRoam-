@@ -68,6 +68,13 @@
         <span class="l-div">|</span>
         <span class="l-en">EN</span>
       </button>
+      <a href="order.html" class="cart-link" aria-label="訂單" id="cartLink">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+      </a>
     </div>
   </header>
 
@@ -175,6 +182,7 @@
 
         <!-- 1. White Lace Organza Dress -->
         <div class="product-card" data-category="dress"
+          data-id="dress-white-lace" data-sizes="S,M,L,XL"
           data-modal-img="images/products/dress-white-lace.jpg"
           data-modal-name-zh="花嫁之夢" data-modal-name-en="Bridal Dream"
           data-modal-desc-zh="白色蕾絲歐根紗洋裝，澎袖馬甲設計，背後蝴蝶結綁帶。手工刺繡花卉歐根紗，仙氣十足。"
@@ -200,6 +208,7 @@
 
         <!-- 2. Pink Watercolor Mesh Top -->
         <div class="product-card" data-category="top"
+          data-id="top-mesh-pink" data-sizes="S,M,L,XL"
           data-modal-img="images/products/top-mesh-pink.jpg"
           data-modal-name-zh="夢雲網紗上衣" data-modal-name-en="Dream Cloud Mesh Top"
           data-modal-desc-zh="粉紫水彩暈染長袖網紗上衣，搭配手工草莓刺繡點綴。每件手染，顏色略有差異，獨一無二。"
@@ -225,6 +234,7 @@
 
         <!-- 3. Blue Watercolor Mesh Top -->
         <div class="product-card" data-category="top"
+          data-id="top-mesh-blue" data-sizes="S,M,L,XL"
           data-modal-img="images/products/top-mesh-blue.jpg"
           data-modal-name-zh="夢雲網紗上衣" data-modal-name-en="Dream Cloud Mesh Top"
           data-modal-desc-zh="霧藍水彩暈染長袖網紗上衣，朦朧感如夢似幻。每件手染，顏色略有差異，獨一無二。"
@@ -250,6 +260,7 @@
 
         <!-- 4. White Ruffle Organza Bag -->
         <div class="product-card" data-category="bag"
+          data-id="bag-ruffle-white" data-sizes="F"
           data-modal-img="images/products/bag-ruffle-white.jpg"
           data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
           data-modal-desc-zh="純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。輕盈柔軟，是少女感配件的極致。"
@@ -275,6 +286,7 @@
 
         <!-- 5. Blue Ruffle Organza Bag -->
         <div class="product-card" data-category="bag"
+          data-id="bag-ruffle-blue" data-sizes="F"
           data-modal-img="images/products/bag-ruffle-blue.jpg"
           data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
           data-modal-desc-zh="水藍漸層歐根紗荷葉手提包，清透的水藍色澤帶來清新夢幻感。與白色款同款設計，不同色系。"
@@ -300,6 +312,7 @@
 
         <!-- 6. Lace Set -->
         <div class="product-card" data-category="top"
+          data-id="top-lace-set" data-sizes="S,M,L,XL"
           data-modal-img="images/products/top-lace-set.jpg"
           data-modal-name-zh="蕾絲花圃套裝" data-modal-name-en="Lace Garden Set"
           data-modal-desc-zh="白色蕾絲花卉上衣搭配歐根紗裙，整套穿搭仙氣滿分。上衣立領設計，裙擺輕盈飄逸。"
@@ -455,6 +468,21 @@
           <p class="section-label" id="modalCategory"></p>
           <h2 id="modalName"></h2>
           <p id="modalDesc"></p>
+          <div class="modal-order">
+            <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
+            <select id="modalSize" class="modal-size-select"></select>
+            <input id="modalSizeCustom" class="modal-size-custom" type="text"
+                   placeholder="輸入自訂尺寸" style="display:none" maxlength="40">
+            <div class="modal-qty">
+              <button type="button" id="modalQtyMinus" aria-label="減少">−</button>
+              <span id="modalQty">1</span>
+              <button type="button" id="modalQtyPlus" aria-label="增加">+</button>
+            </div>
+            <button id="modalAdd" class="btn-primary"
+                    data-zh="加入訂單" data-en="Add to Order">加入訂單</button>
+            <span id="modalAdded" class="modal-added" style="display:none"
+                  data-zh="已加入 ✓" data-en="Added ✓">已加入 ✓</span>
+          </div>
           <p class="modal-note" data-zh="✦ 限量手作，售完即止" data-en="✦ Limited handcraft, while stocks last">✦ 限量手作，售完即止</p>
           <a href="https://line.me/R/ti/p/@547hgbaz" class="btn-line modal-line" target="_blank" rel="noopener noreferrer">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 .999C5.926.999 1 5.4 1 10.827c0 4.73 4.195 8.687 9.866 9.44.384.083.907.253 1.04.581.119.298.078.764.038 1.065l-.168.994c-.051.297-.237 1.163 1.028.634 1.264-.528 6.817-4 9.297-6.855C23.22 14.851 24 12.928 24 10.827 24 5.4 18.075.999 12 .999zm-4.667 13.5H5.167a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.333a.833.833 0 1 1 0 1.666zm2.5-.833a.833.833 0 1 1-1.666 0V9.499a.833.833 0 1 1 1.666 0v4.167zm5.167 0a.833.833 0 0 1-.815-.658l-1.685-3.342v3.167a.833.833 0 1 1-1.667 0V9.499a.833.833 0 0 1 1.648-.174l1.685 3.342V9.499a.833.833 0 1 1 1.667 0v4.167a.833.833 0 0 1-.833.833zm3.667 0h-2.5a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.667a.833.833 0 1 1 0 1.666z"/></svg>
@@ -465,6 +493,7 @@
     </div>
   </div>
 
+  <script src="cart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

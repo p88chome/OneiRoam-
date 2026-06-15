@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OneiRoam 夢遊 — 訂購頁">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <title>OneiRoam — 訂購</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-lang="zh">
+  <header id="header" class="scrolled">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-brand">OneiRoam</span>
+        <span class="logo-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+      </a>
+      <nav id="main-nav">
+        <a href="index.html#collections" data-zh="繼續逛" data-en="Keep Shopping">繼續逛</a>
+      </nav>
+      <button class="lang-toggle" id="langToggle" aria-label="語言切換">
+        <span class="l-zh active">中</span><span class="l-div">|</span><span class="l-en">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="order-page">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label" data-zh="訂單確認" data-en="Your Order">訂單確認</p>
+        <h2 data-zh="完成妳的夢境訂購" data-en="Complete Your Order">完成妳的夢境訂購</h2>
+      </div>
+
+      <div id="cartEmpty" class="cart-empty" style="display:none">
+        <p data-zh="訂單是空的" data-en="Your order is empty">訂單是空的</p>
+        <a href="index.html#collections" class="btn-primary" data-zh="去逛逛" data-en="Browse Collections">去逛逛</a>
+      </div>
+
+      <div id="cartArea">
+        <div id="cartList" class="cart-list"></div>
+        <div class="cart-total">
+          <span data-zh="合計" data-en="Total">合計</span>
+          <span class="cart-total-amt">NT$ <span id="cartTotal">0</span></span>
+        </div>
+
+        <form id="orderForm" class="order-form" novalidate>
+          <h3 data-zh="收件資訊" data-en="Delivery Info">收件資訊</h3>
+          <label><span data-zh="姓名" data-en="Name">姓名</span>
+            <input name="name" type="text" required maxlength="60"></label>
+          <label><span data-zh="收件地址" data-en="Address">收件地址</span>
+            <input name="address" type="text" required maxlength="200"></label>
+          <label><span data-zh="LINE ID / 電話" data-en="LINE ID / Phone">LINE ID / 電話</span>
+            <input name="contact" type="text" required maxlength="60"></label>
+          <label><span data-zh="Email（收訂單副本）" data-en="Email (order copy)">Email（收訂單副本）</span>
+            <input name="email" type="email" required maxlength="120"></label>
+          <label><span data-zh="備註" data-en="Notes">備註</span>
+            <textarea name="notes" maxlength="500"></textarea></label>
+          <button type="submit" id="submitBtn" class="btn-primary"
+                  data-zh="送出訂單" data-en="Place Order">送出訂單</button>
+          <p id="formError" class="form-error" style="display:none"></p>
+        </form>
+      </div>
+
+      <div id="orderSuccess" class="order-success" style="display:none">
+        <p class="success-mark">✦</p>
+        <h3 data-zh="訂單已送出" data-en="Order Received">訂單已送出</h3>
+        <p data-zh="訂單編號" data-en="Order Number">訂單編號</p>
+        <p class="order-no" id="resultOrderNo"></p>
+        <div class="bank-info">
+          <p data-zh="請匯款至以下帳戶，並於備註填入訂單編號：" data-en="Please transfer to the account below, noting your order number:">請匯款至以下帳戶，並於備註填入訂單編號：</p>
+          <pre id="bankInfo" class="bank-detail">【銀行】___________
+【戶名】___________
+【帳號】___________</pre>
+        </div>
+        <p class="success-note" data-zh="匯款後請透過 LINE 傳送收據與訂單編號，我們確認後出貨。" data-en="After transfer, please send the receipt and order number via LINE.">匯款後請透過 LINE 傳送收據與訂單編號，我們確認後出貨。</p>
+        <a href="https://line.me/R/ti/p/@547hgbaz" class="btn-line" target="_blank" rel="noopener noreferrer">
+          <span data-zh="開啟 LINE 傳收據" data-en="Open LINE">開啟 LINE 傳收據</span>
+        </a>
+        <a href="index.html" class="back-home" data-zh="返回首頁" data-en="Back to Home">返回首頁</a>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer">
+    <div class="footer-inner">
+      <p class="footer-copy" data-zh="© 2026 OneiRoam. 保留所有權利。" data-en="© 2026 OneiRoam. All rights reserved.">© 2026 OneiRoam. 保留所有權利。</p>
+    </div>
+  </footer>
+
+  <script src="cart.js"></script>
+  <script src="order.js"></script>
+</body>
+</html>
