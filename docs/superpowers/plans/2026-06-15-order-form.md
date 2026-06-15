@@ -724,7 +724,7 @@ git commit -m "feat: render and edit order list on order page"
 
 ```js
   /* ---- 送出 ---- */
-  const WEB3FORMS_KEY = 'WEB3FORMS_ACCESS_KEY'; // TODO: 使用者提供後填入
+  const WEB3FORMS_KEY = '4145687f-468f-489d-ab01-6e1d95d5f5b9';
 
   function buildItemsText(items) {
     return items.map(it =>
@@ -931,6 +931,6 @@ git commit -m "test: verify order flow end-to-end"
 
 | 項目 | 位置 | 預設佔位 |
 |------|------|----------|
-| Web3Forms access key | `order.js` `WEB3FORMS_KEY` | `'WEB3FORMS_ACCESS_KEY'` |
+| Web3Forms access key | `order.js` `WEB3FORMS_KEY` | ✅ 已填 `4145687f-468f-489d-ab01-6e1d95d5f5b9` |
 | 銀行帳號資訊 | `order.html` `#bankInfo` | `【銀行】___` 等底線 |
 | 缺的商品/lookbook 圖 | `images/` | （JS 已自動隱藏壞圖） |
