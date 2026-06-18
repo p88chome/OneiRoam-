@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="cart-row-qty">
           <button type="button" class="qminus" aria-label="減少">−</button>
           <span class="qval">${it.qty}</span>
-          <button type="button" class="qplus" aria-label="增加">+</button>
+          <button type="button" class="qplus" aria-label="增加"
+            ${it.maxQty && it.qty >= it.maxQty ? 'disabled' : ''}>+</button>
         </div>
         <button type="button" class="cart-row-del" aria-label="刪除">×</button>
       </div>`).join('');
@@ -68,7 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const cur = Cart.getItems().find(it => it.id === id && it.size === size);
     if (!cur) return;
     if (e.target.classList.contains('qminus')) Cart.updateQty(id, size, cur.qty - 1);
-    else if (e.target.classList.contains('qplus')) Cart.updateQty(id, size, cur.qty + 1);
+    else if (e.target.classList.contains('qplus')) {
+      if (cur.maxQty && cur.qty >= cur.maxQty) return;
+      Cart.updateQty(id, size, cur.qty + 1);
+    }
     else if (e.target.classList.contains('cart-row-del')) Cart.remove(id, size);
     else return;
     render();

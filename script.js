@@ -205,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalCheckout').style.display = 'none';
     // 暫存目前商品供加入鈕使用
     modal.dataset.curId = card.dataset.id;
+    modal.dataset.curMaxQty = card.dataset.maxQty || '';
     modal.dataset.curName = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     const priceText = card.querySelector('.product-price').textContent;
     modal.dataset.curPrice = priceText.replace(/[^0-9]/g, '');
@@ -260,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
       price: parseInt(modal.dataset.curPrice, 10) || 0,
       size,
       qty: parseInt(qtyEl.textContent, 10),
+      maxQty: parseInt(modal.dataset.curMaxQty, 10) || undefined,
     });
     updateCartBadge();
     document.getElementById('modalAdd').style.display = 'none';

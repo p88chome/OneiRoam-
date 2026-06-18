@@ -20,11 +20,12 @@
 
     return {
       getItems() { return read(); },
-      addItem({ id, name, price, size, qty }) {
+      addItem({ id, name, price, size, qty, maxQty }) {
         const items = read();
         const i = findIndex(items, id, size);
-        if (i >= 0) items[i].qty += qty;
-        else items.push({ id, name, price, size, qty });
+        const cap = maxQty || Infinity;
+        if (i >= 0) items[i].qty = Math.min(items[i].qty + qty, cap);
+        else items.push({ id, name, price, size, qty: Math.min(qty, cap), maxQty });
         write(items);
       },
       updateQty(id, size, qty) {
