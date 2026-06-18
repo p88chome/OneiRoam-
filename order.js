@@ -20,10 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
     () => { applyLang(currentLang === 'zh' ? 'en' : 'zh'); render(); });
 
   /* 渲染清單 */
+  const BUNDLES = []; // Plan D：改由 Supabase 載入
   const listEl  = document.getElementById('cartList');
-  const totalEl = document.getElementById('cartTotal');
   const emptyEl = document.getElementById('cartEmpty');
   const areaEl  = document.getElementById('cartArea');
+  const fmt = n => n.toLocaleString();
 
   function render() {
     const items = Cart.getItems();
@@ -49,7 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <button type="button" class="cart-row-del" aria-label="刪除">×</button>
       </div>`).join('');
-    totalEl.textContent = Cart.total().toLocaleString();
+    const p = computePricing(Cart.getItems(), { bundles: BUNDLES });
+    document.getElementById('sumSubtotal').textContent = fmt(p.subtotal);
+    document.getElementById('sumDiscount').textContent = fmt(p.discount);
+    document.getElementById('sumDiscountRow').style.display = p.discount > 0 ? '' : 'none';
+    document.getElementById('sumTotal').textContent = fmt(p.total);
+    document.getElementById('sumDeposit').textContent = fmt(p.deposit);
+    document.getElementById('sumCod').textContent = fmt(p.cod);
     applyLang(currentLang);
   }
 
@@ -88,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         order_no: payload.orderNo,
         items: payload.itemsText,
         total: payload.total,
+        deposit: payload.deposit,
+        cod: payload.cod,
         name: payload.name,
         address: payload.address,
         contact: payload.contact,
@@ -115,10 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fd = new FormData(form);
     const orderNo = makeOrderNo();
+    const p = computePricing(items, { bundles: BUNDLES });
     const payload = {
       orderNo,
       itemsText: buildItemsText(items),
-      total: Cart.total(),
+      total: p.total,
+      subtotal: p.subtotal,
+      discount: p.discount,
+      deposit: p.deposit,
+      cod: p.cod,
       name: fd.get('name').trim(),
       address: fd.get('address').trim(),
       contact: fd.get('contact').trim(),
