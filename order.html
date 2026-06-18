@@ -57,13 +57,17 @@
         </div>
 
         <form id="orderForm" class="order-form" novalidate>
-          <h3 data-zh="收件資訊" data-en="Delivery Info">收件資訊</h3>
+          <h3 data-zh="訂購人資訊" data-en="Your Info">訂購人資訊</h3>
           <label><span data-zh="姓名" data-en="Name">姓名</span>
             <input name="name" type="text" required maxlength="60"></label>
+          <label><span data-zh="電話" data-en="Phone">電話</span>
+            <input name="phone" type="tel" required maxlength="30"></label>
+          <label><span data-zh="Line 暱稱或 IG 帳號" data-en="LINE nickname or IG">Line 暱稱或 IG 帳號</span>
+            <input name="social" type="text" required maxlength="60"></label>
+          <label><span data-zh="付款帳號末五碼" data-en="Last 5 digits of payment account">付款帳號末五碼</span>
+            <input name="pay_last5" type="text" required inputmode="numeric" pattern="[0-9]{5}" maxlength="5"></label>
           <label><span data-zh="收件地址" data-en="Address">收件地址</span>
             <input name="address" type="text" required maxlength="200"></label>
-          <label><span data-zh="LINE ID / 電話" data-en="LINE ID / Phone">LINE ID / 電話</span>
-            <input name="contact" type="text" required maxlength="60"></label>
           <label><span data-zh="Email（收訂單副本）" data-en="Email (order copy)">Email（收訂單副本）</span>
             <input name="email" type="email" required maxlength="120"></label>
           <label><span data-zh="備註" data-en="Notes">備註</span>
@@ -80,6 +84,9 @@
         <h3 data-zh="訂單已送出" data-en="Order Received">訂單已送出</h3>
         <p data-zh="訂單編號" data-en="Order Number">訂單編號</p>
         <p class="order-no" id="resultOrderNo"></p>
+        <p class="success-deposit"
+           data-zh="應付訂金" data-en="Deposit Due">應付訂金</p>
+        <p class="order-no">NT$ <span id="resultDeposit"></span></p>
         <div class="bank-info">
           <p data-zh="請匯款至以下帳戶，並於備註填入訂單編號：" data-en="Please transfer to the account below, noting your order number:">請匯款至以下帳戶，並於備註填入訂單編號：</p>
           <pre id="bankInfo" class="bank-detail">【銀行】___________

@@ -125,8 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
         deposit: payload.deposit,
         cod: payload.cod,
         name: payload.name,
+        phone: payload.phone,
+        social: payload.social,
+        pay_last5: payload.payLast5,
         address: payload.address,
-        contact: payload.contact,
         email: payload.email,
         notes: payload.notes,
       }),
@@ -162,8 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
       deposit: p.deposit,
       cod: p.cod,
       name: fd.get('name').trim(),
+      phone: fd.get('phone').trim(),
+      social: fd.get('social').trim(),
+      payLast5: fd.get('pay_last5').trim(),
       address: fd.get('address').trim(),
-      contact: fd.get('contact').trim(),
       email: fd.get('email').trim(),
       notes: (fd.get('notes') || '').trim(),
     };
@@ -174,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       await submitOrder(payload);
       document.getElementById('resultOrderNo').textContent = orderNo;
+      document.getElementById('resultDeposit').textContent = payload.deposit.toLocaleString();
       document.getElementById('cartArea').style.display = 'none';
       document.getElementById('orderSuccess').style.display = '';
       Cart.clear();
