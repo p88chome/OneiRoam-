@@ -12,10 +12,18 @@ const rest = path => fetch(`${URL}/rest/v1/${path}`, {
 
 const MAP_CAT = { top: ['上衣', 'Top'], dress: ['洋裝', 'Dress'], bag: ['包款', 'Bag'] };
 
-const products = await rest('products?status=neq.hidden&order=sort_order.asc&select=*');
-const variants = await rest('product_variants?select=*');
-const images   = await rest('product_images?order=sort_order.asc&select=*');
-const settingsRows = await rest('settings?select=*');
+let products, variants, images, settingsRows;
+try {
+  [products, variants, images, settingsRows] = await Promise.all([
+    rest('products?status=neq.hidden&order=sort_order.asc&select=*'),
+    rest('product_variants?select=*'),
+    rest('product_images?order=sort_order.asc&select=*'),
+    rest('settings?select=*'),
+  ]);
+} catch (err) {
+  console.error(`Supabase fetch failed: ${err.message}`);
+  process.exit(1);
+}
 
 const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
 
