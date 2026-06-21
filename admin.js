@@ -25,6 +25,17 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   await sb.auth.signOut(); refreshAuth();
 });
 
+document.getElementById('publishBtn').onclick = async () => {
+  const msg = document.getElementById('publishMsg');
+  msg.textContent = '發布中…';
+  const { data } = await sb.from('settings').select('value').eq('key', 'deploy_hook_url').single();
+  if (!data?.value) { msg.textContent = '未設定 deploy hook'; return; }
+  try {
+    await fetch(data.value, { method: 'POST' });
+    msg.textContent = '已觸發發布，數分鐘後生效';
+  } catch { msg.textContent = '發布失敗'; }
+};
+
 const viewRoot = () => document.getElementById('viewRoot');
 
 async function renderProducts() {
