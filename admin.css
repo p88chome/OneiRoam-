@@ -1,0 +1,8 @@
+/* admin.css */
+body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+input, button { padding: .5rem; margin: .25rem 0; font-size: 1rem; }
+.err { color: #c00; }
+header { display: flex; justify-content: space-between; align-items: center; }
+nav button.active { font-weight: 700; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: .4rem; text-align: left; }

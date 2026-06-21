@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net;
+             style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;
+             connect-src 'self' https://*.supabase.co; base-uri 'self'">
+  <title>OneiRoam 後台</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div id="loginView">
+    <h1>OneiRoam 後台</h1>
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="密碼">
+    <button id="loginBtn">登入</button>
+    <p id="loginError" class="err"></p>
+  </div>
+  <div id="adminApp" hidden>
+    <header><span>OneiRoam 後台</span><button id="logoutBtn">登出</button></header>
+    <nav><button data-view="products" class="active">商品</button></nav>
+    <main id="viewRoot"></main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="admin.config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
