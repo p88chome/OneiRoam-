@@ -2,11 +2,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
 
-const URL = process.env.SUPABASE_URL;
+const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
-if (!URL || !KEY) { console.error('Missing SUPABASE_URL / SUPABASE_SERVICE_KEY'); process.exit(1); }
+if (!BASE_URL || !KEY) { console.error('Missing SUPABASE_URL / SUPABASE_SERVICE_KEY'); process.exit(1); }
 
-const rest = path => fetch(`${URL}/rest/v1/${path}`, {
+const rest = path => fetch(`${BASE_URL}/rest/v1/${path}`, {
   headers: { apikey: KEY, Authorization: `Bearer ${KEY}` },
 }).then(r => { if (!r.ok) throw new Error(`${path} ${r.status}`); return r.json(); });
 

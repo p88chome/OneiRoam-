@@ -71,7 +71,9 @@ async function productForm(p) {
     <label>中文描述<input id="f_desc_zh" value="${esc(p.desc_zh)}"></label><br>
     <label>分類<input id="f_category" value="${esc(p.category)}"></label><br>
     <label>價格<input id="f_price" type="number" value="${esc(p.price)}"></label><br>
+    <label>英文描述<input id="f_desc_en" value="${esc(p.desc_en)}"></label><br>
     <label>徽章(中)<input id="f_badge_zh" value="${esc(p.badge_zh)}"></label><br>
+    <label>徽章(英)<input id="f_badge_en" value="${esc(p.badge_en)}"></label><br>
     <label>狀態
       <select id="f_status">${['preorder','active','sold_out','hidden']
         .map(s => `<option ${s===p.status?'selected':''}>${s}</option>`).join('')}</select></label><br>
@@ -89,8 +91,8 @@ async function saveProduct(isNew) {
   const v = id => document.getElementById(id).value.trim();
   const row = {
     id: v('f_id'), name_zh: v('f_name_zh'), name_en: v('f_name_en'),
-    desc_zh: v('f_desc_zh'), category: v('f_category'),
-    price: parseInt(v('f_price'),10)||0, badge_zh: v('f_badge_zh'),
+    desc_zh: v('f_desc_zh'), desc_en: v('f_desc_en'), category: v('f_category'),
+    price: parseInt(v('f_price'),10)||0, badge_zh: v('f_badge_zh'), badge_en: v('f_badge_en'),
     status: v('f_status'), sort_order: parseInt(v('f_sort'),10)||0,
   };
   const { error } = await sb.from('products').upsert(row);
