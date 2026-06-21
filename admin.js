@@ -1,4 +1,5 @@
 // admin.js
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 window.sb = sb;
 
@@ -45,8 +46,8 @@ async function renderProducts() {
     <button id="newBtn">+ 新增商品</button>
     <table><thead><tr><th>排序</th><th>名稱</th><th>價格</th><th>狀態</th><th></th></tr></thead>
     <tbody>${products.map(p => `
-      <tr><td>${p.sort_order}</td><td>${p.name_zh}</td><td>NT$ ${p.price}</td>
-      <td>${p.status}</td><td><button data-edit="${p.id}">編輯</button></td></tr>`).join('')}
+      <tr><td>${esc(p.sort_order)}</td><td>${esc(p.name_zh)}</td><td>NT$ ${esc(p.price)}</td>
+      <td>${esc(p.status)}</td><td><button data-edit="${esc(p.id)}">編輯</button></td></tr>`).join('')}
     </tbody></table>`;
   document.getElementById('newBtn').onclick = () => productForm(null);
   viewRoot().querySelectorAll('[data-edit]').forEach(b =>
@@ -64,19 +65,19 @@ async function productForm(p) {
   }
   viewRoot().innerHTML = `
     <h2>${isNew ? '新增' : '編輯'}商品</h2>
-    <label>ID(slug)<input id="f_id" value="${p.id}" ${isNew ? '' : 'disabled'}></label><br>
-    <label>中文名<input id="f_name_zh" value="${p.name_zh}"></label><br>
-    <label>英文名<input id="f_name_en" value="${p.name_en}"></label><br>
-    <label>中文描述<input id="f_desc_zh" value="${p.desc_zh}"></label><br>
-    <label>分類<input id="f_category" value="${p.category}"></label><br>
-    <label>價格<input id="f_price" type="number" value="${p.price}"></label><br>
-    <label>徽章(中)<input id="f_badge_zh" value="${p.badge_zh}"></label><br>
+    <label>ID(slug)<input id="f_id" value="${esc(p.id)}" ${isNew ? '' : 'disabled'}></label><br>
+    <label>中文名<input id="f_name_zh" value="${esc(p.name_zh)}"></label><br>
+    <label>英文名<input id="f_name_en" value="${esc(p.name_en)}"></label><br>
+    <label>中文描述<input id="f_desc_zh" value="${esc(p.desc_zh)}"></label><br>
+    <label>分類<input id="f_category" value="${esc(p.category)}"></label><br>
+    <label>價格<input id="f_price" type="number" value="${esc(p.price)}"></label><br>
+    <label>徽章(中)<input id="f_badge_zh" value="${esc(p.badge_zh)}"></label><br>
     <label>狀態
       <select id="f_status">${['preorder','active','sold_out','hidden']
         .map(s => `<option ${s===p.status?'selected':''}>${s}</option>`).join('')}</select></label><br>
-    <label>排序<input id="f_sort" type="number" value="${p.sort_order}"></label><br>
+    <label>排序<input id="f_sort" type="number" value="${esc(p.sort_order)}"></label><br>
     <label>尺寸+庫存(格式 小碼:20,大碼:20)
-      <input id="f_variants" value="${variants.map(v=>`${v.size}:${v.stock}`).join(',')}"></label><br>
+      <input id="f_variants" value="${variants.map(v=>`${esc(v.size)}:${esc(v.stock)}`).join(',')}"></label><br>
     <label>商品圖片<input id="f_image" type="file" accept="image/*"></label><br>
     <button id="saveBtn">儲存</button> <button id="cancelBtn">取消</button>
     <p class="err" id="formErr"></p>`;
@@ -100,7 +101,10 @@ async function saveProduct(isNew) {
     const [size, stock] = s.split(':');
     return { product_id: row.id, size: size.trim(), stock: parseInt(stock,10)||0, max_qty: 1 };
   });
-  if (vars.length) await sb.from('product_variants').insert(vars);
+  if (vars.length) {
+    const { error: varErr } = await sb.from('product_variants').insert(vars);
+    if (varErr) { document.getElementById('formErr').textContent = varErr.message; return; }
+  }
   // 圖片上傳
   const file = document.getElementById('f_image').files[0];
   if (file) {
@@ -109,7 +113,8 @@ async function saveProduct(isNew) {
     if (!up.error) {
       const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
       await sb.from('product_images').delete().eq('product_id', row.id);
-      await sb.from('product_images').insert({ product_id: row.id, url: pub.publicUrl, sort_order: 0 });
+      const { error: imgErr } = await sb.from('product_images').insert({ product_id: row.id, url: pub.publicUrl, sort_order: 0 });
+      if (imgErr) { document.getElementById('formErr').textContent = imgErr.message; return; }
     }
   }
   renderProducts();
