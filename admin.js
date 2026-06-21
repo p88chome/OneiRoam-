@@ -66,6 +66,7 @@ async function productForm(p) {
     <label>排序<input id="f_sort" type="number" value="${p.sort_order}"></label><br>
     <label>尺寸+庫存(格式 小碼:20,大碼:20)
       <input id="f_variants" value="${variants.map(v=>`${v.size}:${v.stock}`).join(',')}"></label><br>
+    <label>商品圖片<input id="f_image" type="file" accept="image/*"></label><br>
     <button id="saveBtn">儲存</button> <button id="cancelBtn">取消</button>
     <p class="err" id="formErr"></p>`;
   document.getElementById('cancelBtn').onclick = renderProducts;
@@ -89,6 +90,17 @@ async function saveProduct(isNew) {
     return { product_id: row.id, size: size.trim(), stock: parseInt(stock,10)||0, max_qty: 1 };
   });
   if (vars.length) await sb.from('product_variants').insert(vars);
+  // 圖片上傳
+  const file = document.getElementById('f_image').files[0];
+  if (file) {
+    const path = `${row.id}-${Date.now()}.${file.name.split('.').pop()}`;
+    const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
+    if (!up.error) {
+      const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
+      await sb.from('product_images').delete().eq('product_id', row.id);
+      await sb.from('product_images').insert({ product_id: row.id, url: pub.publicUrl, sort_order: 0 });
+    }
+  }
   renderProducts();
 }
 
