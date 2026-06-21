@@ -43,7 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* 渲染清單 */
-  const BUNDLES = []; // Plan D：改由 Supabase 載入
+  // 海的公因數 四款全包 $4320（原價 980+980+1680+1680 = 5320）
+  const BUNDLES = [{
+    id: 'sea-gcd-all4',
+    productIds: ['sea-gcd-short-jelly', 'sea-gcd-short-tear',
+                 'sea-gcd-long-jelly', 'sea-gcd-long-tear'],
+    flatPrice: 4320,
+  }];
   const listEl  = document.getElementById('cartList');
   const emptyEl = document.getElementById('cartEmpty');
   const areaEl  = document.getElementById('cartArea');
@@ -128,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
         phone: payload.phone,
         social: payload.social,
         pay_last5: payload.payLast5,
-        address: payload.address,
         email: payload.email,
         notes: payload.notes,
       }),
@@ -167,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
       phone: fd.get('phone').trim(),
       social: fd.get('social').trim(),
       payLast5: fd.get('pay_last5').trim(),
-      address: fd.get('address').trim(),
       email: fd.get('email').trim(),
       notes: (fd.get('notes') || '').trim(),
     };

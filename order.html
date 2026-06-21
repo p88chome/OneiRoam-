@@ -7,6 +7,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <title>OneiRoam — 訂購</title>
+  <link rel="canonical" href="https://www.oneiroam.com/order.html">
+  <meta name="robots" content="noindex, follow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,9 +68,7 @@
             <input name="social" type="text" required maxlength="60"></label>
           <label><span data-zh="付款帳號末五碼" data-en="Last 5 digits of payment account">付款帳號末五碼</span>
             <input name="pay_last5" type="text" required inputmode="numeric" pattern="[0-9]{5}" maxlength="5"></label>
-          <label><span data-zh="收件地址" data-en="Address">收件地址</span>
-            <input name="address" type="text" required maxlength="200"></label>
-          <label><span data-zh="Email（收訂單副本）" data-en="Email (order copy)">Email（收訂單副本）</span>
+          <label><span data-zh="Email（收訂單確認信）" data-en="Email (order confirmation)">Email（收訂單確認信）</span>
             <input name="email" type="email" required maxlength="120"></label>
           <label><span data-zh="備註" data-en="Notes">備註</span>
             <textarea name="notes" maxlength="500"></textarea></label>
@@ -89,11 +89,11 @@
         <p class="order-no">NT$ <span id="resultDeposit"></span></p>
         <div class="bank-info">
           <p data-zh="請匯款至以下帳戶，並於備註填入訂單編號：" data-en="Please transfer to the account below, noting your order number:">請匯款至以下帳戶，並於備註填入訂單編號：</p>
-          <pre id="bankInfo" class="bank-detail">【銀行】___________
-【戶名】___________
-【帳號】___________</pre>
+          <pre id="bankInfo" class="bank-detail">【銀行】玉山銀行（808）
+【戶名】＿＿＿＿＿＿＿
+【帳號】0831976040688</pre>
         </div>
-        <p class="success-note" data-zh="匯款後請透過 LINE 傳送收據與訂單編號，我們確認後出貨。" data-en="After transfer, please send the receipt and order number via LINE.">匯款後請透過 LINE 傳送收據與訂單編號，我們確認後出貨。</p>
+        <p class="success-note" data-zh="尾款下單時間請留意品牌 IG 及 LINE 通知。匯款後請透過 LINE 傳送收據與訂單編號。" data-en="Watch the brand IG & LINE for balance-payment timing. After transfer, send your receipt and order number via LINE.">尾款下單時間請留意品牌 IG 及 LINE 通知。匯款後請透過 LINE 傳送收據與訂單編號。</p>
         <a href="https://line.me/R/ti/p/@547hgbaz" class="btn-line" target="_blank" rel="noopener noreferrer">
           <span data-zh="開啟 LINE 傳收據" data-en="Open LINE">開啟 LINE 傳收據</span>
         </a>
