@@ -6,24 +6,58 @@
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net;
-             style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;
-             connect-src 'self' https://*.supabase.co https://api.cloudflare.com; frame-ancestors 'none'; base-uri 'self'">
+             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+             font-src https://fonts.gstatic.com;
+             img-src 'self' data: https:;
+             connect-src 'self' https://*.supabase.co https://api.cloudflare.com;
+             frame-ancestors 'none'; base-uri 'self'">
   <title>OneiRoam 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-  <div id="loginView">
-    <h1>OneiRoam 後台</h1>
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="密碼">
-    <button id="loginBtn">登入</button>
-    <p id="loginError" class="err"></p>
+  <!-- 開機錯誤橫幅：函式庫/設定載入失敗時顯示 -->
+  <div id="bootError" hidden></div>
+
+  <!-- 登入 -->
+  <div id="loginView" class="login-view">
+    <form id="loginForm" class="login-card" novalidate>
+      <p class="brand">OneiRoam</p>
+      <p class="brand-sub">夢遊 · 管理後台</p>
+      <label class="field">
+        <span>Email</span>
+        <input id="email" type="email" autocomplete="username" placeholder="you@example.com">
+      </label>
+      <label class="field">
+        <span>密碼</span>
+        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••">
+      </label>
+      <button id="loginBtn" type="submit" class="btn btn-primary btn-block">登入</button>
+      <p id="loginError" class="err" role="alert"></p>
+    </form>
   </div>
-  <div id="adminApp" hidden>
-    <header><span>OneiRoam 後台</span><button id="publishBtn">發布到網站</button> <span id="publishMsg"></span><button id="logoutBtn">登出</button></header>
-    <nav><button data-view="products" class="active">商品</button></nav>
-    <main id="viewRoot"></main>
+
+  <!-- 後台主體 -->
+  <div id="adminApp" class="admin-app" hidden>
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="brand-mark">OneiRoam</span>
+        <span class="brand-tag">後台</span>
+      </div>
+      <div class="topbar-actions">
+        <span id="publishMsg" class="publish-msg"></span>
+        <button id="publishBtn" class="btn btn-accent">發布到網站</button>
+        <button id="logoutBtn" class="btn btn-ghost">登出</button>
+      </div>
+    </header>
+    <nav class="sidenav">
+      <button data-view="products" class="nav-item active">商品</button>
+    </nav>
+    <main id="viewRoot" class="view-root"></main>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="admin.config.js"></script>
   <script src="admin.js"></script>

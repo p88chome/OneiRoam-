@@ -1,8 +1,155 @@
-/* admin.css */
-body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
-input, button { padding: .5rem; margin: .25rem 0; font-size: 1rem; }
-.err { color: #c00; }
-header { display: flex; justify-content: space-between; align-items: center; }
-nav button.active { font-weight: 700; }
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #ddd; padding: .4rem; text-align: left; }
+/* admin.css — OneiRoam 後台 · 夢遊柔霧風 */
+:root {
+  --ink:        #3a3442;
+  --ink-soft:   #6b6475;
+  --muted:      #9a93a4;
+  --line:       #e7e1ec;
+  --bg:         #f7f4f9;
+  --surface:    #ffffff;
+  --accent:     #b9a3c9;   /* 霧紫 */
+  --accent-d:   #9c83b2;
+  --blush:      #e9c9d4;
+  --ok:         #6fa890;
+  --warn:       #c97a86;
+  --radius:     14px;
+  --shadow:     0 6px 24px rgba(110, 90, 130, .10);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(160deg, #f7f4f9 0%, #f3eef6 100%);
+  min-height: 100vh;
+}
+h1, h2, .brand, .brand-mark {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+
+/* ---- 開機錯誤 ---- */
+#bootError {
+  margin: 2rem auto; max-width: 480px; padding: 1rem 1.25rem;
+  background: #fbeef0; color: var(--warn); border: 1px solid #f0d3d8;
+  border-radius: var(--radius); text-align: center; line-height: 1.6;
+}
+
+/* ---- 登入 ---- */
+.login-view {
+  min-height: 100vh; display: grid; place-items: center; padding: 1.5rem;
+}
+.login-card {
+  width: 100%; max-width: 380px; background: var(--surface);
+  padding: 2.5rem 2rem; border-radius: 20px; box-shadow: var(--shadow);
+  border: 1px solid var(--line); text-align: center;
+}
+.login-card .brand { font-size: 2rem; margin: 0; color: var(--ink); }
+.login-card .brand-sub { margin: .25rem 0 1.75rem; color: var(--muted); font-size: .9rem; letter-spacing: .25em; }
+.login-card .field { text-align: left; margin-bottom: 1rem; }
+
+/* ---- 欄位 ---- */
+.field { display: flex; flex-direction: column; gap: .35rem; }
+.field > span { font-size: .82rem; color: var(--ink-soft); }
+input, select {
+  width: 100%; padding: .65rem .8rem; font-size: .95rem; color: var(--ink);
+  background: #fcfbfd; border: 1px solid var(--line); border-radius: 10px;
+  font-family: inherit; transition: border-color .15s, box-shadow .15s;
+}
+input:focus, select:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(185, 163, 201, .18);
+}
+input:disabled { background: #f1eef4; color: var(--muted); }
+input[type=file] { padding: .45rem; background: #fcfbfd; }
+
+/* ---- 按鈕 ---- */
+.btn {
+  font-family: inherit; font-size: .9rem; padding: .6rem 1.1rem; cursor: pointer;
+  border: 1px solid transparent; border-radius: 10px; transition: all .15s; color: var(--ink);
+  background: #efeaf3;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:disabled { opacity: .55; cursor: default; transform: none; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-d); }
+.btn-accent { background: var(--blush); color: #6a4350; }
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--ink-soft); }
+.btn-ghost:hover { background: #f1eef4; }
+.btn-sm { padding: .35rem .75rem; font-size: .8rem; }
+.btn-block { width: 100%; margin-top: .5rem; }
+
+.err { color: var(--warn); font-size: .85rem; min-height: 1.2em; margin: .5rem 0 0; }
+
+/* ---- 後台框架 ---- */
+.admin-app {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "top top" "side main";
+  min-height: 100vh;
+}
+.topbar {
+  grid-area: top; display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.5rem; background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.topbar-brand { display: flex; align-items: baseline; gap: .5rem; }
+.brand-mark { font-size: 1.4rem; }
+.brand-tag { font-size: .75rem; color: var(--muted); letter-spacing: .2em; }
+.topbar-actions { display: flex; align-items: center; gap: .6rem; }
+.publish-msg { font-size: .82rem; color: var(--ok); }
+
+.sidenav { grid-area: side; padding: 1.25rem .9rem; }
+.nav-item {
+  width: 100%; text-align: left; background: transparent; border: none;
+  padding: .6rem .8rem; border-radius: 10px; cursor: pointer; color: var(--ink-soft);
+  font-family: inherit; font-size: .9rem;
+}
+.nav-item.active, .nav-item:hover { background: #efeaf3; color: var(--ink); }
+
+.view-root { grid-area: main; padding: 1.75rem 2rem; max-width: 1000px; }
+.view-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.view-head h2 { margin: 0; font-size: 1.6rem; }
+
+/* ---- 卡片 ---- */
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+}
+
+/* ---- 表格 ---- */
+.data-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.data-table th {
+  text-align: left; padding: .85rem 1rem; background: #faf8fc;
+  color: var(--ink-soft); font-weight: 500; font-size: .8rem; letter-spacing: .05em;
+  border-bottom: 1px solid var(--line);
+}
+.data-table td { padding: .8rem 1rem; border-bottom: 1px solid #f2eef6; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #fbfafd; }
+.muted { color: var(--muted); }
+
+/* ---- 狀態徽章 ---- */
+.badge { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .75rem; }
+.badge-preorder { background: #ece4f3; color: #7a5e95; }
+.badge-active   { background: #e2f0ea; color: #437a64; }
+.badge-sold_out { background: #f7e6e9; color: #a85a67; }
+.badge-hidden   { background: #eeeaf0; color: #8b8395; }
+
+/* ---- 表單 ---- */
+.form-card { padding: 1.5rem; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.25rem; }
+.field-wide { grid-column: 1 / -1; }
+.form-actions { display: flex; align-items: center; gap: .75rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.form-actions .err { margin: 0; }
+
+/* ---- 響應式 ---- */
+@media (max-width: 720px) {
+  .admin-app { grid-template-columns: 1fr; grid-template-areas: "top" "side" "main"; }
+  .sidenav { display: flex; gap: .5rem; padding: .75rem 1rem; }
+  .nav-item { width: auto; }
+  .form-grid { grid-template-columns: 1fr; }
+  .topbar { flex-wrap: wrap; gap: .5rem; }
+  .view-root { padding: 1.25rem; }
+}
