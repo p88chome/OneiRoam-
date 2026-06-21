@@ -146,11 +146,25 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .form-actions { display: flex; align-items: center; gap: .75rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
 .form-actions .err { margin: 0; }
 
+/* ---- 總覽 ---- */
+.banner { padding: .9rem 1.25rem; border-radius: var(--radius); margin-bottom: 1.25rem; font-size: .95rem; }
+.banner-open   { background: #ece4f3; color: #6b4e87; }
+.banner-before { background: #eef0f5; color: #5b6478; }
+.banner-after  { background: #f3eef0; color: #8b6470; }
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; display: flex; flex-direction: column; gap: .35rem; }
+.stat-num { font-family: 'Cormorant Garamond', 'Noto Serif TC', serif; font-size: 2rem; line-height: 1; color: var(--ink); }
+.stat-label { font-size: .82rem; color: var(--muted); }
+.stat-card.soon { opacity: .5; }
+.stat-card.soon .stat-num { color: var(--muted); }
+.view-head h3 { margin: 1.5rem 0 .75rem; font-size: 1.15rem; }
+
 /* ---- 響應式 ---- */
 @media (max-width: 720px) {
   .admin-app { grid-template-columns: 1fr; grid-template-areas: "top" "side" "main"; }
   .sidenav { display: flex; gap: .5rem; padding: .75rem 1rem; }
   .nav-item { width: auto; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .form-grid { grid-template-columns: 1fr; }
   .topbar { flex-wrap: wrap; gap: .5rem; }
   .view-root { padding: 1.25rem; }

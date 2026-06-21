@@ -37,7 +37,7 @@ async function refreshAuth() {
   const ok = !!data.session;
   loginView.hidden = ok;
   adminApp.hidden = !ok;
-  if (ok) renderProducts();
+  if (ok) renderDashboard();
 }
 
 // 登入：用 form submit，Enter 也能送；按鈕 loading 狀態
@@ -87,6 +87,61 @@ publishBtn.onclick = async () => {
 };
 
 const viewRoot = () => document.getElementById('viewRoot');
+
+function setActiveNav(view) {
+  document.querySelectorAll('.nav-item').forEach(b =>
+    b.classList.toggle('active', b.dataset.view === view));
+}
+document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => {
+  if (b.dataset.view === 'dashboard') renderDashboard();
+  else { setActiveNav('products'); renderProducts(); }
+});
+
+async function renderDashboard() {
+  setActiveNav('dashboard');
+  const [pRes, vRes, sRes] = await Promise.all([
+    sb.from('products').select('*').order('sort_order'),
+    sb.from('product_variants').select('*'),
+    sb.from('settings').select('*'),
+  ]);
+  const err = pRes.error || vRes.error || sRes.error;
+  if (err) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(err.message)}</p>`; return; }
+  const settings = Object.fromEntries((sRes.data || []).map(s => [s.key, s.value]));
+  const st = window.computeDashboardStats(pRes.data, vRes.data, settings, new Date());
+  const banner = st.window === 'before'
+    ? `預售尚未開始（${esc(settings.preorder_start || '')} 起）`
+    : st.window === 'after' ? '預售已結束'
+    : `預售中 · 倒數 ${esc(st.daysLeft)} 天`;
+  viewRoot().innerHTML = `
+    <div class="view-head"><h2>總覽</h2></div>
+    <div class="banner banner-${esc(st.window)}">${banner}</div>
+    <div class="stat-grid">
+      <div class="stat-card"><span class="stat-num">${esc(st.total)}</span><span class="stat-label">商品總數</span></div>
+      <div class="stat-card"><span class="stat-num">${esc(st.preorder)}</span><span class="stat-label">預購中</span></div>
+      <div class="stat-card"><span class="stat-num">${esc(st.soldOut)}</span><span class="stat-label">售罄</span></div>
+      <div class="stat-card"><span class="stat-num">${esc(st.lowStockCount)}</span><span class="stat-label">低庫存款式</span></div>
+    </div>
+    <div class="view-head"><h3>低庫存提醒</h3></div>
+    <div class="card">
+      ${st.lowStockList.length ? `<table class="data-table">
+        <thead><tr><th>商品</th><th>尺寸</th><th>庫存</th></tr></thead>
+        <tbody>${st.lowStockList.map(r => `<tr><td>${esc(r.name)}</td><td>${esc(r.size)}</td><td>${esc(r.stock)}</td></tr>`).join('')}</tbody>
+      </table>` : `<p class="muted" style="padding:1rem">庫存充足 ✓</p>`}
+    </div>
+    <div class="view-head"><h3>即將推出</h3></div>
+    <div class="stat-grid">
+      <div class="stat-card soon"><span class="stat-num">—</span><span class="stat-label">本月訂單</span></div>
+      <div class="stat-card soon"><span class="stat-num">—</span><span class="stat-label">待付款</span></div>
+      <div class="stat-card soon"><span class="stat-num">—</span><span class="stat-label">營收</span></div>
+      <div class="stat-card soon"><span class="stat-num">—</span><span class="stat-label">流量</span></div>
+    </div>
+    <div class="form-actions" style="border:none">
+      <button id="dashNew" class="btn btn-primary">＋ 新增商品</button>
+      <button id="dashPublish" class="btn btn-accent">發布到網站</button>
+    </div>`;
+  document.getElementById('dashNew').onclick = () => { setActiveNav('products'); productForm(null); };
+  document.getElementById('dashPublish').onclick = () => publishBtn.click();
+}
 
 const STATUS_LABEL = { preorder: '預購中', active: '現貨', sold_out: '售罄', hidden: '隱藏' };
 
