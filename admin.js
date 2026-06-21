@@ -111,7 +111,7 @@ async function renderDashboard() {
   const banner = st.window === 'before'
     ? `預售尚未開始（${esc(settings.preorder_start || '')} 起）`
     : st.window === 'after' ? '預售已結束'
-    : `預售中 · 倒數 ${esc(st.daysLeft)} 天`;
+    : st.daysLeft != null ? `預售中 · 倒數 ${esc(st.daysLeft)} 天` : '預售中';
   viewRoot().innerHTML = `
     <div class="view-head"><h2>總覽</h2></div>
     <div class="banner banner-${esc(st.window)}">${banner}</div>
