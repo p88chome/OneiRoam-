@@ -16,6 +16,8 @@
 }
 
 * { box-sizing: border-box; }
+/* 確保 hidden 屬性生效（蓋過下方 .login-view/.admin-app 的 display 設定）*/
+.login-view[hidden], .admin-app[hidden], [hidden] { display: none !important; }
 body {
   margin: 0;
   font-family: 'Noto Sans TC', system-ui, sans-serif;
