@@ -26,6 +26,7 @@ export function calcCheckMacValue(hashKey, hashIV, params, method) {
 }
 
 export function verifyCheckMacValue(params, hashKey, hashIV, method) {
+  if (!params || typeof params !== 'object') return false;
   const received = String(params.CheckMacValue || '').toUpperCase();
   const computed = calcCheckMacValue(hashKey, hashIV, params, method);
   if (received.length !== computed.length) return false;
