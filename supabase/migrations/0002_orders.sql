@@ -13,7 +13,7 @@ create table if not exists orders (
   total          int  not null default 0,
   pay_amount     int  not null default 0,
   payment_status text not null default 'pending' check (payment_status in ('pending','paid','failed')),
-  ecpay_trade_no text not null default '',
+  gateway_trade_no text not null default '',
   payment_method text not null default '',
   needs_review   bool not null default false,
   paid_at        timestamptz,
