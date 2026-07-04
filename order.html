@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="OneiRoam 夢遊 — 訂購頁">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://sandbox-api.payuni.com.tw https://api.payuni.com.tw">
   <title>OneiRoam — 訂購</title>
   <link rel="canonical" href="https://www.oneiroam.com/order.html">
   <meta name="robots" content="noindex, follow">
@@ -66,12 +66,17 @@
             <input name="phone" type="tel" required maxlength="30"></label>
           <label><span data-zh="Line 暱稱或 IG 帳號" data-en="LINE nickname or IG">Line 暱稱或 IG 帳號</span>
             <input name="social" type="text" required maxlength="60"></label>
-          <label><span data-zh="付款帳號末五碼" data-en="Last 5 digits of payment account">付款帳號末五碼</span>
-            <input name="pay_last5" type="text" required inputmode="numeric" pattern="[0-9]{5}" maxlength="5"></label>
           <label><span data-zh="Email（收訂單確認信）" data-en="Email (order confirmation)">Email（收訂單確認信）</span>
             <input name="email" type="email" required maxlength="120"></label>
           <label><span data-zh="備註" data-en="Notes">備註</span>
             <textarea name="notes" maxlength="500"></textarea></label>
+          <fieldset class="pay-choice">
+            <legend data-zh="付款金額" data-en="Pay">付款金額</legend>
+            <label><input type="radio" name="amount_type" value="deposit" checked>
+              <span data-zh="訂金（一半）" data-en="Deposit (half)">訂金（一半）</span></label>
+            <label><input type="radio" name="amount_type" value="full">
+              <span data-zh="全額" data-en="Full">全額</span></label>
+          </fieldset>
           <p id="preorderGate" class="preorder-gate" style="display:none"></p>
           <button type="submit" id="submitBtn" class="btn-primary"
                   data-zh="送出訂單" data-en="Place Order">送出訂單</button>
@@ -109,6 +114,7 @@
   </footer>
 
   <script src="cart.js"></script>
+  <script src="admin.config.js"></script>
   <script src="order.js"></script>
 </body>
 </html>

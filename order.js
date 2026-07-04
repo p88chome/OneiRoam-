@@ -108,40 +108,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ---- 送出 ---- */
-  const WEB3FORMS_KEY = '4145687f-468f-489d-ab01-6e1d95d5f5b9';
-
-  function buildItemsText(items) {
-    return items.map(it =>
-      `- ${it.name} / ${currentLang === 'zh' ? '尺寸' : 'Size'} ${it.size} x${it.qty} = NT$ ${it.price * it.qty}`
-    ).join('\n');
-  }
-
-  async function submitOrder(payload) {
-    const res = await fetch('https://api.web3forms.com/submit', {
+  async function submitOrder(payload, items, amountType) {
+    const res = await fetch(`${window.SUPABASE_URL}/functions/v1/create-order`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${window.SUPABASE_ANON_KEY}` },
       body: JSON.stringify({
-        access_key: WEB3FORMS_KEY,
-        subject: `新訂單 ${payload.orderNo}`,
-        from_name: 'OneiRoam 訂單',
-        replyto: payload.email,
-        order_no: payload.orderNo,
-        items: payload.itemsText,
-        total: payload.total,
-        deposit: payload.deposit,
-        cod: payload.cod,
-        name: payload.name,
-        phone: payload.phone,
-        social: payload.social,
-        pay_last5: payload.payLast5,
-        email: payload.email,
-        notes: payload.notes,
+        items: items.map(it => ({ id: it.id, size: it.size, qty: it.qty })),
+        customer: { name: payload.name, phone: payload.phone, social: payload.social, email: payload.email, notes: payload.notes },
+        amount_type: amountType,
       }),
     });
-    if (!res.ok) throw new Error('submit failed');
     const data = await res.json();
-    if (!data.success) throw new Error('web3forms error');
-    return data;
+    if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
+    const form = document.createElement('form');
+    form.method = 'POST'; form.action = data.action;
+    for (const [k, v] of Object.entries(data.params)) {
+      const inp = document.createElement('input');
+      inp.type = 'hidden'; inp.name = k; inp.value = String(v);
+      form.appendChild(inp);
+    }
+    document.body.appendChild(form);
+    form.submit();
   }
 
   const form = document.getElementById('orderForm');
@@ -162,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const p = computePricing(items, { bundles: BUNDLES });
     const payload = {
       orderNo,
-      itemsText: buildItemsText(items),
       total: p.total,
       subtotal: p.subtotal,
       discount: p.discount,
@@ -171,28 +157,19 @@ document.addEventListener('DOMContentLoaded', () => {
       name: fd.get('name').trim(),
       phone: fd.get('phone').trim(),
       social: fd.get('social').trim(),
-      payLast5: fd.get('pay_last5').trim(),
       email: fd.get('email').trim(),
       notes: (fd.get('notes') || '').trim(),
     };
 
+    const amountType = (form.querySelector('input[name="amount_type"]:checked') || {}).value || 'deposit';
     submitBtn.disabled = true;
     const orig = submitBtn.textContent;
-    submitBtn.textContent = currentLang === 'zh' ? '送出中…' : 'Sending…';
+    submitBtn.textContent = currentLang === 'zh' ? '前往付款…' : 'Redirecting…';
     try {
-      await submitOrder(payload);
-      document.getElementById('resultOrderNo').textContent = orderNo;
-      document.getElementById('resultDeposit').textContent = payload.deposit.toLocaleString();
-      document.getElementById('cartArea').style.display = 'none';
-      document.getElementById('orderSuccess').style.display = '';
-      Cart.clear();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      await submitOrder(payload, items, amountType);   // 成功則頁面已跳轉 PAYUNi
     } catch (err) {
-      formError.textContent = currentLang === 'zh'
-        ? '送出失敗，請改用 LINE 直接聯絡我們。'
-        : 'Submission failed. Please contact us via LINE.';
+      formError.textContent = currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.';
       formError.style.display = '';
-    } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = orig;
     }
