@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
+    if (!data.action || !data.params) throw new Error('create-order response malformed');
     const form = document.createElement('form');
     form.method = 'POST'; form.action = data.action;
     for (const [k, v] of Object.entries(data.params)) {
@@ -128,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
       form.appendChild(inp);
     }
     document.body.appendChild(form);
+    Cart.clear();
     form.submit();
   }
 
@@ -145,15 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!form.checkValidity()) { form.reportValidity(); return; }
 
     const fd = new FormData(form);
-    const orderNo = makeOrderNo();
-    const p = computePricing(items, { bundles: BUNDLES });
     const payload = {
-      orderNo,
-      total: p.total,
-      subtotal: p.subtotal,
-      discount: p.discount,
-      deposit: p.deposit,
-      cod: p.cod,
       name: fd.get('name').trim(),
       phone: fd.get('phone').trim(),
       social: fd.get('social').trim(),

@@ -87,7 +87,9 @@ Deno.serve(async (req) => {
       }
     } else if (isFailed(inner) && order.payment_status === 'pending') {
       // 明確失敗才標 failed；取號中（未付）維持 pending
-      const { error: failErr } = await sb.from('orders').update({ payment_status: 'failed' }).eq('id', order.id);
+      const { error: failErr } = await sb.from('orders').update({ payment_status: 'failed' })
+        .eq('id', order.id)
+        .eq('payment_status', 'pending');
       if (failErr) console.error('order failed-status update failed', no, failErr);
     }
     return ok200();

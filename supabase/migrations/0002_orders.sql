@@ -42,6 +42,7 @@ create or replace function decrement_stock(p_order_id uuid)
 returns boolean
 language plpgsql
 security definer
+set search_path = public
 as $$
 declare
   it record;
