@@ -19,3 +19,8 @@ supabase/.branches/
 
 # internal planning docs (keep local only)
 docs/superpowers/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
