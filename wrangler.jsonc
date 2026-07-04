@@ -1,0 +1,11 @@
+{
+  // Cloudflare Workers static-assets deploy for the OneiRoam storefront.
+  // The site is plain static HTML/CSS/JS at the repo root (build-products.mjs
+  // edits index.html in place — there is no separate build output dir), so the
+  // assets directory is "." and .assetsignore keeps backend/dev files off the CDN.
+  "name": "oneiroam",
+  "compatibility_date": "2026-07-04",
+  "assets": {
+    "directory": "."
+  }
+}
