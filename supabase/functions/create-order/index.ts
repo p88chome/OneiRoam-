@@ -27,7 +27,14 @@ Deno.serve(async (req) => {
     const version = Deno.env.get('PAYUNI_VERSION') || '2.0';
     const site = Deno.env.get('SITE_URL')!;
     const supaUrl = Deno.env.get('SUPABASE_URL')!;
-    const sb = createClient(supaUrl, Deno.env.get('SUPABASE_SERVICE_KEY')!);
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_KEY')!;
+
+    // Validate required secrets before any DB write
+    if (!merId || !hashKey || !hashIV || !site || !supaUrl || !serviceKey) {
+      return json({ error: 'server misconfigured' }, 500);
+    }
+
+    const sb = createClient(supaUrl, serviceKey);
 
     const body = await req.json();
     const reqItems = Array.isArray(body.items) ? body.items : [];
@@ -36,8 +43,10 @@ Deno.serve(async (req) => {
 
     // 伺服器重算：讀現價 + 庫存
     const ids = [...new Set(reqItems.map((i: any) => i.id))];
-    const { data: products } = await sb.from('products').select('id,name_zh,price').in('id', ids);
-    const { data: variants } = await sb.from('product_variants').select('product_id,size,stock,max_qty').in('product_id', ids);
+    const { data: products, error: pErr } = await sb.from('products').select('id,name_zh,price').in('id', ids);
+    if (pErr) return json({ error: '讀取商品資料失敗' }, 500);
+    const { data: variants, error: vErr } = await sb.from('product_variants').select('product_id,size,stock,max_qty').in('product_id', ids);
+    if (vErr) return json({ error: '讀取商品資料失敗' }, 500);
     const priceOf = (id: string) => products?.find(p => p.id === id)?.price ?? null;
 
     const lineItems: any[] = [];
@@ -64,9 +73,10 @@ Deno.serve(async (req) => {
       subtotal: p.subtotal, discount: p.discount, total: p.total, pay_amount: payAmount,
     }).select('id').single();
     if (oErr) return json({ error: oErr.message }, 500);
-    await sb.from('order_items').insert(lineItems.map(l => ({
+    const { error: iErr } = await sb.from('order_items').insert(lineItems.map(l => ({
       order_id: order.id, product_id: l.id, name: l.name, size: l.size, price: l.price, qty: l.qty,
     })));
+    if (iErr) return json({ error: iErr.message }, 500);
 
     // PAYUNi UPP 加密參數
     const productName = lineItems.map(l => `${l.name} x${l.qty}`).join('、').slice(0, 60);
