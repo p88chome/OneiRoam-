@@ -1,0 +1,18 @@
+# Keep non-site files off the public CDN (gitignore-style patterns).
+# Everything NOT listed here under the repo root is uploaded as a static asset.
+.git
+.gitignore
+.claude
+.superpowers
+.wrangler
+node_modules
+supabase
+tests
+scripts
+docs
+.env
+.env.example
+wrangler.jsonc
+.assetsignore
+README.md
+*.log
