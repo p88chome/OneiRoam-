@@ -4,5 +4,18 @@ package.json
 .DS_Store
 *.tmp
 
+# secrets / env — NEVER commit Supabase keys, service key, deploy hook
+.env
+.env.*
+!.env.example
+*.local
+
+# build artifacts (generated from Supabase at build time)
+data/storefront.json
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/
+
 # internal planning docs (keep local only)
 docs/superpowers/

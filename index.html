@@ -6,22 +6,42 @@
   <meta name="description" content="OneiRoam 夢遊 — 獨立設計女裝品牌，蕾絲、歐根紗、手染布料，打造屬於妳的夢境穿搭">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
-  <title>OneiRoam — 夢遊</title>
+  <title>OneiRoam 夢遊 — 獨立設計女裝品牌｜蕾絲・歐根紗・手染限量手作</title>
+  <link rel="canonical" href="https://www.oneiroam.com/">
+  <meta name="robots" content="index, follow">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
   <!-- SEO / Open Graph -->
   <meta property="og:type"        content="website">
-  <meta property="og:title"       content="OneiRoam — 夢遊">
+  <meta property="og:title"       content="OneiRoam 夢遊 — 獨立設計女裝品牌">
   <meta property="og:description" content="獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料，每件都是限量手作。">
-  <meta property="og:image"       content="https://p88chome.github.io/OneiRoam-/images/hero-1.jpg">
-  <meta property="og:url"         content="https://p88chome.github.io/OneiRoam-/">
+  <meta property="og:image"       content="https://www.oneiroam.com/images/hero-1.jpg">
+  <meta property="og:image:alt"   content="OneiRoam 夢遊 — 夢境穿搭主視覺">
+  <meta property="og:url"         content="https://www.oneiroam.com/">
   <meta property="og:site_name"   content="OneiRoam">
+  <meta property="og:locale"      content="zh_TW">
   <meta name="twitter:card"       content="summary_large_image">
-  <meta name="twitter:title"      content="OneiRoam — 夢遊">
+  <meta name="twitter:title"      content="OneiRoam 夢遊 — 獨立設計女裝品牌">
   <meta name="twitter:description" content="獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料。">
-  <meta name="twitter:image"      content="https://p88chome.github.io/OneiRoam-/images/hero-1.jpg">
+  <meta name="twitter:image"      content="https://www.oneiroam.com/images/hero-1.jpg">
+
+  <!-- 結構化資料 (JSON-LD) — type 非 JS，不受 CSP script-src 限制 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "name": "OneiRoam 夢遊",
+    "alternateName": "OneiRoam",
+    "url": "https://www.oneiroam.com/",
+    "image": "https://www.oneiroam.com/images/hero-1.jpg",
+    "logo": "https://www.oneiroam.com/favicon.svg",
+    "description": "獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料，每件都是限量手作。",
+    "currenciesAccepted": "TWD",
+    "areaServed": "TW"
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -179,10 +199,11 @@
 
       <!-- Product Grid -->
       <div class="product-grid">
+        <!-- BUILD:PRODUCTS:START -->
 
         <!-- 1. White Lace Organza Dress -->
         <div class="product-card" data-category="dress"
-          data-id="dress-white-lace" data-sizes="S,M,L,XL"
+          data-id="dress-white-lace" data-sizes="S,M,L,XL" data-max-qty="1"
           data-modal-img="images/products/dress-white-lace.jpg"
           data-modal-name-zh="花嫁之夢" data-modal-name-en="Bridal Dream"
           data-modal-desc-zh="白色蕾絲歐根紗洋裝，澎袖馬甲設計，背後蝴蝶結綁帶。手工刺繡花卉歐根紗，仙氣十足。"
@@ -208,7 +229,7 @@
 
         <!-- 2. Pink Watercolor Mesh Top -->
         <div class="product-card" data-category="top"
-          data-id="top-mesh-pink" data-sizes="S,M,L,XL"
+          data-id="top-mesh-pink" data-sizes="S,M,L,XL" data-max-qty="1"
           data-modal-img="images/products/top-mesh-pink.jpg"
           data-modal-name-zh="夢雲網紗上衣" data-modal-name-en="Dream Cloud Mesh Top"
           data-modal-desc-zh="粉紫水彩暈染長袖網紗上衣，搭配手工草莓刺繡點綴。每件手染，顏色略有差異，獨一無二。"
@@ -234,7 +255,7 @@
 
         <!-- 3. Blue Watercolor Mesh Top -->
         <div class="product-card" data-category="top"
-          data-id="top-mesh-blue" data-sizes="S,M,L,XL"
+          data-id="top-mesh-blue" data-sizes="S,M,L,XL" data-max-qty="1"
           data-modal-img="images/products/top-mesh-blue.jpg"
           data-modal-name-zh="夢雲網紗上衣" data-modal-name-en="Dream Cloud Mesh Top"
           data-modal-desc-zh="霧藍水彩暈染長袖網紗上衣，朦朧感如夢似幻。每件手染，顏色略有差異，獨一無二。"
@@ -260,7 +281,7 @@
 
         <!-- 4. White Ruffle Organza Bag -->
         <div class="product-card" data-category="bag"
-          data-id="bag-ruffle-white" data-sizes="F"
+          data-id="bag-ruffle-white" data-sizes="F" data-max-qty="1"
           data-modal-img="images/products/bag-ruffle-white.jpg"
           data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
           data-modal-desc-zh="純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。輕盈柔軟，是少女感配件的極致。"
@@ -286,7 +307,7 @@
 
         <!-- 5. Blue Ruffle Organza Bag -->
         <div class="product-card" data-category="bag"
-          data-id="bag-ruffle-blue" data-sizes="F"
+          data-id="bag-ruffle-blue" data-sizes="F" data-max-qty="1"
           data-modal-img="images/products/bag-ruffle-blue.jpg"
           data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
           data-modal-desc-zh="水藍漸層歐根紗荷葉手提包，清透的水藍色澤帶來清新夢幻感。與白色款同款設計，不同色系。"
@@ -312,7 +333,7 @@
 
         <!-- 6. Lace Set -->
         <div class="product-card" data-category="top"
-          data-id="top-lace-set" data-sizes="S,M,L,XL"
+          data-id="top-lace-set" data-sizes="S,M,L,XL" data-max-qty="1"
           data-modal-img="images/products/top-lace-set.jpg"
           data-modal-name-zh="蕾絲花圃套裝" data-modal-name-en="Lace Garden Set"
           data-modal-desc-zh="白色蕾絲花卉上衣搭配歐根紗裙，整套穿搭仙氣滿分。上衣立領設計，裙擺輕盈飄逸。"
@@ -335,6 +356,111 @@
             </div>
           </div>
         </div>
+
+        <!-- 7. 海的公因數 — 短袖・水母 -->
+        <div class="product-card" data-category="top"
+          data-id="sea-gcd-short-jelly" data-sizes="小碼,大碼" data-max-qty="1"
+          data-modal-img="images/products/sea-gcd-jelly.jpg"
+          data-modal-name-zh="海的公因數 · 短袖水母" data-modal-name-en="Sea GCD · Short Sleeve Jellyfish"
+          data-modal-desc-zh="🫧 印花透膚短袖上衣，水母圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
+          data-modal-desc-en="Sheer printed short-sleeve top, jellyfish print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          <div class="product-img-wrap">
+            <img src="images/products/sea-gcd-jelly.jpg" alt="海的公因數 短袖水母印花透膚上衣" class="product-img" loading="lazy">
+            <div class="product-hover">
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
+            </div>
+            <span class="product-badge" data-zh="印花透膚" data-en="Sheer Print">印花透膚</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="海的公因數 · 短袖水母" data-en="Sea GCD · Short Jellyfish">海的公因數 · 短袖水母</h3>
+            <p data-zh="🫧 印花透膚短袖上衣" data-en="🫧 Sheer Print Short Sleeve">🫧 印花透膚短袖上衣</p>
+            <span class="product-price">NT$ 980</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. 海的公因數 — 短袖・眼淚 -->
+        <div class="product-card" data-category="top"
+          data-id="sea-gcd-short-tear" data-sizes="小碼,大碼" data-max-qty="1"
+          data-modal-img="images/products/sea-gcd-tear.jpg"
+          data-modal-name-zh="海的公因數 · 短袖眼淚" data-modal-name-en="Sea GCD · Short Sleeve Teardrop"
+          data-modal-desc-zh="🫧 印花透膚短袖上衣，眼淚圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
+          data-modal-desc-en="Sheer printed short-sleeve top, teardrop print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          <div class="product-img-wrap">
+            <img src="images/products/sea-gcd-tear.jpg" alt="海的公因數 短袖眼淚印花透膚上衣" class="product-img" loading="lazy">
+            <div class="product-hover">
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
+            </div>
+            <span class="product-badge" data-zh="印花透膚" data-en="Sheer Print">印花透膚</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="海的公因數 · 短袖眼淚" data-en="Sea GCD · Short Teardrop">海的公因數 · 短袖眼淚</h3>
+            <p data-zh="🫧 印花透膚短袖上衣" data-en="🫧 Sheer Print Short Sleeve">🫧 印花透膚短袖上衣</p>
+            <span class="product-price">NT$ 980</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. 海的公因數 — 立領長袖・水母 -->
+        <div class="product-card" data-category="top"
+          data-id="sea-gcd-long-jelly" data-sizes="小碼,大碼" data-max-qty="1"
+          data-modal-img="images/products/sea-gcd-jelly.jpg"
+          data-modal-name-zh="海的公因數 · 立領長袖水母" data-modal-name-en="Sea GCD · Mock Neck Long Jellyfish"
+          data-modal-desc-zh="🫧 印花透膚立領長袖上衣，水母圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
+          data-modal-desc-en="Sheer printed mock-neck long-sleeve top, jellyfish print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          <div class="product-img-wrap">
+            <img src="images/products/sea-gcd-jelly.jpg" alt="海的公因數 立領長袖水母印花透膚上衣" class="product-img" loading="lazy">
+            <div class="product-hover">
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
+            </div>
+            <span class="product-badge" data-zh="印花透膚" data-en="Sheer Print">印花透膚</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="海的公因數 · 立領長袖水母" data-en="Sea GCD · Mock Long Jellyfish">海的公因數 · 立領長袖水母</h3>
+            <p data-zh="🫧 印花透膚立領長袖上衣" data-en="🫧 Sheer Print Mock Neck Long Sleeve">🫧 印花透膚立領長袖上衣</p>
+            <span class="product-price">NT$ 1,680</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. 海的公因數 — 立領長袖・眼淚 -->
+        <div class="product-card" data-category="top"
+          data-id="sea-gcd-long-tear" data-sizes="小碼,大碼" data-max-qty="1"
+          data-modal-img="images/products/sea-gcd-tear.jpg"
+          data-modal-name-zh="海的公因數 · 立領長袖眼淚" data-modal-name-en="Sea GCD · Mock Neck Long Teardrop"
+          data-modal-desc-zh="🫧 印花透膚立領長袖上衣，眼淚圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
+          data-modal-desc-en="Sheer printed mock-neck long-sleeve top, teardrop print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
+          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          <div class="product-img-wrap">
+            <img src="images/products/sea-gcd-tear.jpg" alt="海的公因數 立領長袖眼淚印花透膚上衣" class="product-img" loading="lazy">
+            <div class="product-hover">
+              <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
+            </div>
+            <span class="product-badge" data-zh="印花透膚" data-en="Sheer Print">印花透膚</span>
+          </div>
+          <div class="product-info">
+            <h3 data-zh="海的公因數 · 立領長袖眼淚" data-en="Sea GCD · Mock Long Teardrop">海的公因數 · 立領長袖眼淚</h3>
+            <p data-zh="🫧 印花透膚立領長袖上衣" data-en="🫧 Sheer Print Mock Neck Long Sleeve">🫧 印花透膚立領長袖上衣</p>
+            <span class="product-price">NT$ 1,680</span>
+            <div class="product-meta">
+              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
+            </div>
+          </div>
+        </div>
+        <!-- BUILD:PRODUCTS:END -->
 
       </div><!-- /product-grid -->
     </div>

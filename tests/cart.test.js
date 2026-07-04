@@ -103,3 +103,10 @@ test('連續產生不重複（機率）', () => {
   const set = new Set(Array.from({ length: 50 }, () => makeOrderNo(d)));
   assert.ok(set.size > 45);
 });
+
+test('addItem 受 maxQty 上限夾擠', () => {
+  const cart = createCart(memStorage());
+  cart.addItem({ id: 'a', name: 'X', price: 100, size: 'M', qty: 1, maxQty: 1 });
+  cart.addItem({ id: 'a', name: 'X', price: 100, size: 'M', qty: 3, maxQty: 1 });
+  assert.strictEqual(cart.getItems()[0].qty, 1);
+});
