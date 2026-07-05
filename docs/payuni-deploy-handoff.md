@@ -54,6 +54,10 @@ supabase secrets set \
 - 換 `PAYUNI_ENV=prod` + 正式 `MerID` / `HashKey` / `HashIV`
 - 重跑一次真實小額交易驗證
 
+### ⚠️ 測試期暫時改動 — 上線前必還原
+- `order.js` `PREORDER_END` 測試期改為 `2026-12-31`（原為 `2026-06-30`）→ 上線前設回真實預售窗
+- `payuni-notify/index.ts` 有一行 `console.log('PAYUNi notify DIAG inner=' ...)` 診斷 log → 校準完 `isPaid/isFailed` 後移除並重部署
+
 ---
 
 ## 已知限制 / 後續 follow-up（非阻擋上線）
