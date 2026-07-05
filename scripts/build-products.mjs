@@ -43,12 +43,49 @@ const normalized = products.map(p => {
 
 const cardsHtml = renderProductCards(normalized);
 
+// SEO：每個商品的 Product 結構化資料（Google 富摘要：價格/庫存）
+const AVAIL = { sold_out: 'OutOfStock', active: 'InStock', preorder: 'PreOrder' };
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: normalized.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Product',
+      name: p.name_zh,
+      ...(p.name_en ? { alternateName: p.name_en } : {}),
+      ...(p.desc_zh ? { description: p.desc_zh } : {}),
+      image: `https://www.oneiroam.com${p.image}`,
+      brand: { '@type': 'Brand', name: 'OneiRoam' },
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'TWD',
+        price: String(p.price),
+        availability: `https://schema.org/${AVAIL[p.status] || 'PreOrder'}`,
+        url: 'https://www.oneiroam.com/#products',
+      },
+    },
+  })),
+};
+// </script> 防注入：JSON 內的 < 一律轉 <
+const jsonldTag = `<script type="application/ld+json">\n${
+  JSON.stringify(jsonld, null, 2).replace(/</g, '\\u003c')
+}\n  </script>`;
+
 const START = '<!-- BUILD:PRODUCTS:START -->';
 const END = '<!-- BUILD:PRODUCTS:END -->';
 const html = await readFile('index.html', 'utf8');
 const re = new RegExp(`${START}[\\s\\S]*?${END}`);
 if (!re.test(html)) { console.error('build markers not found in index.html'); process.exit(1); }
-const out = html.replace(re, `${START}\n${cardsHtml}\n        ${END}`);
+let out = html.replace(re, `${START}\n${cardsHtml}\n        ${END}`);
+
+const JSTART = '<!-- BUILD:JSONLD:START -->';
+const JEND = '<!-- BUILD:JSONLD:END -->';
+const jre = new RegExp(`${JSTART}[\\s\\S]*?${JEND}`);
+if (jre.test(out)) out = out.replace(jre, `${JSTART}\n  ${jsonldTag}\n  ${JEND}`);
+else console.warn('JSONLD markers not found in index.html — skipping product structured data');
+
 await writeFile('index.html', out);
 
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
