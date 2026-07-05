@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
       TradeAmt: String(payAmount),
       ProductName: productName,
       Timestamp: String(Math.floor(Date.now() / 1000)),
-      ReturnURL: `${pickReturnBase(req.headers.get('origin') || '', site)}/order-result.html`,
+      ReturnURL: `${pickReturnBase(req.headers.get('origin') || '', site)}/order-result.html?order_no=${no}`,
       NotifyURL: `${supaUrl}/functions/v1/payuni-notify`,
     };
     const encryptInfo = buildEncryptInfo(inner, hashKey, hashIV);
