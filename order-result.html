@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW"><head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
   <meta name="robots" content="noindex">
   <title>OneiRoam — 付款結果</title>
   <link rel="stylesheet" href="style.css">
@@ -8,8 +9,10 @@
   <main class="order-page"><div class="container" style="text-align:center;padding:4rem 1rem">
     <p class="success-mark">✦</p>
     <h2>付款處理中</h2>
+    <p id="orderNoLine" style="display:none">訂單編號：<strong id="orderNo"></strong></p>
     <p>我們已收到 PAYUNi 的付款結果，訂單狀態將於確認後更新。</p>
     <p>請留意品牌 IG 及 LINE 通知。</p>
     <a href="index.html" class="btn-primary">返回首頁</a>
   </div></main>
+  <script src="order-result.js"></script>
 </body></html>
