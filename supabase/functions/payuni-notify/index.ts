@@ -21,7 +21,8 @@ Deno.serve(async (req) => {
   try {
     const hashKey = Deno.env.get('PAYUNI_HASH_KEY')!;
     const hashIV = Deno.env.get('PAYUNI_HASH_IV')!;
-    const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_KEY')!);
+    // Supabase auto-injects the service role key as SUPABASE_SERVICE_ROLE_KEY.
+    const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
     const form = await req.formData();
     const body: Record<string, string> = {};
@@ -34,6 +35,8 @@ Deno.serve(async (req) => {
       return ok200();
     }
     const inner = res.data as Record<string, string>;
+    // TEMP diagnostic (remove after isPaid/isFailed calibration): reveal real PAYUNi notify fields.
+    console.log('PAYUNi notify DIAG inner=', JSON.stringify(inner), 'outerStatus=', body.Status);
     const no = inner.MerTradeNo;
     if (!no) { console.error('notify missing MerTradeNo'); return ok200(); }
 

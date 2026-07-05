@@ -1,4 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, timingSafeEqual } from 'node:crypto';
+// Buffer is a Node global but NOT a global in Deno / Supabase Edge Runtime — import it explicitly.
+import { Buffer } from 'node:buffer';
 
 // PHP http_build_query 等價：alnum 與 -_. 不編碼；空格→+；其餘 %XX 大寫；~→%7E
 function phpUrlencode(s) {
