@@ -21,7 +21,8 @@ Deno.serve(async (req) => {
   try {
     const hashKey = Deno.env.get('PAYUNI_HASH_KEY')!;
     const hashIV = Deno.env.get('PAYUNI_HASH_IV')!;
-    const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_KEY')!);
+    // Supabase auto-injects the service role key as SUPABASE_SERVICE_ROLE_KEY.
+    const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
     const form = await req.formData();
     const body: Record<string, string> = {};

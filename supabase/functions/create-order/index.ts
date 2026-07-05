@@ -25,12 +25,14 @@ Deno.serve(async (req) => {
     const hashKey = Deno.env.get('PAYUNI_HASH_KEY')!;
     const hashIV = Deno.env.get('PAYUNI_HASH_IV')!;
     const version = Deno.env.get('PAYUNI_VERSION') || '2.0';
-    const site = Deno.env.get('SITE_URL')!;
+    const site = Deno.env.get('SITE_URL') || 'https://www.oneiroam.com';
     const supaUrl = Deno.env.get('SUPABASE_URL')!;
-    const serviceKey = Deno.env.get('SUPABASE_SERVICE_KEY')!;
+    // Supabase auto-injects the service role key as SUPABASE_SERVICE_ROLE_KEY
+    // (the SUPABASE_ prefix is reserved — you cannot set SUPABASE_SERVICE_KEY yourself).
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
     // Validate required secrets before any DB write
-    if (!merId || !hashKey || !hashIV || !site || !supaUrl || !serviceKey) {
+    if (!merId || !hashKey || !hashIV || !supaUrl || !serviceKey) {
       return json({ error: 'server misconfigured' }, 500);
     }
 
