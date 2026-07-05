@@ -75,9 +75,23 @@ publishBtn.onclick = async () => {
   publishBtn.disabled = true;
   msg.textContent = '發布中…';
   try {
-    const { data } = await sb.from('settings').select('value').eq('key', 'deploy_hook_url').single();
-    if (!data || !data.value) { msg.textContent = '未設定 deploy hook'; return; }
-    await fetch(data.value, { method: 'POST' });
+    // 經 trigger-deploy 代理觸發（server 端 POST hook：避開 CORS、hook 不進瀏覽器）
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { msg.textContent = '請重新登入'; return; }
+    const res = await fetch(`${window.SUPABASE_URL}/functions/v1/trigger-deploy`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': window.SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+    const out = await res.json();
+    if (!res.ok || out.error) {
+      msg.textContent = out.error === 'hook not configured' ? '未設定 deploy hook' : '發布失敗';
+      return;
+    }
     msg.textContent = '✓ 已觸發發布，數分鐘後生效';
   } catch {
     msg.textContent = '發布失敗';
