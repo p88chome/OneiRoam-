@@ -35,6 +35,8 @@ Deno.serve(async (req) => {
       return ok200();
     }
     const inner = res.data as Record<string, string>;
+    // TEMP diagnostic (remove after isPaid/isFailed calibration): reveal real PAYUNi notify fields.
+    console.log('PAYUNi notify DIAG inner=', JSON.stringify(inner), 'outerStatus=', body.Status);
     const no = inner.MerTradeNo;
     if (!no) { console.error('notify missing MerTradeNo'); return ok200(); }
 
