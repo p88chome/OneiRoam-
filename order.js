@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* 預售日期閘門 */
   const PREORDER_START = '2026-06-23';
-  const PREORDER_END = '2026-06-30';
+  // TEMP for PAYUNi testing — extended so today falls inside the window.
+  // TODO before go-live: restore the real preorder window (was '2026-06-30').
+  const PREORDER_END = '2026-12-31';
   function preorderStatus(now = new Date()) {
     const day = now.getFullYear() + '-' +
       String(now.getMonth() + 1).padStart(2, '0') + '-' +
