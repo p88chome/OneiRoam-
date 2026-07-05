@@ -230,11 +230,31 @@ async function productForm(p) {
       <div class="form-actions">
         <button id="saveBtn" class="btn btn-primary">儲存</button>
         <button id="cancelBtn" class="btn btn-ghost">取消</button>
+        ${isNew ? '' : '<button id="deleteBtn" class="btn btn-danger">刪除商品</button>'}
         <span id="formErr" class="err" role="alert"></span>
       </div>
     </div>`;
   document.getElementById('cancelBtn').onclick = renderProducts;
   document.getElementById('saveBtn').onclick = () => saveProduct(isNew);
+  if (!isNew) document.getElementById('deleteBtn').onclick = () => deleteProduct(p);
+}
+
+async function deleteProduct(p) {
+  // 永久刪除：variants/images 由 DB cascade 帶走；order_items 是文字快照不受影響。
+  // 暫時下架請改用狀態「隱藏」。
+  if (!confirm(`確定永久刪除「${p.name_zh || p.id}」？\n\n訂單紀錄不受影響，但商品無法復原。\n若只是暫時下架，請改用狀態「隱藏」。`)) return;
+  const btn = document.getElementById('deleteBtn');
+  const formErr = document.getElementById('formErr');
+  btn.disabled = true;
+  btn.textContent = '刪除中…';
+  const { error } = await sb.from('products').delete().eq('id', p.id);
+  if (error) {
+    formErr.textContent = friendlyErr(error);
+    btn.disabled = false;
+    btn.textContent = '刪除商品';
+    return;
+  }
+  renderProducts();
 }
 
 async function saveProduct(isNew) {
