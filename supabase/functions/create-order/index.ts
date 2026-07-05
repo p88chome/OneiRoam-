@@ -15,6 +15,21 @@ function orderNo() {
   return ('OR' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6)).toUpperCase().slice(0, 20);
 }
 
+// Return-page base picked from the request Origin (staging vs production auto-follow),
+// validated against an allowlist so the post-payment redirect can't be pointed at a
+// phishing host. Covers www.oneiroam.com and every *.oneiroam.workers.dev preview/alias.
+function pickReturnBase(origin: string, fallback: string): string {
+  try {
+    const u = new URL(origin);
+    if (u.protocol === 'https:' && (
+      u.hostname === 'www.oneiroam.com' ||
+      u.hostname === 'oneiroam.com' ||
+      u.hostname.endsWith('.oneiroam.workers.dev')
+    )) return `${u.protocol}//${u.host}`;
+  } catch { /* invalid/absent Origin → fallback */ }
+  return fallback;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   const json = (o: unknown, status = 200) =>
@@ -88,7 +103,7 @@ Deno.serve(async (req) => {
       TradeAmt: String(payAmount),
       ProductName: productName,
       Timestamp: String(Math.floor(Date.now() / 1000)),
-      ReturnURL: `${site}/order-result.html`,
+      ReturnURL: `${pickReturnBase(req.headers.get('origin') || '', site)}/order-result.html`,
       NotifyURL: `${supaUrl}/functions/v1/payuni-notify`,
     };
     const encryptInfo = buildEncryptInfo(inner, hashKey, hashIV);
