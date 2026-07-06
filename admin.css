@@ -79,6 +79,8 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .btn-accent { background: var(--blush); color: #6a4350; }
 .btn-ghost { background: transparent; border-color: var(--line); color: var(--ink-soft); }
 .btn-ghost:hover { background: #f1eef4; }
+.btn-danger { background: transparent; border-color: #d9534f; color: #c9302c; margin-left: auto; }
+.btn-danger:hover { background: #fdf1f0; }
 .btn-sm { padding: .35rem .75rem; font-size: .8rem; }
 .btn-block { width: 100%; margin-top: .5rem; }
 
