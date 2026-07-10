@@ -23,3 +23,7 @@ export function splitProducts(products) {
     select:   products.filter(p => p.category === 'select'),
   };
 }
+
+// 選品區空狀態（需與 index.html 靜態內容一字不差，build 覆寫時才無 diff 噪音）
+export const SELECT_EMPTY_HTML =
+  '<p class="select-empty" data-zh="選物即將上架，敬請期待 ✦" data-en="Select goods coming soon ✦">選物即將上架，敬請期待 ✦</p>';
