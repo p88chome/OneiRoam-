@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OneiRoam 夢遊選物 — 主理人挑選的選物商品">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <title>夢遊選物 — OneiRoam 選品</title>
+  <link rel="canonical" href="https://www.oneiroam.com/select.html">
+  <meta name="robots" content="index, follow">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- SEO / Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="OneiRoam 夢遊 — 獨立設計女裝品牌">
+  <meta property="og:description" content="獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料，每件都是限量手作。">
+  <meta property="og:image"       content="https://www.oneiroam.com/images/hero-1.jpg">
+  <meta property="og:image:alt"   content="OneiRoam 夢遊 — 夢境穿搭主視覺">
+  <meta property="og:url"         content="https://www.oneiroam.com/select.html">
+  <meta property="og:site_name"   content="OneiRoam">
+  <meta property="og:locale"      content="zh_TW">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="OneiRoam 夢遊 — 獨立設計女裝品牌">
+  <meta name="twitter:description" content="獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料。">
+  <meta name="twitter:image"      content="https://www.oneiroam.com/images/hero-1.jpg">
+
+  <!-- 結構化資料 (JSON-LD) — type 非 JS，不受 CSP script-src 限制 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "name": "OneiRoam 夢遊",
+    "alternateName": "OneiRoam",
+    "url": "https://www.oneiroam.com/",
+    "image": "https://www.oneiroam.com/images/hero-1.jpg",
+    "logo": "https://www.oneiroam.com/favicon.svg",
+    "description": "獨立設計女裝品牌，以夢為靈感。蕾絲、歐根紗、手染布料，每件都是限量手作。",
+    "currenciesAccepted": "TWD",
+    "areaServed": "TW"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-lang="zh">
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div id="loader">
+    <div class="loader-inner">
+      <span class="loader-brand">OneiRoam</span>
+      <span class="loader-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+      <div class="loader-line"></div>
+    </div>
+  </div>
+
+  <!-- ===== ANNOUNCEMENT BANNER ===== -->
+  <div id="announce-bar">
+    <div class="announce-inner">
+      <span class="announce-text" data-zh="✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦" data-en="✦ Pre-order Now · Limited Handcraft · Message us on LINE ✦">✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦</span>
+    </div>
+    <button class="announce-close" id="announceClose" aria-label="關閉">×</button>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header id="header">
+    <div class="header-inner">
+      <button class="hamburger" id="hamburger" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="index.html" class="logo">
+        <span class="logo-brand">OneiRoam</span>
+        <span class="logo-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+      </a>
+      <nav id="main-nav">
+        <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
+        <div class="nav-drop">
+          <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+          <div class="drop-menu">
+            <a href="index.html#collections" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+            <a href="index.html#collections" data-zh="領片" data-en="Collars">領片</a>
+            <a href="index.html#collections" data-zh="套裝" data-en="Sets">套裝</a>
+            <a href="index.html#collections" data-zh="上衣" data-en="Tops">上衣</a>
+            <a href="index.html#collections" data-zh="下著" data-en="Bottoms">下著</a>
+            <a href="index.html#collections" data-zh="其他配件" data-en="Accessories">其他配件</a>
+          </div>
+        </div>
+        <a href="select.html" class="nav-active" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="index.html#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
+      </nav>
+      <button class="lang-toggle" id="langToggle" aria-label="語言切換">
+        <span class="l-zh active">中</span>
+        <span class="l-div">|</span>
+        <span class="l-en">EN</span>
+      </button>
+      <a href="order.html" class="cart-link" aria-label="訂單" id="cartLink">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Mobile Overlay Nav -->
+  <div class="mobile-overlay" id="mobileOverlay">
+    <nav class="mobile-nav">
+      <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
+      <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+      <div class="mobile-subnav">
+        <a href="index.html#collections" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+        <a href="index.html#collections" data-zh="領片" data-en="Collars">領片</a>
+        <a href="index.html#collections" data-zh="套裝" data-en="Sets">套裝</a>
+        <a href="index.html#collections" data-zh="上衣" data-en="Tops">上衣</a>
+        <a href="index.html#collections" data-zh="下著" data-en="Bottoms">下著</a>
+        <a href="index.html#collections" data-zh="其他配件" data-en="Accessories">其他配件</a>
+      </div>
+      <a href="select.html" class="nav-active" data-zh="選品" data-en="Select Goods">選品</a>
+      <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+      <a href="index.html#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
+    </nav>
+    <div class="mobile-overlay-lang">
+      <button class="lang-toggle-mobile" id="langToggleMobile">
+        <span class="l-zh active">中</span>
+        <span class="l-div">|</span>
+        <span class="l-en">EN</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SELECT PAGE ===== -->
+  <main class="select-page">
+    <section id="select">
+      <div class="container">
+        <div class="section-header fade-up">
+          <p class="section-label" data-zh="選品" data-en="Select Goods">選品</p>
+          <h2 data-zh="夢遊選物" data-en="Curated by OneiRoam">夢遊選物</h2>
+          <p class="section-sub" data-zh="主理人親自挑選的美好物件" data-en="Lovely things picked by the founder">主理人親自挑選的美好物件</p>
+        </div>
+        <div class="product-grid">
+          <!-- BUILD:SELECT:START -->
+          <p class="select-empty" data-zh="選物即將上架，敬請期待 ✦" data-en="Select goods coming soon ✦">選物即將上架，敬請期待 ✦</p>
+          <!-- BUILD:SELECT:END -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo-en">OneiRoam</span>
+        <span class="footer-logo-zh" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+        <a href="select.html" class="nav-active" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="index.html#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
+      </nav>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/oneiroam?igsh=MW5rZGF3Z3BpNms2eQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://line.me/R/ti/p/@547hgbaz" aria-label="LINE" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 .999C5.926.999 1 5.4 1 10.827c0 4.73 4.195 8.687 9.866 9.44.384.083.907.253 1.04.581.119.298.078.764.038 1.065l-.168.994c-.051.297-.237 1.163 1.028.634 1.264-.528 6.817-4 9.297-6.855C23.22 14.851 24 12.928 24 10.827 24 5.4 18.075.999 12 .999zm-4.667 13.5H5.167a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.333a.833.833 0 1 1 0 1.666zm2.5-.833a.833.833 0 1 1-1.666 0V9.499a.833.833 0 1 1 1.666 0v4.167zm5.167 0a.833.833 0 0 1-.815-.658l-1.685-3.342v3.167a.833.833 0 1 1-1.667 0V9.499a.833.833 0 0 1 1.648-.174l1.685 3.342V9.499a.833.833 0 1 1 1.667 0v4.167a.833.833 0 0 1-.833.833zm3.667 0h-2.5a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.667a.833.833 0 1 1 0 1.666z"/></svg>
+        </a>
+      </div>
+      <p class="footer-copy" data-zh="© 2026 OneiRoam. 保留所有權利。" data-en="© 2026 OneiRoam. All rights reserved.">© 2026 OneiRoam. 保留所有權利。</p>
+    </div>
+  </footer>
+
+  <!-- ===== PRODUCT MODAL ===== -->
+  <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-label="商品詳情">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="關閉">×</button>
+      <div class="modal-grid">
+        <div class="modal-img-wrap">
+          <img id="modalImg" src="" alt="">
+        </div>
+        <div class="modal-info">
+          <p class="section-label" id="modalCategory"></p>
+          <h2 id="modalName"></h2>
+          <p id="modalDesc"></p>
+          <p class="modal-price">
+            <span class="mp-label" data-zh="單價" data-en="Unit">單價</span> NT$ <span id="modalUnit"></span>
+            <span class="mp-sep">·</span>
+            <span class="mp-label" data-zh="小計" data-en="Subtotal">小計</span> NT$ <span id="modalSubtotal"></span>
+          </p>
+          <div class="modal-order">
+            <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
+            <select id="modalSize" class="modal-size-select"></select>
+            <input id="modalSizeCustom" class="modal-size-custom" type="text"
+                   placeholder="輸入自訂尺寸" style="display:none" maxlength="40">
+            <div class="modal-qty">
+              <button type="button" id="modalQtyMinus" aria-label="減少">−</button>
+              <span id="modalQty">1</span>
+              <button type="button" id="modalQtyPlus" aria-label="增加">+</button>
+            </div>
+            <button id="modalAdd" class="btn-primary"
+                    data-zh="加入訂單" data-en="Add to Order">加入訂單</button>
+            <span id="modalAdded" class="modal-added" style="display:none"
+                  data-zh="已加入 ✓" data-en="Added ✓">已加入 ✓</span>
+          </div>
+          <a href="order.html" id="modalCheckout" class="btn-primary modal-checkout" style="display:none"
+             data-zh="前往結帳 →" data-en="Go to Checkout →">前往結帳 →</a>
+          <p class="modal-note" data-zh="✦ 限量手作，售完即止" data-en="✦ Limited handcraft, while stocks last">✦ 限量手作，售完即止</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="cart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

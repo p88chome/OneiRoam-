@@ -564,6 +564,11 @@ button { cursor: pointer; }
   padding: 2rem 0;
 }
 
+/* 選物獨立頁 */
+.select-page #select { padding: 10rem 0 6rem; min-height: 70vh; }
+#main-nav a.nav-active { color: var(--text-dark); }
+#main-nav a.nav-active::after { width: 100%; }
+
 /* Product Grid */
 .product-grid {
   display: grid;

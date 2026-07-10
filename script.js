@@ -330,21 +330,23 @@ document.addEventListener('DOMContentLoaded', () => {
      LOOKBOOK DRAG SCROLL
      ------------------------------------------ */
   const lookbook    = document.getElementById('lookbookScroll');
-  let isDragging    = false;
-  let dragStartX    = 0;
-  let scrollStart   = 0;
+  if (lookbook) {
+    let isDragging    = false;
+    let dragStartX    = 0;
+    let scrollStart   = 0;
 
-  lookbook.addEventListener('mousedown', e => {
-    isDragging = true; dragStartX = e.pageX - lookbook.offsetLeft;
-    scrollStart = lookbook.scrollLeft; lookbook.classList.add('grabbing');
-  });
-  lookbook.addEventListener('mouseleave', () => { isDragging = false; lookbook.classList.remove('grabbing'); });
-  lookbook.addEventListener('mouseup',    () => { isDragging = false; lookbook.classList.remove('grabbing'); });
-  lookbook.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    e.preventDefault();
-    lookbook.scrollLeft = scrollStart - (e.pageX - lookbook.offsetLeft - dragStartX) * 1.4;
-  });
+    lookbook.addEventListener('mousedown', e => {
+      isDragging = true; dragStartX = e.pageX - lookbook.offsetLeft;
+      scrollStart = lookbook.scrollLeft; lookbook.classList.add('grabbing');
+    });
+    lookbook.addEventListener('mouseleave', () => { isDragging = false; lookbook.classList.remove('grabbing'); });
+    lookbook.addEventListener('mouseup',    () => { isDragging = false; lookbook.classList.remove('grabbing'); });
+    lookbook.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      lookbook.scrollLeft = scrollStart - (e.pageX - lookbook.offsetLeft - dragStartX) * 1.4;
+    });
+  }
 
 
   /* ------------------------------------------
