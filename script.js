@@ -125,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
      COLLECTIONS FILTER
      ------------------------------------------ */
   const filterBtns  = document.querySelectorAll('.filter-btn');
-  const productCards = document.querySelectorAll('.product-card');
+  // 篩選只作用在原創設計區；選品區有自己的 grid，不參與篩選
+  const productCards = document.querySelectorAll('#collections .product-card');
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -141,6 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
           card.style.animation = 'cardIn 0.45s var(--ease) both';
         }
       });
+    });
+  });
+
+  // 導覽列分類連結：捲動到原創設計區並套用對應篩選
+  document.querySelectorAll('[data-filter-link]').forEach(link => {
+    link.addEventListener('click', () => {
+      const btn = document.querySelector(`.filter-btn[data-filter="${link.dataset.filterLink}"]`);
+      if (btn) btn.click();
     });
   });
 
@@ -296,6 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   productCards.forEach((card, i) => {
+    card.classList.add('fade-up');
+    card.dataset.delay = String(i * 75);
+    observer.observe(card);
+  });
+  document.querySelectorAll('#select .product-card').forEach((card, i) => {
     card.classList.add('fade-up');
     card.dataset.delay = String(i * 75);
     observer.observe(card);
