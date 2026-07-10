@@ -1,6 +1,7 @@
 // scripts/build-products.mjs
 import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
+import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug } from './categories.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -9,8 +10,6 @@ if (!BASE_URL || !KEY) { console.error('Missing SUPABASE_URL / SUPABASE_SERVICE_
 const rest = path => fetch(`${BASE_URL}/rest/v1/${path}`, {
   headers: { apikey: KEY, Authorization: `Bearer ${KEY}` },
 }).then(r => { if (!r.ok) throw new Error(`${path} ${r.status}`); return r.json(); });
-
-const MAP_CAT = { top: ['上衣', 'Top'], dress: ['洋裝', 'Dress'], bag: ['包款', 'Bag'] };
 
 let products, variants, images, settingsRows;
 try {
@@ -30,9 +29,9 @@ const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
 const normalized = products.map(p => {
   const vs = variants.filter(v => v.product_id === p.id);
   const img = images.find(i => i.product_id === p.id);
-  const [cat_zh, cat_en] = MAP_CAT[p.category] || ['上衣', 'Top'];
+  const [cat_zh, cat_en] = catLabel(p.category);
   return {
-    id: p.id, category: p.category, price: p.price,
+    id: p.id, category: normalizeSlug(p.category), price: p.price,
     name_zh: p.name_zh, name_en: p.name_en, desc_zh: p.desc_zh, desc_en: p.desc_en,
     badge_zh: p.badge_zh, badge_en: p.badge_en, cat_zh, cat_en,
     status: vs.length && vs.every(v => v.stock <= 0) ? 'sold_out' : p.status,
@@ -41,7 +40,9 @@ const normalized = products.map(p => {
   };
 });
 
-const cardsHtml = renderProductCards(normalized);
+const { original, select } = splitProducts(normalized);
+const cardsHtml = renderProductCards(original);
+const selectHtml = select.length ? renderProductCards(select) : `        ${SELECT_EMPTY_HTML}`;
 
 // SEO：每個商品的 Product 結構化資料（Google 富摘要：價格/庫存）
 const AVAIL = { sold_out: 'OutOfStock', active: 'InStock', preorder: 'PreOrder' };
@@ -80,6 +81,12 @@ const re = new RegExp(`${START}[\\s\\S]*?${END}`);
 if (!re.test(html)) { console.error('build markers not found in index.html'); process.exit(1); }
 let out = html.replace(re, `${START}\n${cardsHtml}\n        ${END}`);
 
+const SSTART = '<!-- BUILD:SELECT:START -->';
+const SEND = '<!-- BUILD:SELECT:END -->';
+const sre = new RegExp(`${SSTART}[\\s\\S]*?${SEND}`);
+if (sre.test(out)) out = out.replace(sre, `${SSTART}\n${selectHtml}\n        ${SEND}`);
+else console.warn('SELECT markers not found in index.html — skipping select goods');
+
 const JSTART = '<!-- BUILD:JSONLD:START -->';
 const JEND = '<!-- BUILD:JSONLD:END -->';
 const jre = new RegExp(`${JSTART}[\\s\\S]*?${JEND}`);
@@ -89,4 +96,4 @@ else console.warn('JSONLD markers not found in index.html — skipping product s
 await writeFile('index.html', out);
 
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
-console.log(`built ${normalized.length} products`);
+console.log(`built ${original.length} original + ${select.length} select products`);

@@ -80,10 +80,21 @@
         <span class="logo-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
       </a>
       <nav id="main-nav">
-        <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
-        <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
-        <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
-        <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+        <a href="#hero" data-zh="首頁" data-en="Home">首頁</a>
+        <div class="nav-drop">
+          <a href="#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+          <div class="drop-menu">
+            <a href="#collections" data-filter-link="puff" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+            <a href="#collections" data-filter-link="collar" data-zh="領片" data-en="Collars">領片</a>
+            <a href="#collections" data-filter-link="set" data-zh="套裝" data-en="Sets">套裝</a>
+            <a href="#collections" data-filter-link="top" data-zh="上衣" data-en="Tops">上衣</a>
+            <a href="#collections" data-filter-link="bottom" data-zh="下著" data-en="Bottoms">下著</a>
+            <a href="#collections" data-filter-link="accessory" data-zh="其他配件" data-en="Accessories">其他配件</a>
+          </div>
+        </div>
+        <a href="#select" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
       </nav>
       <button class="lang-toggle" id="langToggle" aria-label="語言切換">
         <span class="l-zh active">中</span>
@@ -103,10 +114,19 @@
   <!-- Mobile Overlay Nav -->
   <div class="mobile-overlay" id="mobileOverlay">
     <nav class="mobile-nav">
-      <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
-      <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
-      <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
-      <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+      <a href="#hero" data-zh="首頁" data-en="Home">首頁</a>
+      <a href="#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+      <div class="mobile-subnav">
+        <a href="#collections" data-filter-link="puff" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+        <a href="#collections" data-filter-link="collar" data-zh="領片" data-en="Collars">領片</a>
+        <a href="#collections" data-filter-link="set" data-zh="套裝" data-en="Sets">套裝</a>
+        <a href="#collections" data-filter-link="top" data-zh="上衣" data-en="Tops">上衣</a>
+        <a href="#collections" data-filter-link="bottom" data-zh="下著" data-en="Bottoms">下著</a>
+        <a href="#collections" data-filter-link="accessory" data-zh="其他配件" data-en="Accessories">其他配件</a>
+      </div>
+      <a href="#select" data-zh="選品" data-en="Select Goods">選品</a>
+      <a href="#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+      <a href="#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
     </nav>
     <div class="mobile-overlay-lang">
       <button class="lang-toggle-mobile" id="langToggleMobile">
@@ -133,10 +153,6 @@
         <span data-zh="探索系列" data-en="Explore Collections">探索系列</span>
       </a>
     </div>
-    <div class="hero-scroll">
-      <div class="scroll-line"></div>
-      <span data-zh="向下探索" data-en="Scroll">向下探索</span>
-    </div>
   </section>
 
   <!-- ===== MARQUEE STRIP ===== -->
@@ -160,43 +176,23 @@
     </div>
   </div>
 
-  <!-- ===== ABOUT ===== -->
-  <section id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-img-wrap fade-left">
-          <img src="images/about.jpg" alt="About OneiRoam" width="1200" height="960" loading="lazy">
-          <div class="img-deco"></div>
-        </div>
-        <div class="about-text fade-right">
-          <p class="section-label" data-zh="關於品牌" data-en="About">關於品牌</p>
-          <h2 data-zh="我們相信，穿衣是一種夢境的延伸" data-en="We believe dressing is an extension of dreams">我們相信，穿衣是一種夢境的延伸</h2>
-          <p data-zh="OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。" data-en="OneiRoam was born from a fascination with dreams — those light, ethereal, poetic moments. We transform this feeling into each garment, weaving your personal dreamscape through lace, organza, and hand-dyed fabrics.">OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。</p>
-          <p data-zh="每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。" data-en="Each piece is handcrafted in limited quantities — one-of-a-kind. We believe fashion, like dreams, should let you forget the ordinary and wander freely through beauty.">每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。</p>
-          <div class="about-tags">
-            <span data-zh="手作限量" data-en="Handcrafted Limited">手作限量</span>
-            <span data-zh="獨立設計" data-en="Independent Design">獨立設計</span>
-            <span data-zh="夢境美學" data-en="Dream Aesthetic">夢境美學</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ===== COLLECTIONS ===== -->
   <section id="collections">
     <div class="container">
       <div class="section-header fade-up">
-        <p class="section-label" data-zh="系列商品" data-en="Collections">系列商品</p>
+        <p class="section-label" data-zh="原創設計" data-en="Original Design">原創設計</p>
         <h2 data-zh="夢境衣櫥" data-en="The Dream Wardrobe">夢境衣櫥</h2>
       </div>
 
       <!-- Filter Tabs -->
       <div class="filter-tabs fade-up">
         <button class="filter-btn active" data-filter="all" data-zh="全部" data-en="All">全部</button>
-        <button class="filter-btn" data-filter="dress" data-zh="洋裝" data-en="Dresses">洋裝</button>
+        <button class="filter-btn" data-filter="puff" data-zh="澎袖" data-en="Puff Sleeves">澎袖</button>
+        <button class="filter-btn" data-filter="collar" data-zh="領片" data-en="Collars">領片</button>
+        <button class="filter-btn" data-filter="set" data-zh="套裝" data-en="Sets">套裝</button>
         <button class="filter-btn" data-filter="top" data-zh="上衣" data-en="Tops">上衣</button>
-        <button class="filter-btn" data-filter="bag" data-zh="包款" data-en="Bags">包款</button>
+        <button class="filter-btn" data-filter="bottom" data-zh="下著" data-en="Bottoms">下著</button>
+        <button class="filter-btn" data-filter="accessory" data-zh="其他配件" data-en="Accessories">其他配件</button>
       </div>
 
       <!-- Product Grid -->
@@ -204,13 +200,13 @@
         <!-- BUILD:PRODUCTS:START -->
 
         <!-- 1. White Lace Organza Dress -->
-        <div class="product-card" data-category="dress"
+        <div class="product-card" data-category="puff"
           data-id="dress-white-lace" data-sizes="S,M,L,XL" data-max-qty="1"
           data-modal-img="images/products/dress-white-lace.jpg"
           data-modal-name-zh="花嫁之夢" data-modal-name-en="Bridal Dream"
           data-modal-desc-zh="白色蕾絲歐根紗洋裝，澎袖馬甲設計，背後蝴蝶結綁帶。手工刺繡花卉歐根紗，仙氣十足。"
           data-modal-desc-en="White lace organza dress with puff sleeves, corset bodice and back bow tie. Hand-embroidered floral organza overlay."
-          data-modal-cat-zh="洋裝" data-modal-cat-en="Dress">
+          data-modal-cat-zh="澎袖" data-modal-cat-en="Puff Sleeves">
           <div class="product-img-wrap">
             <img src="images/products/dress-white-lace.jpg" alt="花嫁之夢蕾絲洋裝" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -223,7 +219,7 @@
             <p data-zh="白色蕾絲歐根紗洋裝" data-en="White Lace Organza Dress">白色蕾絲歐根紗洋裝</p>
             <span class="product-price">NT$ 1,690</span>
             <div class="product-meta">
-              <span class="product-tag dress-tag" data-zh="洋裝" data-en="Dress">洋裝</span>
+              <span class="product-tag puff-tag" data-zh="澎袖" data-en="Puff Sleeves">澎袖</span>
               <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
             </div>
           </div>
@@ -282,13 +278,13 @@
         </div>
 
         <!-- 4. White Ruffle Organza Bag -->
-        <div class="product-card" data-category="bag"
+        <div class="product-card" data-category="accessory"
           data-id="bag-ruffle-white" data-sizes="F" data-max-qty="1"
           data-modal-img="images/products/bag-ruffle-white.jpg"
           data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
           data-modal-desc-zh="純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。輕盈柔軟，是少女感配件的極致。"
           data-modal-desc-en="Pure white organza ruffle tote bag. Soft and voluminous like a cloud. The perfect feminine accessory."
-          data-modal-cat-zh="包款" data-modal-cat-en="Bag">
+          data-modal-cat-zh="其他配件" data-modal-cat-en="Accessories">
           <div class="product-img-wrap">
             <img src="images/products/bag-ruffle-white.jpg" alt="雲朵荷葉包 白色" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -301,20 +297,20 @@
             <p data-zh="純白歐根紗荷葉托特包" data-en="Pure White Organza Ruffle Tote">純白歐根紗荷葉托特包</p>
             <span class="product-price">NT$ 690</span>
             <div class="product-meta">
-              <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+              <span class="product-tag accessory-tag" data-zh="其他配件" data-en="Accessories">其他配件</span>
               <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
             </div>
           </div>
         </div>
 
         <!-- 5. Blue Ruffle Organza Bag -->
-        <div class="product-card" data-category="bag"
+        <div class="product-card" data-category="accessory"
           data-id="bag-ruffle-blue" data-sizes="F" data-max-qty="1"
           data-modal-img="images/products/bag-ruffle-blue.jpg"
           data-modal-name-zh="雲朵荷葉包" data-modal-name-en="Cloud Ruffle Bag"
           data-modal-desc-zh="水藍漸層歐根紗荷葉手提包，清透的水藍色澤帶來清新夢幻感。與白色款同款設計，不同色系。"
           data-modal-desc-en="Aqua blue gradient organza ruffle tote bag. Fresh, dreamy and ethereal. Same design as white version, different colorway."
-          data-modal-cat-zh="包款" data-modal-cat-en="Bag">
+          data-modal-cat-zh="其他配件" data-modal-cat-en="Accessories">
           <div class="product-img-wrap">
             <img src="images/products/bag-ruffle-blue.jpg" alt="雲朵荷葉包 水藍" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -327,20 +323,20 @@
             <p data-zh="水藍漸層歐根紗荷葉托特包" data-en="Aqua Blue Gradient Organza Ruffle Tote">水藍漸層歐根紗荷葉托特包</p>
             <span class="product-price">NT$ 690</span>
             <div class="product-meta">
-              <span class="product-tag bag-tag" data-zh="包款" data-en="Bag">包款</span>
+              <span class="product-tag accessory-tag" data-zh="其他配件" data-en="Accessories">其他配件</span>
               <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
             </div>
           </div>
         </div>
 
         <!-- 6. Lace Set -->
-        <div class="product-card" data-category="top"
+        <div class="product-card" data-category="set"
           data-id="top-lace-set" data-sizes="S,M,L,XL" data-max-qty="1"
           data-modal-img="images/products/top-lace-set.jpg"
           data-modal-name-zh="蕾絲花圃套裝" data-modal-name-en="Lace Garden Set"
           data-modal-desc-zh="白色蕾絲花卉上衣搭配歐根紗裙，整套穿搭仙氣滿分。上衣立領設計，裙擺輕盈飄逸。"
           data-modal-desc-en="White lace floral top paired with organza skirt. Complete ethereal look. High collar top with a flowing organza skirt."
-          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          data-modal-cat-zh="套裝" data-modal-cat-en="Sets">
           <div class="product-img-wrap">
             <img src="images/products/top-lace-set.jpg" alt="蕾絲花圃套裝" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -353,7 +349,7 @@
             <p data-zh="白色蕾絲花卉上衣 + 歐根紗裙" data-en="White Lace Floral Top + Organza Skirt">白色蕾絲花卉上衣 + 歐根紗裙</p>
             <span class="product-price">NT$ 1,690</span>
             <div class="product-meta">
-              <span class="product-tag top-tag" data-zh="上衣" data-en="Top">上衣</span>
+              <span class="product-tag set-tag" data-zh="套裝" data-en="Sets">套裝</span>
               <span class="product-status status-preorder" data-zh="預購中" data-en="Pre-order">預購中</span>
             </div>
           </div>
@@ -366,7 +362,7 @@
           data-modal-name-zh="海的公因數 · 短袖水母" data-modal-name-en="Sea GCD · Short Sleeve Jellyfish"
           data-modal-desc-zh="🫧 印花透膚短袖上衣，水母圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
           data-modal-desc-en="Sheer printed short-sleeve top, jellyfish print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
-          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          data-modal-cat-zh="上衣" data-modal-cat-en="Tops">
           <div class="product-img-wrap">
             <img src="images/products/sea-gcd-jelly.jpg" alt="海的公因數 短袖水母印花透膚上衣" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -392,7 +388,7 @@
           data-modal-name-zh="海的公因數 · 短袖眼淚" data-modal-name-en="Sea GCD · Short Sleeve Teardrop"
           data-modal-desc-zh="🫧 印花透膚短袖上衣，眼淚圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
           data-modal-desc-en="Sheer printed short-sleeve top, teardrop print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
-          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          data-modal-cat-zh="上衣" data-modal-cat-en="Tops">
           <div class="product-img-wrap">
             <img src="images/products/sea-gcd-tear.jpg" alt="海的公因數 短袖眼淚印花透膚上衣" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -418,7 +414,7 @@
           data-modal-name-zh="海的公因數 · 立領長袖水母" data-modal-name-en="Sea GCD · Mock Neck Long Jellyfish"
           data-modal-desc-zh="🫧 印花透膚立領長袖上衣，水母圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
           data-modal-desc-en="Sheer printed mock-neck long-sleeve top, jellyfish print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
-          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          data-modal-cat-zh="上衣" data-modal-cat-en="Tops">
           <div class="product-img-wrap">
             <img src="images/products/sea-gcd-jelly.jpg" alt="海的公因數 立領長袖水母印花透膚上衣" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -444,7 +440,7 @@
           data-modal-name-zh="海的公因數 · 立領長袖眼淚" data-modal-name-en="Sea GCD · Mock Neck Long Teardrop"
           data-modal-desc-zh="🫧 印花透膚立領長袖上衣，眼淚圖案。手染透膚網紗，朦朧夢幻。尺碼：小碼（胸圍90內）／大碼（胸圍110內）。"
           data-modal-desc-en="Sheer printed mock-neck long-sleeve top, teardrop print. Sizes: S (bust ≤90cm) / L (bust ≤110cm)."
-          data-modal-cat-zh="上衣" data-modal-cat-en="Top">
+          data-modal-cat-zh="上衣" data-modal-cat-en="Tops">
           <div class="product-img-wrap">
             <img src="images/products/sea-gcd-tear.jpg" alt="海的公因數 立領長袖眼淚印花透膚上衣" class="product-img" loading="lazy">
             <div class="product-hover">
@@ -465,6 +461,21 @@
         <!-- BUILD:PRODUCTS:END -->
 
       </div><!-- /product-grid -->
+    </div>
+  </section>
+
+  <!-- ===== SELECT GOODS ===== -->
+  <section id="select">
+    <div class="container">
+      <div class="section-header fade-up">
+        <p class="section-label" data-zh="選品" data-en="Select Goods">選品</p>
+        <h2 data-zh="夢遊選物" data-en="Curated by OneiRoam">夢遊選物</h2>
+      </div>
+      <div class="product-grid">
+        <!-- BUILD:SELECT:START -->
+        <p class="select-empty" data-zh="選物即將上架，敬請期待 ✦" data-en="Select goods coming soon ✦">選物即將上架，敬請期待 ✦</p>
+        <!-- BUILD:SELECT:END -->
+      </div>
     </div>
   </section>
 
@@ -505,7 +516,7 @@
   <section id="order">
     <div class="container">
       <div class="section-header fade-up">
-        <p class="section-label" data-zh="如何訂購" data-en="How to Order">如何訂購</p>
+        <p class="section-label" data-zh="購物須知" data-en="Shopping Guide">購物須知</p>
         <h2 data-zh="讓夢境成真" data-en="Make the Dream Real">讓夢境成真</h2>
       </div>
 
@@ -554,6 +565,29 @@
     </div>
   </section>
 
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-img-wrap fade-left">
+          <img src="images/about.jpg" alt="About OneiRoam" width="1200" height="960" loading="lazy">
+          <div class="img-deco"></div>
+        </div>
+        <div class="about-text fade-right">
+          <p class="section-label" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</p>
+          <h2 data-zh="我們相信，穿衣是一種夢境的延伸" data-en="We believe dressing is an extension of dreams">我們相信，穿衣是一種夢境的延伸</h2>
+          <p data-zh="OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。" data-en="OneiRoam was born from a fascination with dreams — those light, ethereal, poetic moments. We transform this feeling into each garment, weaving your personal dreamscape through lace, organza, and hand-dyed fabrics.">OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。</p>
+          <p data-zh="每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。" data-en="Each piece is handcrafted in limited quantities — one-of-a-kind. We believe fashion, like dreams, should let you forget the ordinary and wander freely through beauty.">每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。</p>
+          <div class="about-tags">
+            <span data-zh="手作限量" data-en="Handcrafted Limited">手作限量</span>
+            <span data-zh="獨立設計" data-en="Independent Design">獨立設計</span>
+            <span data-zh="夢境美學" data-en="Dream Aesthetic">夢境美學</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== FOOTER ===== -->
   <footer id="footer">
     <div class="footer-inner">
@@ -562,10 +596,10 @@
         <span class="footer-logo-zh" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
       </div>
       <nav class="footer-nav">
-        <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
-        <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
-        <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
-        <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+        <a href="#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+        <a href="#select" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
       </nav>
       <div class="footer-social">
         <a href="https://www.instagram.com/oneiroam?igsh=MW5rZGF3Z3BpNms2eQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
