@@ -32,6 +32,13 @@ test('renderProductCards: sold_out 狀態顯示售罄', () => {
   assert.match(html, /售罄/);
 });
 
+test('renderProductCards: 沒圖不輸出 img，卡片留漸層底', () => {
+  const html = renderProductCards([{ ...sample, image: '' }]);
+  assert.doesNotMatch(html, /<img/);
+  assert.match(html, /data-modal-img=""/);
+  assert.match(html, /product-img-wrap/);
+});
+
 test('renderProductCards: 跳脫引號避免破壞屬性', () => {
   const html = renderProductCards([{ ...sample, name_zh: '雙"引號"款' }]);
   assert.match(html, /data-modal-name-zh="雙&quot;引號&quot;款"/);

@@ -322,11 +322,12 @@ button { cursor: pointer; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  /* 直式全身照裁成橫幅 banner：對焦人物上半身；center top 只會拍到天空/牆面 */
+  object-position: center 25%;
   transition: opacity 1.8s ease;
 }
-.h-img-1 { opacity: 1; z-index: 1; }
-.h-img-2 { opacity: 0; z-index: 0; }
+.h-img-1 { opacity: 1; z-index: 1; object-position: center 22%; }
+.h-img-2 { opacity: 0; z-index: 0; object-position: center 32%; }
 
 .hero-overlay {
   position: absolute;

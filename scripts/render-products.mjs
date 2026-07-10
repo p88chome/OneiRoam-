@@ -19,7 +19,7 @@ export function renderProductCards(products) {
           data-modal-desc-zh="${esc(p.desc_zh)}" data-modal-desc-en="${esc(p.desc_en)}"
           data-modal-cat-zh="${esc(p.cat_zh)}" data-modal-cat-en="${esc(p.cat_en)}">
           <div class="product-img-wrap">
-            <img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="product-img" loading="lazy">
+            ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="product-img" loading="lazy">` : ''}
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>

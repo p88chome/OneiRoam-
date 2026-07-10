@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openModal(card) {
     const lang = currentLang;
-    modalImg.style.display = '';
+    modalImg.style.display = card.dataset.modalImg ? '' : 'none'; // 沒圖就不留空白框
     modalImg.src    = card.dataset.modalImg || '';
     modalImg.alt    = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     modalName.textContent = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;

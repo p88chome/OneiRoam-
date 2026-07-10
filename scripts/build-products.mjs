@@ -35,7 +35,7 @@ const normalized = products.map(p => {
     name_zh: p.name_zh, name_en: p.name_en, desc_zh: p.desc_zh, desc_en: p.desc_en,
     badge_zh: p.badge_zh, badge_en: p.badge_en, cat_zh, cat_en,
     status: vs.length && vs.every(v => v.stock <= 0) ? 'sold_out' : p.status,
-    image: img ? img.url : '/favicon.svg',
+    image: img ? img.url : '',  // 沒圖 → 卡片顯示漸層底（不能塞 favicon，會被拉伸）
     sizes: vs.map(v => v.size), max_qty: vs.length ? Math.min(...vs.map(v => v.max_qty)) : 1,
   };
 });
@@ -57,7 +57,10 @@ const jsonld = {
       name: p.name_zh,
       ...(p.name_en ? { alternateName: p.name_en } : {}),
       ...(p.desc_zh ? { description: p.desc_zh } : {}),
-      image: `https://www.oneiroam.com${p.image}`,
+      // Supabase Storage 給的是絕對網址；相對路徑才補網域
+      image: !p.image ? 'https://www.oneiroam.com/favicon.svg'
+        : p.image.startsWith('http') ? p.image
+        : `https://www.oneiroam.com${p.image}`,
       brand: { '@type': 'Brand', name: 'OneiRoam' },
       offers: {
         '@type': 'Offer',
