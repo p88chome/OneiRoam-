@@ -344,7 +344,7 @@ button { cursor: pointer; }
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(-45deg, #EDE0E8, #D8CEDC, #C2CDD8, #D5C8D0);
+  background: linear-gradient(-45deg, var(--blush), var(--lilac), var(--misty-blue), var(--blush-deep));
   background-size: 400% 400%;
   animation: gradientShift 10s ease infinite;
 }

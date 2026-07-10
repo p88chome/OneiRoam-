@@ -113,5 +113,13 @@ try {
   console.warn(`select.html not updated: ${err.message}`);
 }
 
+// 結帳頁也要跟著主題換色
+try {
+  const orderPage = await readFile('order.html', 'utf8');
+  await writeFile('order.html', applyTheme(orderPage, settings.theme));
+} catch (err) {
+  console.warn(`order.html not updated: ${err.message}`);
+}
+
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
 console.log(`built ${original.length} original + ${select.length} select (${teaser.length} teased)`);

@@ -28,3 +28,9 @@ test('injectBlock: endIndent 客製', () => {
   const out = injectBlock(page, 'FOO', 'x', { endIndent: '  ' });
   assert.match(out, /\nx\n  <!-- BUILD:FOO:END/);
 });
+
+test('injectBlock: 內容含 $& 等替換樣式須原樣輸出', () => {
+  const out = injectBlock(page, 'FOO', "價格 $&#39; 與 $$ 與 $& 原樣");
+  assert.match(out, /價格 \$&#39; 與 \$\$ 與 \$& 原樣/);
+  assert.strictEqual((out.match(/BUILD:FOO:START/g) || []).length, 1);
+});

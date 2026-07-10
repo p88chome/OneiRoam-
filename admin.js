@@ -269,7 +269,8 @@ async function saveSiteSettings() {
     for (const [inputId, key] of [['s_hero1', 'hero_img_1'], ['s_hero2', 'hero_img_2']]) {
       const file = document.getElementById(inputId).files[0];
       if (!file) continue;
-      const path = `site/${key}-${Date.now()}.${file.name.split('.').pop()}`;
+      const ext = (file.name.includes('.') ? file.name.split('.').pop() : '') || (file.type.split('/')[1] || 'jpg');
+      const path = `site/${key}-${Date.now()}.${ext}`;
       const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
       if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
       const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
@@ -277,7 +278,7 @@ async function saveSiteSettings() {
     }
     rows.push({ key: 'hero_focus_1', value: document.getElementById('s_focus1').value.trim() });
     rows.push({ key: 'hero_focus_2', value: document.getElementById('s_focus2').value.trim() });
-    rows.push({ key: 'theme', value: document.querySelector('input[name="s_theme"]:checked').value });
+    rows.push({ key: 'theme', value: (document.querySelector('input[name="s_theme"]:checked') || {}).value || 'default' });
     for (const [k] of SITE_TEXT_FIELDS)
       rows.push({ key: k, value: document.getElementById(`s_${k}`).value.trim() });
     const { error } = await sb.from('settings').upsert(rows);
