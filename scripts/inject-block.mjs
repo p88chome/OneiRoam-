@@ -8,5 +8,5 @@ export function injectBlock(html, name, content, { required = false, endIndent =
     console.warn(`BUILD:${name} markers not found — skipping`);
     return html;
   }
-  return html.replace(re, `${START}\n${content}\n${endIndent}${END}`);
+  return html.replace(re, () => `${START}\n${content}\n${endIndent}${END}`);
 }

@@ -3,6 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
 import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASER_COUNT } from './categories.mjs';
 import { injectBlock } from './inject-block.mjs';
+import { heroImgsHtml, announceHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -92,14 +93,32 @@ out = injectBlock(out, 'SELECT', teaserHtml);
 
 out = injectBlock(out, 'JSONLD', `  ${jsonldTag}`, { endIndent: '  ' });
 
+// 網站設定：banner／文字／配色
+out = injectBlock(out, 'HERO', heroImgsHtml(settings), { endIndent: '      ' });
+out = injectBlock(out, 'EYEBROW', eyebrowHtml(settings), { endIndent: '      ' });
+out = injectBlock(out, 'HERODESC', heroDescHtml(settings), { endIndent: '      ' });
+out = injectBlock(out, 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
+out = applyTheme(out, settings.theme);
+
 await writeFile('index.html', out);
 
 // 選物獨立頁：完整列表
 try {
   const selPage = await readFile('select.html', 'utf8');
-  await writeFile('select.html', injectBlock(selPage, 'SELECT', selectHtml));
+  let selOut = injectBlock(selPage, 'SELECT', selectHtml);
+  selOut = injectBlock(selOut, 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
+  selOut = applyTheme(selOut, settings.theme);
+  await writeFile('select.html', selOut);
 } catch (err) {
   console.warn(`select.html not updated: ${err.message}`);
+}
+
+// 結帳頁也要跟著主題換色
+try {
+  const orderPage = await readFile('order.html', 'utf8');
+  await writeFile('order.html', applyTheme(orderPage, settings.theme));
+} catch (err) {
+  console.warn(`order.html not updated: ${err.message}`);
 }
 
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
