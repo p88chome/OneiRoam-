@@ -120,10 +120,8 @@ function setActiveNav(view) {
   document.querySelectorAll('.nav-item').forEach(b =>
     b.classList.toggle('active', b.dataset.view === view));
 }
-document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => {
-  if (b.dataset.view === 'dashboard') renderDashboard();
-  else { setActiveNav('products'); renderProducts(); }
-});
+const VIEWS = { dashboard: renderDashboard, products: () => { setActiveNav('products'); renderProducts(); }, site: renderSiteSettings };
+document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => (VIEWS[b.dataset.view] || renderDashboard)());
 
 async function renderDashboard() {
   setActiveNav('dashboard');
@@ -198,6 +196,98 @@ async function renderProducts() {
   document.getElementById('newBtn').onclick = () => productForm(null);
   viewRoot().querySelectorAll('[data-edit]').forEach(b =>
     b.onclick = () => productForm(products.find(p => p.id === b.dataset.edit)));
+}
+
+// 與 scripts/site-settings.mjs 的 THEMES 同步
+const THEME_OPTIONS = [
+  ['default', '夢幻粉紫（現行）', ['#FAFAF7', '#E0CDD5', '#C4A882']],
+  ['sage',    '米綠',            ['#F5F4EA', '#C9D0B5', '#9A9160']],
+  ['latte',   '奶茶',            ['#FAF6F0', '#D8C2AC', '#A8845C']],
+  ['mist',    '霧藍',            ['#F5F7F8', '#C2CED8', '#7A8FA0']],
+];
+const SITE_TEXT_FIELDS = [
+  ['announce_zh', '公告列（中）'], ['announce_en', '公告列（英，可留白）'],
+  ['hero_eyebrow_zh', '首圖上方小標（中）'], ['hero_eyebrow_en', '首圖上方小標（英，可留白）'],
+  ['hero_desc_zh', '首圖描述（中）'], ['hero_desc_en', '首圖描述（英，可留白）'],
+];
+
+async function renderSiteSettings() {
+  setActiveNav('site');
+  const { data, error } = await sb.from('settings').select('*');
+  if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
+  const s = Object.fromEntries((data || []).map(r => [r.key, r.value]));
+  const theme = s.theme || 'default';
+  viewRoot().innerHTML = `
+    <div class="view-head"><h2>網站設定</h2></div>
+    <div class="card form-card">
+      <h3>首圖 Banner</h3>
+      <p class="muted">建議橫式照片；直式照片可用「焦點」調整裁切位置（0=頂、100=底）。存檔後按「發布到網站」才會生效。</p>
+      <div class="form-grid">
+        <label class="field"><span>Banner 圖 1（現用：${esc(s.hero_img_1 || '內建')}）</span>
+          <input id="s_hero1" type="file" accept="image/*"></label>
+        <label class="field"><span>圖 1 焦點（0-100，預設 22）</span>
+          <input id="s_focus1" type="number" min="0" max="100" value="${esc(s.hero_focus_1 || '22')}"></label>
+        <label class="field"><span>Banner 圖 2（現用：${esc(s.hero_img_2 || '內建')}）</span>
+          <input id="s_hero2" type="file" accept="image/*"></label>
+        <label class="field"><span>圖 2 焦點（0-100，預設 32）</span>
+          <input id="s_focus2" type="number" min="0" max="100" value="${esc(s.hero_focus_2 || '32')}"></label>
+      </div>
+      <h3>配色主題</h3>
+      <div class="theme-row">
+        ${THEME_OPTIONS.map(([v, label, sw]) => `
+          <label class="theme-opt">
+            <input type="radio" name="s_theme" value="${v}" ${v === theme ? 'checked' : ''}>
+            <span class="swatches">${sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>
+            <span>${label}</span>
+          </label>`).join('')}
+      </div>
+      <h3>文字</h3>
+      <div class="form-grid">
+        ${SITE_TEXT_FIELDS.map(([k, label]) => `
+          <label class="field field-wide"><span>${label}</span>
+            <input id="s_${k}" value="${esc(s[k] || '')}" placeholder="留白＝用內建文案"></label>`).join('')}
+      </div>
+      <div class="form-actions">
+        <button id="siteSaveBtn" class="btn btn-primary">儲存</button>
+        <span id="siteMsg" class="muted" role="status"></span>
+        <span id="siteErr" class="err" role="alert"></span>
+      </div>
+    </div>`;
+  document.getElementById('siteSaveBtn').onclick = saveSiteSettings;
+}
+
+async function saveSiteSettings() {
+  const btn = document.getElementById('siteSaveBtn');
+  const msg = document.getElementById('siteMsg');
+  const errEl = document.getElementById('siteErr');
+  errEl.textContent = ''; msg.textContent = '';
+  btn.disabled = true; btn.textContent = '儲存中…';
+  const fail = m => { errEl.textContent = m; btn.disabled = false; btn.textContent = '儲存'; };
+  try {
+    const rows = [];
+    // 圖片上傳（有選檔才傳）
+    for (const [inputId, key] of [['s_hero1', 'hero_img_1'], ['s_hero2', 'hero_img_2']]) {
+      const file = document.getElementById(inputId).files[0];
+      if (!file) continue;
+      const ext = (file.name.includes('.') ? file.name.split('.').pop() : '') || (file.type.split('/')[1] || 'jpg');
+      const path = `site/${key}-${Date.now()}.${ext}`;
+      const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
+      if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
+      const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
+      rows.push({ key, value: pub.publicUrl });
+    }
+    rows.push({ key: 'hero_focus_1', value: document.getElementById('s_focus1').value.trim() });
+    rows.push({ key: 'hero_focus_2', value: document.getElementById('s_focus2').value.trim() });
+    rows.push({ key: 'theme', value: (document.querySelector('input[name="s_theme"]:checked') || {}).value || 'default' });
+    for (const [k] of SITE_TEXT_FIELDS)
+      rows.push({ key: k, value: document.getElementById(`s_${k}`).value.trim() });
+    const { error } = await sb.from('settings').upsert(rows);
+    if (error) return fail(friendlyErr(error));
+    msg.textContent = '✓ 已儲存，記得按「發布到網站」';
+    btn.disabled = false; btn.textContent = '儲存';
+  } catch (e) {
+    fail(friendlyErr(e));
+  }
 }
 
 async function productForm(p) {
