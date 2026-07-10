@@ -1,6 +1,20 @@
 // admin.js
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+// 與 scripts/categories.mjs 的 CATEGORIES 同步（瀏覽器端無法 import ESM 建置模組）
+const CATEGORY_OPTIONS = [
+  ['puff', '澎袖'], ['collar', '領片'], ['set', '套裝'], ['top', '上衣'],
+  ['bottom', '下著'], ['accessory', '其他配件'], ['select', '選品'],
+];
+function categoryOptions(current) {
+  const opts = CATEGORY_OPTIONS.map(([v, l]) =>
+    `<option value="${v}" ${v === current ? 'selected' : ''}>${l}</option>`);
+  // 舊分類值保留為選項，避免編輯舊商品時被靜默改掉
+  if (current && !CATEGORY_OPTIONS.some(([v]) => v === current))
+    opts.unshift(`<option value="${esc(current)}" selected>${esc(current)}（舊分類）</option>`);
+  return opts.join('');
+}
+
 // ---- 開機防呆：函式庫 / 設定沒載到就明白告知，而非靜默失效 ----
 function bootFail(msg) {
   const el = document.getElementById('bootError');
@@ -202,7 +216,7 @@ async function productForm(p) {
         <label class="field"><span>ID（slug，英數-）</span>
           <input id="f_id" value="${esc(p.id)}" ${isNew ? '' : 'disabled'}></label>
         <label class="field"><span>分類</span>
-          <input id="f_category" value="${esc(p.category)}"></label>
+          <select id="f_category">${categoryOptions(p.category)}</select></label>
         <label class="field"><span>中文名</span>
           <input id="f_name_zh" value="${esc(p.name_zh)}"></label>
         <label class="field"><span>英文名</span>

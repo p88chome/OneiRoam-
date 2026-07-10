@@ -1,10 +1,10 @@
 -- supabase/seed.sql
 insert into products (id,name_zh,name_en,desc_zh,desc_en,category,price,badge_zh,badge_en,status,sort_order) values
-('dress-white-lace','花嫁之夢','Bridal Dream','白色蕾絲歐根紗洋裝，澎袖馬甲設計，背後蝴蝶結綁帶。手工刺繡花卉歐根紗，仙氣十足。','White lace organza dress with puff sleeves, corset bodice and back bow tie.','dress',1690,'限量手作','Limited','preorder',1),
+('dress-white-lace','花嫁之夢','Bridal Dream','白色蕾絲歐根紗洋裝，澎袖馬甲設計，背後蝴蝶結綁帶。手工刺繡花卉歐根紗，仙氣十足。','White lace organza dress with puff sleeves, corset bodice and back bow tie.','puff',1690,'限量手作','Limited','preorder',1),
 ('top-mesh-pink','夢雲網紗上衣','Dream Cloud Mesh Top','粉紫水彩暈染長袖網紗上衣，搭配手工草莓刺繡點綴。','Pink purple watercolor long sleeve mesh top.','top',1690,'手染獨款','Hand-dyed','preorder',2),
 ('top-mesh-blue','夢雲網紗上衣','Dream Cloud Mesh Top','霧藍水彩暈染長袖網紗上衣，朦朧感如夢似幻。','Misty blue watercolor long sleeve mesh top.','top',1690,'手染獨款','Hand-dyed','preorder',3),
-('bag-ruffle-white','雲朵荷葉包','Cloud Ruffle Bag','純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。','Pure white organza ruffle tote bag.','bag',1690,'限量手作','Limited','preorder',4),
-('bag-ruffle-blue','雲朵荷葉包','Cloud Ruffle Bag','霧藍歐根紗荷葉手提包。','Misty blue organza ruffle tote bag.','bag',1690,'限量手作','Limited','preorder',5),
+('bag-ruffle-white','雲朵荷葉包','Cloud Ruffle Bag','純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。','Pure white organza ruffle tote bag.','accessory',1690,'限量手作','Limited','preorder',4),
+('bag-ruffle-blue','雲朵荷葉包','Cloud Ruffle Bag','霧藍歐根紗荷葉手提包。','Misty blue organza ruffle tote bag.','accessory',1690,'限量手作','Limited','preorder',5),
 ('top-lace-set','蕾絲花圃套裝','Lace Garden Set','白色蕾絲花卉上衣搭配歐根紗裙。','White lace floral top paired with organza skirt.','top',1690,'限量手作','Limited','preorder',6),
 ('sea-gcd-short-jelly','海的公因數 · 短袖水母','Sea GCD · Short Sleeve Jellyfish','🫧 印花透膚短袖上衣，水母圖案。','Sheer printed short-sleeve top, jellyfish print.','top',980,'印花透膚','Sheer Print','preorder',7),
 ('sea-gcd-short-tear','海的公因數 · 短袖眼淚','Sea GCD · Short Sleeve Teardrop','🫧 印花透膚短袖上衣，眼淚圖案。','Sheer printed short-sleeve top, teardrop print.','top',980,'印花透膚','Sheer Print','preorder',8),
@@ -14,11 +14,11 @@ on conflict (id) do nothing;
 
 -- 尺寸+庫存（限購一件 → max_qty 1；初始庫存暫設 20，老闆可後台調）
 insert into product_variants (product_id,size,stock,max_qty)
-select id, unnest(array['S','M','L','XL']), 20, 1 from products where category='dress';
+select id, unnest(array['S','M','L','XL']), 20, 1 from products where category='puff';
 insert into product_variants (product_id,size,stock,max_qty)
 select id, unnest(array['S','M','L','XL']), 20, 1 from products where id in ('top-mesh-pink','top-mesh-blue','top-lace-set');
 insert into product_variants (product_id,size,stock,max_qty)
-select id, 'F', 20, 1 from products where category='bag';
+select id, 'F', 20, 1 from products where category='accessory';
 insert into product_variants (product_id,size,stock,max_qty)
 select id, unnest(array['小碼','大碼']), 20, 1 from products where id like 'sea-gcd-%';
 
