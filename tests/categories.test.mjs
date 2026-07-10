@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import { readFile } from 'node:fs/promises';
-import { CATEGORIES, catLabel, splitProducts, SELECT_EMPTY_HTML } from '../scripts/categories.mjs';
+import { CATEGORIES, catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug } from '../scripts/categories.mjs';
 
 test('CATEGORIES: 七個分類、slug 順序固定', () => {
   assert.deepStrictEqual(
@@ -35,4 +35,11 @@ test('splitProducts: select 分流，其餘歸原創', () => {
 test('SELECT_EMPTY_HTML 與 index.html 靜態空狀態一致', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   assert.ok(html.includes(SELECT_EMPTY_HTML));
+});
+
+test('normalizeSlug: 已知 slug 原樣、未知/舊 slug 歸 accessory', () => {
+  assert.strictEqual(normalizeSlug('puff'), 'puff');
+  assert.strictEqual(normalizeSlug('select'), 'select');
+  assert.strictEqual(normalizeSlug('dress'), 'accessory');
+  assert.strictEqual(normalizeSlug(undefined), 'accessory');
 });

@@ -1094,6 +1094,7 @@ button { cursor: pointer; }
 
 /* When banner is visible, shift header down */
 body.has-banner #header  { top: 32px; }
+body.has-banner #hero    { padding-top: 104px; }
 
 /* =============================================
    PRODUCT MODAL

@@ -16,6 +16,11 @@ export function catLabel(slug) {
   return c ? [c.zh, c.en] : FALLBACK;
 }
 
+// 未遷移/未知 slug 一律視為其他配件，確保 data-category、tag class、篩選互相一致
+export function normalizeSlug(slug) {
+  return CATEGORIES.some(c => c.slug === slug) ? slug : 'accessory';
+}
+
 // 選品獨立成區，其餘（含未遷移的舊分類）都進原創設計區
 export function splitProducts(products) {
   return {

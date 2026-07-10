@@ -1,7 +1,7 @@
 // scripts/build-products.mjs
 import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
-import { catLabel, splitProducts, SELECT_EMPTY_HTML } from './categories.mjs';
+import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug } from './categories.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -31,7 +31,7 @@ const normalized = products.map(p => {
   const img = images.find(i => i.product_id === p.id);
   const [cat_zh, cat_en] = catLabel(p.category);
   return {
-    id: p.id, category: p.category, price: p.price,
+    id: p.id, category: normalizeSlug(p.category), price: p.price,
     name_zh: p.name_zh, name_en: p.name_en, desc_zh: p.desc_zh, desc_en: p.desc_en,
     badge_zh: p.badge_zh, badge_en: p.badge_en, cat_zh, cat_en,
     status: vs.length && vs.every(v => v.stock <= 0) ? 'sold_out' : p.status,
