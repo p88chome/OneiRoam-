@@ -5,7 +5,7 @@ insert into products (id,name_zh,name_en,desc_zh,desc_en,category,price,badge_zh
 ('top-mesh-blue','夢雲網紗上衣','Dream Cloud Mesh Top','霧藍水彩暈染長袖網紗上衣，朦朧感如夢似幻。','Misty blue watercolor long sleeve mesh top.','top',1690,'手染獨款','Hand-dyed','preorder',3),
 ('bag-ruffle-white','雲朵荷葉包','Cloud Ruffle Bag','純白歐根紗荷葉手提包，蓬鬆立體的荷葉造型如一朵雲。','Pure white organza ruffle tote bag.','accessory',1690,'限量手作','Limited','preorder',4),
 ('bag-ruffle-blue','雲朵荷葉包','Cloud Ruffle Bag','霧藍歐根紗荷葉手提包。','Misty blue organza ruffle tote bag.','accessory',1690,'限量手作','Limited','preorder',5),
-('top-lace-set','蕾絲花圃套裝','Lace Garden Set','白色蕾絲花卉上衣搭配歐根紗裙。','White lace floral top paired with organza skirt.','top',1690,'限量手作','Limited','preorder',6),
+('top-lace-set','蕾絲花圃套裝','Lace Garden Set','白色蕾絲花卉上衣搭配歐根紗裙。','White lace floral top paired with organza skirt.','set',1690,'限量手作','Limited','preorder',6),
 ('sea-gcd-short-jelly','海的公因數 · 短袖水母','Sea GCD · Short Sleeve Jellyfish','🫧 印花透膚短袖上衣，水母圖案。','Sheer printed short-sleeve top, jellyfish print.','top',980,'印花透膚','Sheer Print','preorder',7),
 ('sea-gcd-short-tear','海的公因數 · 短袖眼淚','Sea GCD · Short Sleeve Teardrop','🫧 印花透膚短袖上衣，眼淚圖案。','Sheer printed short-sleeve top, teardrop print.','top',980,'印花透膚','Sheer Print','preorder',8),
 ('sea-gcd-long-jelly','海的公因數 · 立領長袖水母','Sea GCD · Mock Neck Long Jellyfish','🫧 印花透膚立領長袖上衣，水母圖案。','Sheer printed mock-neck long-sleeve top, jellyfish print.','top',1680,'印花透膚','Sheer Print','preorder',9),
