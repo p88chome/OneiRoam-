@@ -527,6 +527,19 @@ button { cursor: pointer; }
   background: rgba(196, 168, 130, 0.08);
 }
 
+/* Select goods section */
+#select {
+  padding: 8rem 0;
+  background: var(--ivory-warm);
+}
+.select-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-light);
+  letter-spacing: 0.1em;
+  padding: 2rem 0;
+}
+
 /* Product Grid */
 .product-grid {
   display: grid;
@@ -614,9 +627,13 @@ button { cursor: pointer; }
   padding: 0.2rem 0.65rem;
   border-radius: 20px;
 }
-.dress-tag { background: rgba(232, 213, 218, 0.5); color: var(--dusty-rose); }
-.top-tag   { background: rgba(200, 189, 208, 0.5); color: #8B7DA0; }
-.bag-tag   { background: rgba(184, 196, 208, 0.5); color: #7090A0; }
+.puff-tag      { background: rgba(232, 213, 218, 0.5); color: var(--dusty-rose); }
+.collar-tag    { background: rgba(237, 224, 206, 0.6); color: #A8894F; }
+.set-tag       { background: rgba(216, 206, 220, 0.5); color: #8B7DA0; }
+.top-tag       { background: rgba(200, 189, 208, 0.5); color: #8B7DA0; }
+.bottom-tag    { background: rgba(184, 196, 208, 0.5); color: #7090A0; }
+.accessory-tag { background: rgba(196, 168, 130, 0.18); color: var(--gold); }
+.select-tag    { background: rgba(180, 220, 200, 0.4); color: #4A8A72; }
 
 /* Price */
 .product-price {
@@ -657,7 +674,7 @@ button { cursor: pointer; }
    ============================================= */
 #lookbook {
   padding: 8rem 0 0;
-  background: var(--ivory-warm);
+  background: var(--ivory);
 }
 
 .lookbook-scroll {
@@ -917,7 +934,7 @@ button { cursor: pointer; }
 
 @media (max-width: 640px) {
   .container { padding: 0 1.25rem; }
-  #about, #collections, #lookbook, #order { padding: 5rem 0; }
+  #about, #collections, #select, #lookbook, #order { padding: 5rem 0; }
 
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
