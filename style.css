@@ -564,6 +564,8 @@ button { cursor: pointer; }
   padding: 2rem 0;
 }
 
+.select-more { text-align: center; margin-top: 2.5rem; }
+
 /* 選物獨立頁 */
 .select-page #select { padding: 10rem 0 6rem; min-height: 70vh; }
 #main-nav a.nav-active { color: var(--text-dark); }

@@ -86,11 +86,21 @@ try {
   console.error(err.message); process.exit(1);
 }
 
-out = injectBlock(out, 'SELECT', selectHtml);
+const teaser = select.slice(0, SELECT_TEASER_COUNT);
+const teaserHtml = teaser.length ? renderProductCards(teaser) : `        ${SELECT_EMPTY_HTML}`;
+out = injectBlock(out, 'SELECT', teaserHtml);
 
 out = injectBlock(out, 'JSONLD', `  ${jsonldTag}`, { endIndent: '  ' });
 
 await writeFile('index.html', out);
 
+// 選物獨立頁：完整列表
+try {
+  const selPage = await readFile('select.html', 'utf8');
+  await writeFile('select.html', injectBlock(selPage, 'SELECT', selectHtml));
+} catch (err) {
+  console.warn(`select.html not updated: ${err.message}`);
+}
+
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
-console.log(`built ${original.length} original + ${select.length} select products`);
+console.log(`built ${original.length} original + ${select.length} select (${teaser.length} teased)`);
