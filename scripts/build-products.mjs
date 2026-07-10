@@ -1,6 +1,7 @@
 // scripts/build-products.mjs
 import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
+import { catLabel } from './categories.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -9,8 +10,6 @@ if (!BASE_URL || !KEY) { console.error('Missing SUPABASE_URL / SUPABASE_SERVICE_
 const rest = path => fetch(`${BASE_URL}/rest/v1/${path}`, {
   headers: { apikey: KEY, Authorization: `Bearer ${KEY}` },
 }).then(r => { if (!r.ok) throw new Error(`${path} ${r.status}`); return r.json(); });
-
-const MAP_CAT = { top: ['上衣', 'Top'], dress: ['洋裝', 'Dress'], bag: ['包款', 'Bag'] };
 
 let products, variants, images, settingsRows;
 try {
@@ -30,7 +29,7 @@ const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
 const normalized = products.map(p => {
   const vs = variants.filter(v => v.product_id === p.id);
   const img = images.find(i => i.product_id === p.id);
-  const [cat_zh, cat_en] = MAP_CAT[p.category] || ['上衣', 'Top'];
+  const [cat_zh, cat_en] = catLabel(p.category);
   return {
     id: p.id, category: p.category, price: p.price,
     name_zh: p.name_zh, name_en: p.name_en, desc_zh: p.desc_zh, desc_en: p.desc_en,
