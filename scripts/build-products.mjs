@@ -1,7 +1,8 @@
 // scripts/build-products.mjs
 import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
-import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug } from './categories.mjs';
+import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASER_COUNT } from './categories.mjs';
+import { injectBlock } from './inject-block.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -77,24 +78,17 @@ const jsonldTag = `<script type="application/ld+json">\n${
   JSON.stringify(jsonld, null, 2).replace(/</g, '\\u003c')
 }\n  </script>`;
 
-const START = '<!-- BUILD:PRODUCTS:START -->';
-const END = '<!-- BUILD:PRODUCTS:END -->';
 const html = await readFile('index.html', 'utf8');
-const re = new RegExp(`${START}[\\s\\S]*?${END}`);
-if (!re.test(html)) { console.error('build markers not found in index.html'); process.exit(1); }
-let out = html.replace(re, `${START}\n${cardsHtml}\n        ${END}`);
+let out;
+try {
+  out = injectBlock(html, 'PRODUCTS', cardsHtml, { required: true });
+} catch (err) {
+  console.error(err.message); process.exit(1);
+}
 
-const SSTART = '<!-- BUILD:SELECT:START -->';
-const SEND = '<!-- BUILD:SELECT:END -->';
-const sre = new RegExp(`${SSTART}[\\s\\S]*?${SEND}`);
-if (sre.test(out)) out = out.replace(sre, `${SSTART}\n${selectHtml}\n        ${SEND}`);
-else console.warn('SELECT markers not found in index.html — skipping select goods');
+out = injectBlock(out, 'SELECT', selectHtml);
 
-const JSTART = '<!-- BUILD:JSONLD:START -->';
-const JEND = '<!-- BUILD:JSONLD:END -->';
-const jre = new RegExp(`${JSTART}[\\s\\S]*?${JEND}`);
-if (jre.test(out)) out = out.replace(jre, `${JSTART}\n  ${jsonldTag}\n  ${JEND}`);
-else console.warn('JSONLD markers not found in index.html — skipping product structured data');
+out = injectBlock(out, 'JSONLD', `  ${jsonldTag}`, { endIndent: '  ' });
 
 await writeFile('index.html', out);
 
