@@ -33,6 +33,44 @@
   --shadow-hover: 0 16px 60px rgba(42, 34, 32, 0.12);
 }
 
+/* ---- 配色主題（後台網站設定選用；default = :root 原值） ---- */
+:root[data-theme="sage"] {          /* 米綠 · 參考站色系 */
+  --ivory:      #F5F4EA;
+  --ivory-warm: #ECEADB;
+  --blush:      #E4E8D8;
+  --blush-deep: #C9D0B5;
+  --dusty-rose: #8F9A6E;
+  --lilac:      #C6CDB4;
+  --misty-blue: #B4C0AC;
+  --gold:       #9A9160;
+  --gold-light: #BDB489;
+  --gold-pale:  #E2DEC2;
+}
+:root[data-theme="latte"] {         /* 奶茶 · 溫暖大地 */
+  --ivory:      #FAF6F0;
+  --ivory-warm: #F2EAE0;
+  --blush:      #EDDFD2;
+  --blush-deep: #D8C2AC;
+  --dusty-rose: #B08968;
+  --lilac:      #D5C4B4;
+  --misty-blue: #C4B8A8;
+  --gold:       #A8845C;
+  --gold-light: #C4A882;
+  --gold-pale:  #E8D9C4;
+}
+:root[data-theme="mist"] {          /* 霧藍 · 清冷夢境 */
+  --ivory:      #F5F7F8;
+  --ivory-warm: #EAEEF1;
+  --blush:      #DFE6EB;
+  --blush-deep: #C2CED8;
+  --dusty-rose: #7E93A8;
+  --lilac:      #BDC8D4;
+  --misty-blue: #A8BACB;
+  --gold:       #7A8FA0;
+  --gold-light: #9FB2C0;
+  --gold-pale:  #D8E1E8;
+}
+
 /* ---- Reset ---- */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; font-size: 16px; }
