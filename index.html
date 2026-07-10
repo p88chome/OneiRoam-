@@ -80,10 +80,21 @@
         <span class="logo-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
       </a>
       <nav id="main-nav">
-        <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
-        <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
-        <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
-        <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+        <a href="#hero" data-zh="首頁" data-en="Home">首頁</a>
+        <div class="nav-drop">
+          <a href="#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+          <div class="drop-menu">
+            <a href="#collections" data-filter-link="puff" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+            <a href="#collections" data-filter-link="collar" data-zh="領片" data-en="Collars">領片</a>
+            <a href="#collections" data-filter-link="set" data-zh="套裝" data-en="Sets">套裝</a>
+            <a href="#collections" data-filter-link="top" data-zh="上衣" data-en="Tops">上衣</a>
+            <a href="#collections" data-filter-link="bottom" data-zh="下著" data-en="Bottoms">下著</a>
+            <a href="#collections" data-filter-link="accessory" data-zh="其他配件" data-en="Accessories">其他配件</a>
+          </div>
+        </div>
+        <a href="#select" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
       </nav>
       <button class="lang-toggle" id="langToggle" aria-label="語言切換">
         <span class="l-zh active">中</span>
@@ -103,10 +114,19 @@
   <!-- Mobile Overlay Nav -->
   <div class="mobile-overlay" id="mobileOverlay">
     <nav class="mobile-nav">
-      <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
-      <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
-      <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
-      <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+      <a href="#hero" data-zh="首頁" data-en="Home">首頁</a>
+      <a href="#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+      <div class="mobile-subnav">
+        <a href="#collections" data-filter-link="puff" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+        <a href="#collections" data-filter-link="collar" data-zh="領片" data-en="Collars">領片</a>
+        <a href="#collections" data-filter-link="set" data-zh="套裝" data-en="Sets">套裝</a>
+        <a href="#collections" data-filter-link="top" data-zh="上衣" data-en="Tops">上衣</a>
+        <a href="#collections" data-filter-link="bottom" data-zh="下著" data-en="Bottoms">下著</a>
+        <a href="#collections" data-filter-link="accessory" data-zh="其他配件" data-en="Accessories">其他配件</a>
+      </div>
+      <a href="#select" data-zh="選品" data-en="Select Goods">選品</a>
+      <a href="#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+      <a href="#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
     </nav>
     <div class="mobile-overlay-lang">
       <button class="lang-toggle-mobile" id="langToggleMobile">
@@ -159,29 +179,6 @@
       <span>Handcrafted with Love</span><span class="mdot">·</span>
     </div>
   </div>
-
-  <!-- ===== ABOUT ===== -->
-  <section id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-img-wrap fade-left">
-          <img src="images/about.jpg" alt="About OneiRoam" width="1200" height="960" loading="lazy">
-          <div class="img-deco"></div>
-        </div>
-        <div class="about-text fade-right">
-          <p class="section-label" data-zh="關於品牌" data-en="About">關於品牌</p>
-          <h2 data-zh="我們相信，穿衣是一種夢境的延伸" data-en="We believe dressing is an extension of dreams">我們相信，穿衣是一種夢境的延伸</h2>
-          <p data-zh="OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。" data-en="OneiRoam was born from a fascination with dreams — those light, ethereal, poetic moments. We transform this feeling into each garment, weaving your personal dreamscape through lace, organza, and hand-dyed fabrics.">OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。</p>
-          <p data-zh="每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。" data-en="Each piece is handcrafted in limited quantities — one-of-a-kind. We believe fashion, like dreams, should let you forget the ordinary and wander freely through beauty.">每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。</p>
-          <div class="about-tags">
-            <span data-zh="手作限量" data-en="Handcrafted Limited">手作限量</span>
-            <span data-zh="獨立設計" data-en="Independent Design">獨立設計</span>
-            <span data-zh="夢境美學" data-en="Dream Aesthetic">夢境美學</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ===== COLLECTIONS ===== -->
   <section id="collections">
@@ -523,7 +520,7 @@
   <section id="order">
     <div class="container">
       <div class="section-header fade-up">
-        <p class="section-label" data-zh="如何訂購" data-en="How to Order">如何訂購</p>
+        <p class="section-label" data-zh="購物須知" data-en="Shopping Guide">購物須知</p>
         <h2 data-zh="讓夢境成真" data-en="Make the Dream Real">讓夢境成真</h2>
       </div>
 
@@ -572,6 +569,29 @@
     </div>
   </section>
 
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-img-wrap fade-left">
+          <img src="images/about.jpg" alt="About OneiRoam" width="1200" height="960" loading="lazy">
+          <div class="img-deco"></div>
+        </div>
+        <div class="about-text fade-right">
+          <p class="section-label" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</p>
+          <h2 data-zh="我們相信，穿衣是一種夢境的延伸" data-en="We believe dressing is an extension of dreams">我們相信，穿衣是一種夢境的延伸</h2>
+          <p data-zh="OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。" data-en="OneiRoam was born from a fascination with dreams — those light, ethereal, poetic moments. We transform this feeling into each garment, weaving your personal dreamscape through lace, organza, and hand-dyed fabrics.">OneiRoam 誕生於對夢境的著迷——那些輕盈、飄渺、充滿詩意的瞬間。我們將這種感受轉化為每一件衣物，以蕾絲、歐根紗、手染布料為媒介，為妳編織屬於自己的夢境。</p>
+          <p data-zh="每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。" data-en="Each piece is handcrafted in limited quantities — one-of-a-kind. We believe fashion, like dreams, should let you forget the ordinary and wander freely through beauty.">每件作品均為限量手作，獨一無二。我們相信時尚應該如夢境般，讓人忘卻日常，輕盈漫遊於美的世界。</p>
+          <div class="about-tags">
+            <span data-zh="手作限量" data-en="Handcrafted Limited">手作限量</span>
+            <span data-zh="獨立設計" data-en="Independent Design">獨立設計</span>
+            <span data-zh="夢境美學" data-en="Dream Aesthetic">夢境美學</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== FOOTER ===== -->
   <footer id="footer">
     <div class="footer-inner">
@@ -580,10 +600,10 @@
         <span class="footer-logo-zh" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
       </div>
       <nav class="footer-nav">
-        <a href="#about" data-zh="關於品牌" data-en="About">關於品牌</a>
-        <a href="#collections" data-zh="系列商品" data-en="Collections">系列商品</a>
-        <a href="#lookbook" data-zh="穿搭日記" data-en="Lookbook">穿搭日記</a>
-        <a href="#order" data-zh="如何訂購" data-en="How to Order">如何訂購</a>
+        <a href="#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+        <a href="#select" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
       </nav>
       <div class="footer-social">
         <a href="https://www.instagram.com/oneiroam?igsh=MW5rZGF3Z3BpNms2eQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">

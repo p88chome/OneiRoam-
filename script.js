@@ -145,6 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 導覽列分類連結：捲動到原創設計區並套用對應篩選
+  document.querySelectorAll('[data-filter-link]').forEach(link => {
+    link.addEventListener('click', () => {
+      const btn = document.querySelector(`.filter-btn[data-filter="${link.dataset.filterLink}"]`);
+      if (btn) btn.click();
+    });
+  });
+
   const styleEl = document.createElement('style');
   styleEl.textContent = `
     @keyframes cardIn {
