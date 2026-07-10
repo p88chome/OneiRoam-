@@ -294,8 +294,8 @@ button { cursor: pointer; }
    ============================================= */
 #hero {
   position: relative;
-  height: 100vh;
-  min-height: 640px;
+  height: clamp(360px, 56vh, 600px);
+  padding-top: 72px; /* fixed header 讓內容視覺置中 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,12 +357,12 @@ button { cursor: pointer; }
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   animation: heroUp 1.2s 0.15s var(--ease) both;
 }
 .hero-title {
   font-family: var(--serif);
-  font-size: clamp(4.5rem, 14vw, 10rem);
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
   font-weight: 300;
   letter-spacing: 0.16em;
   color: var(--text-dark);
@@ -385,7 +385,7 @@ button { cursor: pointer; }
   font-weight: 300;
   color: var(--text-mid);
   letter-spacing: 0.06em;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.8rem;
   animation: heroUp 1.2s 0.45s var(--ease) both;
 }
 
@@ -416,36 +416,6 @@ button { cursor: pointer; }
 .btn-primary:hover { color: var(--ivory); }
 .btn-primary span { position: relative; z-index: 1; }
 
-/* Scroll hint */
-.hero-scroll {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  animation: fadeIn 2s 1.5s both;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.scroll-line {
-  width: 1px;
-  height: 42px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-@keyframes scrollPulse {
-  0%, 100% { transform: scaleY(1); opacity: 0.9; }
-  50%       { transform: scaleY(0.5); opacity: 0.4; }
-}
-.hero-scroll span {
-  font-size: 0.58rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--text-light);
-}
 
 /* =============================================
    MARQUEE STRIP
@@ -596,8 +566,8 @@ button { cursor: pointer; }
 /* Product Grid */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2.5rem 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem 1.5rem;
 }
 
 .product-card { transition: var(--trans); }
@@ -632,10 +602,10 @@ button { cursor: pointer; }
 
 .btn-inquire {
   display: inline-block;
-  padding: 0.72rem 1.8rem;
+  padding: 0.6rem 1.3rem;
   background: var(--text-dark);
   color: var(--ivory);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.15em;
   transform: translateY(10px);
   transition: transform 0.38s var(--ease), background 0.3s ease;
@@ -660,14 +630,14 @@ button { cursor: pointer; }
 .product-info { padding: 1rem 0.3rem 0; }
 .product-info h3 {
   font-family: var(--serif);
-  font-size: 1.08rem;
+  font-size: 0.95rem;
   font-weight: 400;
   letter-spacing: 0.05em;
   color: var(--text-dark);
   margin-bottom: 0.22rem;
 }
 .product-info p {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 300;
   color: var(--text-mid);
   letter-spacing: 0.04em;
@@ -691,7 +661,7 @@ button { cursor: pointer; }
 /* Price */
 .product-price {
   display: block;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-dark);
   letter-spacing: 0.03em;
@@ -977,7 +947,8 @@ button { cursor: pointer; }
   .about-tags { justify-content: center; }
 
   .product-grid {
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem 1.25rem;
   }
 
   .order-steps { flex-direction: column; align-items: center; gap: 0; }
