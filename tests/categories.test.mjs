@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import { readFile } from 'node:fs/promises';
-import { CATEGORIES, catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug } from '../scripts/categories.mjs';
+import { CATEGORIES, catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASER_COUNT } from '../scripts/categories.mjs';
 
 test('CATEGORIES: 七個分類、slug 順序固定', () => {
   assert.deepStrictEqual(
@@ -42,4 +42,10 @@ test('normalizeSlug: 已知 slug 原樣、未知/舊 slug 歸 accessory', () => 
   assert.strictEqual(normalizeSlug('select'), 'select');
   assert.strictEqual(normalizeSlug('dress'), 'accessory');
   assert.strictEqual(normalizeSlug(undefined), 'accessory');
+});
+
+test('SELECT_TEASER_COUNT: 首頁預告最多 4 件', () => {
+  assert.strictEqual(SELECT_TEASER_COUNT, 4);
+  const many = Array.from({ length: 6 }, (_, i) => ({ id: `s${i}`, category: 'select' }));
+  assert.strictEqual(many.slice(0, SELECT_TEASER_COUNT).length, 4);
 });
