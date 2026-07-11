@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const { data: profile } = await sbClient
       .from('customer_profiles').select('*').eq('user_id', session.user.id).maybeSingle();
     prefillForm(profile);
+    // 還沒有會員資料（第一次下單）→ Email 先用 Google 帳號的
+    const emailInput = document.getElementById('orderForm').elements.email;
+    if (emailInput && !emailInput.value.trim() && session.user.email)
+      emailInput.value = session.user.email;
   }
 
   async function saveProfile(fields) {
