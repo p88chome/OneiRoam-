@@ -96,6 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function toggleLang() {
     applyLang(currentLang === 'zh' ? 'en' : 'zh');
     renderOrders();
+    const profileMsgEl = document.getElementById('profileMsg');
+    if (profileMsgEl) profileMsgEl.textContent = '';
   }
   document.getElementById('langToggle').addEventListener('click', toggleLang);
   const mobileToggle = document.getElementById('langToggleMobile');
@@ -146,12 +148,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const area = document.getElementById('memberArea');
     if (!sbClient) { login.style.display = ''; return; }
     const { data: { session } } = await sbClient.auth.getSession();
-    if (!session) { login.style.display = ''; area.style.display = 'none'; return; }
+    if (!session) {
+      login.style.display = ''; area.style.display = 'none';
+      orders = [];
+      const orderListEl = document.getElementById('orderList');
+      if (orderListEl) orderListEl.innerHTML = '';
+      document.getElementById('profileForm').reset();
+      return;
+    }
     login.style.display = 'none'; area.style.display = '';
     document.getElementById('mEmail').textContent = session.user.email || '';
     const [{ data: os }, { data: profile }] = await Promise.all([
       sbClient.from('orders')
         .select('order_no, created_at, payment_status, amount_type, total, pay_amount, order_items(name, size, qty, price)')
+        // RLS 已限制，只是把「只看自己的」寫明（admin 帳號開這頁也不會看到全店訂單）
+        .eq('user_id', session.user.id)
         .order('created_at', { ascending: false }),
       sbClient.from('customer_profiles').select('*')
         .eq('user_id', session.user.id).maybeSingle(),
@@ -210,4 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLang(currentLang);
   updateCartBadge();
   loadMember();
+  // bfcache（返回鍵還原頁面）不會重跑 script — 重新驗證登入狀態
+  window.addEventListener('pageshow', e => { if (e.persisted) loadMember(); });
 });

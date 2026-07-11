@@ -64,7 +64,8 @@ Dashboard → Authentication：
 1. **Providers → Google**：Enable，貼上第 6 步的 Client ID / Secret
 2. **URL Configuration**：
    - Site URL：`https://www.oneiroam.com`
-   - Redirect URLs 加入：`https://www.oneiroam.com/order.html`、staging 網域（`https://*.oneiroam.workers.dev/order.html`）
+   - Redirect URLs 加入：`https://www.oneiroam.com/order.html`、staging 網域（`https://*.oneiroam.workers.dev/order.html`）、
+     `https://www.oneiroam.com/member.html`、`https://*.oneiroam.workers.dev/member.html`
 3. **Sign In / Up**：確認「Allow new users to sign up」開啟（Google 註冊需要）；
    Email provider 可以維持關閉/不開放註冊（後台照常用密碼登入）
 
@@ -91,6 +92,9 @@ Dashboard → Authentication：
    npx supabase functions deploy create-order --project-ref ywzsjhaqgidgxnjmyyeg
    ```
    （新版下單時會把登入者掛到訂單上；未登入照常訪客結帳，`user_id` 為 null。）
+3. 確認第 7 步的 Redirect URLs 已含 `member.html`（沒加的話會員頁登入會跳回首頁且登不進去）。
+
+**⚠️ 必須先在 SQL Editor 跑 0005，再部署 create-order。順序顛倒會讓所有結帳（含訪客）掛掉（insert 找不到 user_id 欄位）。**
 
 **驗收**：
 - [ ] 登入下單 → member.html 看得到這筆訂單
