@@ -194,9 +194,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---- 送出 ---- */
   async function submitOrder(payload, items, amountType) {
+    // 登入狀態下用使用者 token（訂單掛帳號）；任何失敗都退回 anon key，絕不擋結帳
+    let bearer = window.SUPABASE_ANON_KEY;
+    if (sbClient) {
+      try {
+        const { data: { session } } = await sbClient.auth.getSession();
+        if (session) bearer = session.access_token;
+      } catch { /* 匿名結帳 */ }
+    }
     const res = await fetch(`${window.SUPABASE_URL}/functions/v1/create-order`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${window.SUPABASE_ANON_KEY}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${bearer}` },
       body: JSON.stringify({
         items: items.map(it => ({ id: it.id, size: it.size, qty: it.qty })),
         customer: { name: payload.name, phone: payload.phone, social: payload.social, email: payload.email, notes: payload.notes },
