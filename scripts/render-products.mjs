@@ -23,7 +23,7 @@ export function renderProductCards(products) {
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
-            <span class="product-badge" data-zh="${esc(p.badge_zh)}" data-en="${esc(p.badge_en)}">${esc(p.badge_zh)}</span>
+            ${p.badge_zh ? `<span class="product-badge" data-zh="${esc(p.badge_zh)}" data-en="${esc(p.badge_en || p.badge_zh)}">${esc(p.badge_zh)}</span>` : ''}
           </div>
           <div class="product-info">
             <h3 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h3>
