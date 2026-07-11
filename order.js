@@ -2,6 +2,78 @@ document.addEventListener('DOMContentLoaded', () => {
   const esc = s => String(s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  /* ---- 會員：Google 登入 → 自動帶入，下單後回存 ---- */
+  const sbClient = (window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY)
+    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+    : null;
+
+  const memberEls = () => ({
+    box: document.getElementById('memberBox'),
+    loginBtn: document.getElementById('googleLoginBtn'),
+    info: document.getElementById('memberInfo'),
+    email: document.getElementById('memberEmail'),
+    logoutBtn: document.getElementById('logoutBtn'),
+  });
+
+  // 只填空欄位，不覆蓋客人已輸入的內容
+  function prefillForm(profile) {
+    if (!profile) return;
+    const form = document.getElementById('orderForm');
+    for (const k of ['name', 'phone', 'social', 'email']) {
+      const input = form.elements[k];
+      if (input && !input.value.trim() && profile[k]) input.value = profile[k];
+    }
+  }
+
+  async function refreshMemberUI() {
+    if (!sbClient) return;
+    const els = memberEls();
+    if (!els.box) return;
+    const { data: { session } } = await sbClient.auth.getSession();
+    if (!session) {
+      els.loginBtn.style.display = '';
+      els.info.style.display = 'none';
+      return;
+    }
+    els.loginBtn.style.display = 'none';
+    els.info.style.display = '';
+    els.email.textContent = session.user.email || '';
+    const { data: profile } = await sbClient
+      .from('customer_profiles').select('*').eq('user_id', session.user.id).maybeSingle();
+    prefillForm(profile);
+  }
+
+  async function saveProfile(fields) {
+    if (!sbClient) return;
+    try {
+      const { data: { session } } = await sbClient.auth.getSession();
+      if (!session) return;
+      await sbClient.from('customer_profiles').upsert({
+        user_id: session.user.id,
+        name: fields.name, phone: fields.phone,
+        social: fields.social, email: fields.email,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (e) {
+      console.warn('profile save skipped:', e);  // 存檔失敗絕不擋付款
+    }
+  }
+
+  if (sbClient) {
+    const els = memberEls();
+    if (els.loginBtn) els.loginBtn.addEventListener('click', () => {
+      sbClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/order.html' },
+      });
+    });
+    if (els.logoutBtn) els.logoutBtn.addEventListener('click', async () => {
+      await sbClient.auth.signOut();
+      refreshMemberUI();
+    });
+    refreshMemberUI();
+  }
+
   /* 語言（與首頁同套） */
   let currentLang = localStorage.getItem('oneiRoamLang') || 'zh';
   function applyLang(lang) {
@@ -123,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
     if (!data.action || !data.params) throw new Error('create-order response malformed');
+    await saveProfile({ name: payload.name, phone: payload.phone, social: payload.social, email: payload.email });
     const form = document.createElement('form');
     form.method = 'POST'; form.action = data.action;
     for (const [k, v] of Object.entries(data.params)) {

@@ -1292,6 +1292,23 @@ body.has-banner #hero    { padding-top: 104px; }
 .order-form .btn-primary { margin-top: .8rem; }
 .form-error { color: #C05A5A; font-size: .9rem; text-align: center; }
 
+/* 會員登入（結帳頁） */
+.member-box { margin-bottom: .4rem; }
+.btn-google {
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .6rem 1.2rem; background: var(--white);
+  border: 1px solid var(--blush-deep); border-radius: 4px;
+  font: inherit; font-size: .88rem; color: var(--text-dark);
+  transition: var(--trans);
+}
+.btn-google:hover { border-color: var(--gold); box-shadow: var(--shadow); }
+.member-info { font-size: .88rem; color: var(--text-mid); display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.btn-logout {
+  border: none; background: none; font: inherit; font-size: .8rem;
+  color: var(--text-light); text-decoration: underline; cursor: pointer;
+}
+.btn-logout:hover { color: var(--dusty-rose); }
+
 .order-success { max-width: 520px; margin: 2rem auto 0; text-align: center; }
 .order-success .success-mark { font-size: 2rem; color: var(--dusty-rose); }
 .order-no { font-size: 1.3rem; letter-spacing: .05em; margin: .3rem 0 1.5rem; }
