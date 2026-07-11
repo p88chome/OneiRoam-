@@ -46,14 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
   async function saveProfile(fields) {
     if (!sbClient) return;
     try {
-      const { data: { session } } = await sbClient.auth.getSession();
-      if (!session) return;
-      await sbClient.from('customer_profiles').upsert({
-        user_id: session.user.id,
-        name: fields.name, phone: fields.phone,
-        social: fields.social, email: fields.email,
-        updated_at: new Date().toISOString(),
-      });
+      // 最多等 4 秒：網路卡住也不能拖住付款跳轉
+      await Promise.race([
+        (async () => {
+          const { data: { session } } = await sbClient.auth.getSession();
+          if (!session) return;
+          await sbClient.from('customer_profiles').upsert({
+            user_id: session.user.id,
+            name: fields.name, phone: fields.phone,
+            social: fields.social, email: fields.email,
+            updated_at: new Date().toISOString(),
+          });
+        })(),
+        new Promise(resolve => setTimeout(resolve, 4000)),
+      ]);
     } catch (e) {
       console.warn('profile save skipped:', e);  // 存檔失敗絕不擋付款
     }
