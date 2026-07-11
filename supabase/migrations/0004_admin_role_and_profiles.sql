@@ -44,3 +44,16 @@ create policy "own profile insert" on customer_profiles
   for insert to authenticated with check (auth.uid() = user_id);
 create policy "own profile update" on customer_profiles
   for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- 訂單個資：開放註冊後「任何登入者可讀」= 客人可撈全部訂單，收到 admin-only
+drop policy if exists "auth read orders" on orders;
+drop policy if exists "auth read oitems" on order_items;
+create policy "admin read orders" on orders
+  for select to authenticated using (public.is_admin());
+create policy "admin read oitems" on order_items
+  for select to authenticated using (public.is_admin());
+
+-- 部署 hook 不可外讀（含 staging）：讀到 hook 就能直接 POST 觸發部署
+drop policy if exists "public read settings" on settings;
+create policy "public read settings" on settings
+  for select using (key not in ('deploy_hook_url', 'deploy_hook_url_staging'));

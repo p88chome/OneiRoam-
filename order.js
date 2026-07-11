@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---- 會員：Google 登入 → 自動帶入，下單後回存 ---- */
   const sbClient = (window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY)
-    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY,
+        { auth: { flowType: 'pkce' } })  // token 不進網址 hash
     : null;
 
   const memberEls = () => ({

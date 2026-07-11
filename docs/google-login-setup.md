@@ -3,6 +3,7 @@
 結帳頁的「用 Google 登入」要能動，需要以下人工設定。
 **⚠️ 請嚴格照順序做**：順序錯了會出現「客人登入後能改商品」的安全空窗。
 （程式碼已就緒：migration `0004`、`trigger-deploy` 權限檢查、結帳頁 UI 都在 repo 裡。）
+前置：production 資料庫需已套用 0001–0003（目前已套用；全新環境要先跑）。
 
 ## 第 1 步：把管理員帳號標成 admin
 
@@ -76,4 +77,6 @@ Dashboard → Authentication：
 - [ ] 重新開 order.html → 姓名/電話/社群/Email 自動帶入
 - [ ] 登出按鈕正常
 - [ ] **安全驗收**：用這個客人帳號的身分「不能」做到以下事情——admin 後台登入後改商品（應失敗）、觸發發布（應 403）
+- [ ] 用客人帳號的 access token 打 `/rest/v1/orders?select=*` → 應回 0 筆（403 或空陣列）
+- [ ] 匿名／客人讀 `/rest/v1/settings` → 看不到 deploy_hook_url 與 deploy_hook_url_staging
 - [ ] admin 帳號在後台一切照舊（商品、網站設定、發布）
