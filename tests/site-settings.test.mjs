@@ -59,3 +59,10 @@ test('applyTheme: 替換 data-theme；未知值 → default', () => {
   assert.strictEqual(applyTheme('<html lang="x"><b></b></html>', 'sage'),
     '<html lang="x"><b></b></html>'); // 沒有 data-theme 屬性 → 原樣
 });
+
+test('heroImgsHtml: 手機版 banner 選填，沒設定就不輸出', () => {
+  assert.doesNotMatch(heroImgsHtml({}), /h-img-m/);
+  const html = heroImgsHtml({ hero_img_m: 'https://x/m.jpg', hero_focus_m: '40' });
+  assert.match(html, /class="hero-img h-img-m" style="object-position:center 40%"/);
+  assert.ok(html.includes(String.raw`src="https://x/m.jpg"`));
+});

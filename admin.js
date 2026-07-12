@@ -231,6 +231,10 @@ async function renderSiteSettings() {
           <input id="s_hero2" type="file" accept="image/*"></label>
         <label class="field"><span>圖 2 焦點（0-100，預設 32）</span>
           <input id="s_focus2" type="number" min="0" max="100" value="${esc(s.hero_focus_2 || '32')}"></label>
+        <label class="field"><span>手機版 Banner（直式，選填；現用：${esc(s.hero_img_m || '無')}）</span>
+          <input id="s_herom" type="file" accept="image/*"></label>
+        <label class="field"><span>手機圖焦點（0-100，預設 50）</span>
+          <input id="s_focusm" type="number" min="0" max="100" value="${esc(s.hero_focus_m || '50')}"></label>
       </div>
       <h3>配色主題</h3>
       <div class="theme-row">
@@ -266,7 +270,7 @@ async function saveSiteSettings() {
   try {
     const rows = [];
     // 圖片上傳（有選檔才傳）
-    for (const [inputId, key] of [['s_hero1', 'hero_img_1'], ['s_hero2', 'hero_img_2']]) {
+    for (const [inputId, key] of [['s_hero1', 'hero_img_1'], ['s_hero2', 'hero_img_2'], ['s_herom', 'hero_img_m']]) {
       const file = document.getElementById(inputId).files[0];
       if (!file) continue;
       const ext = (file.name.includes('.') ? file.name.split('.').pop() : '') || (file.type.split('/')[1] || 'jpg');
@@ -278,6 +282,7 @@ async function saveSiteSettings() {
     }
     rows.push({ key: 'hero_focus_1', value: document.getElementById('s_focus1').value.trim() });
     rows.push({ key: 'hero_focus_2', value: document.getElementById('s_focus2').value.trim() });
+    rows.push({ key: 'hero_focus_m', value: document.getElementById('s_focusm').value.trim() });
     rows.push({ key: 'theme', value: (document.querySelector('input[name="s_theme"]:checked') || {}).value || 'default' });
     for (const [k] of SITE_TEXT_FIELDS)
       rows.push({ key: k, value: document.getElementById(`s_${k}`).value.trim() });

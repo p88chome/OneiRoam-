@@ -25,6 +25,9 @@ export function heroImgsHtml(s) {
     { src: pick(s, 'hero_img_1'), cls: 'h-img-1', f: focus(pick(s, 'hero_focus_1')), lazy: false },
     { src: pick(s, 'hero_img_2'), cls: 'h-img-2', f: focus(pick(s, 'hero_focus_2')), lazy: true },
   ];
+  // 手機版直式 banner（選填）：≤640px 蓋在桌機圖上（CSS .h-img-m 控制）
+  const mob = s.hero_img_m && String(s.hero_img_m).trim();
+  if (mob) imgs.push({ src: mob, cls: 'h-img-m', f: focus(s.hero_focus_m ?? '50'), lazy: false });
   return imgs.map(i =>
     `      <img src="${esc(i.src)}" alt="OneiRoam" class="hero-img ${i.cls}" style="object-position:center ${i.f}%"${i.lazy ? ' loading="lazy"' : ''}>`
   ).join('\n');

@@ -369,6 +369,11 @@ button { cursor: pointer; }
 }
 .h-img-1 { opacity: 1; z-index: 1; object-position: center 22%; }
 .h-img-2 { opacity: 0; z-index: 0; object-position: center 32%; }
+/* 手機版直式 banner：只在窄螢幕顯示，蓋在桌機圖上 */
+.h-img-m { display: none; }
+@media (max-width: 640px) {
+  .h-img-m { display: block; z-index: 2; opacity: 1; }
+}
 
 .hero-overlay {
   position: absolute;
