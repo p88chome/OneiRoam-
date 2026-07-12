@@ -3,6 +3,8 @@
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const escHtml = v => String(v ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ------------------------------------------
      LOADING SCREEN
@@ -205,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeSel = document.getElementById('modalSize');
     const sizes = (card.dataset.sizes || 'S,M,L,XL').split(',');
     const customLabel = lang === 'zh' ? '自訂' : 'Custom';
-    sizeSel.innerHTML = sizes.map(s => `<option value="${s}">${s}</option>`).join('')
+    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('')
       + `<option value="__custom">${customLabel}</option>`;
     document.getElementById('modalSizeCustom').style.display = 'none';
     document.getElementById('modalSizeCustom').value = '';
