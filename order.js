@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     areaEl.style.display = '';
     listEl.innerHTML = items.map(it => `
       <div class="cart-row" data-id="${esc(it.id)}" data-size="${esc(it.size)}">
+        ${it.img ? `<img class="cart-row-img" src="${esc(it.img)}" alt="">` : '<span class="cart-row-img"></span>'}
         <div class="cart-row-info">
           <span class="cart-row-name">${esc(it.name)}</span>
           <span class="cart-row-size">${currentLang === 'zh' ? '尺寸' : 'Size'}: ${esc(it.size)}</span>
