@@ -64,7 +64,8 @@ Dashboard → Authentication：
 1. **Providers → Google**：Enable，貼上第 6 步的 Client ID / Secret
 2. **URL Configuration**：
    - Site URL：`https://www.oneiroam.com`
-   - Redirect URLs 加入：`https://www.oneiroam.com/order.html`、staging 網域（`https://*.oneiroam.workers.dev/order.html`）
+   - Redirect URLs 加入：`https://www.oneiroam.com/order.html`、staging 網域（`https://*.oneiroam.workers.dev/order.html`）、
+     `https://www.oneiroam.com/member.html`、`https://*.oneiroam.workers.dev/member.html`
 3. **Sign In / Up**：確認「Allow new users to sign up」開啟（Google 註冊需要）；
    Email provider 可以維持關閉/不開放註冊（後台照常用密碼登入）
 
@@ -80,3 +81,22 @@ Dashboard → Authentication：
 - [ ] 用客人帳號的 access token 打 `/rest/v1/orders?select=*` → 應回 0 筆（403 或空陣列）
 - [ ] 匿名／客人讀 `/rest/v1/settings` → 看不到 deploy_hook_url 與 deploy_hook_url_staging
 - [ ] admin 帳號在後台一切照舊（商品、網站設定、發布）
+
+## 會員專區加開步驟
+
+會員專區（member.html：登入客人查自己的訂單）需要額外兩步，才能上線：
+
+1. SQL Editor 貼上 `supabase/migrations/0005_member_orders.sql` 全文執行（加 `orders.user_id`、客人自讀 policy）。
+2. 重新部署 create-order function：
+   ```bash
+   npx supabase functions deploy create-order --project-ref ywzsjhaqgidgxnjmyyeg
+   ```
+   （新版下單時會把登入者掛到訂單上；未登入照常訪客結帳，`user_id` 為 null。）
+3. 確認第 7 步的 Redirect URLs 已含 `member.html`（沒加的話會員頁登入會跳回首頁且登不進去）。
+
+**⚠️ 必須先在 SQL Editor 跑 0005，再部署 create-order。順序顛倒會讓所有結帳（含訪客）掛掉（insert 找不到 user_id 欄位）。**
+
+**驗收**：
+- [ ] 登入下單 → member.html 看得到這筆訂單
+- [ ] 訪客（未登入）下單 → 任何客人的 member.html 都看不到這筆訂單
+- [ ] 客人 A 登入 member.html → 看不到客人 B 的訂單

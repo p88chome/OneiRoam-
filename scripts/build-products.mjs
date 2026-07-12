@@ -121,5 +121,15 @@ try {
   console.warn(`order.html not updated: ${err.message}`);
 }
 
+// 會員專區：跑馬燈公告 + 主題
+try {
+  const memberPage = await readFile('member.html', 'utf8');
+  let memberOut = injectBlock(memberPage, 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
+  memberOut = applyTheme(memberOut, settings.theme);
+  await writeFile('member.html', memberOut);
+} catch (err) {
+  console.warn(`member.html not updated: ${err.message}`);
+}
+
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
 console.log(`built ${original.length} original + ${select.length} select (${teaser.length} teased)`);

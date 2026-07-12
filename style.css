@@ -1249,6 +1249,8 @@ body.has-banner #hero    { padding-top: 104px; }
 }
 
 /* ===== CART BADGE ===== */
+.member-link { display: inline-flex; align-items: center; margin-left: 1rem; color: inherit; }
+.member-link:hover { color: var(--gold); }
 .cart-link { position: relative; display: inline-flex; align-items: center; margin-left: 1rem; color: inherit; }
 .cart-badge {
   position: absolute; top: -6px; right: -8px; min-width: 18px; height: 18px;
@@ -1352,3 +1354,22 @@ body.has-banner #hero    { padding-top: 104px; }
 .modal-price .mp-label { color: var(--text-light); font-size: .85rem; }
 .modal-price .mp-sep { margin: 0 .5rem; color: var(--blush-deep); }
 .modal-checkout { display: inline-flex; margin-top: .8rem; }
+
+/* 會員專區 */
+.member-page #member { padding: 10rem 0 6rem; min-height: 70vh; }
+.member-login { text-align: center; padding: 2.5rem 0; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; color: var(--text-mid); }
+.member-h { font-family: var(--serif); font-weight: 400; letter-spacing: .05em; margin: 2.5rem 0 1rem; }
+.member-empty { color: var(--text-light); letter-spacing: .05em; padding: 1rem 0; }
+.order-list { display: flex; flex-direction: column; gap: 1rem; }
+.order-card { border: 1px solid rgba(196,168,130,0.25); background: var(--ivory-warm); padding: 1.1rem 1.3rem; border-radius: 6px; }
+.order-card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.order-card-no { font-weight: 500; letter-spacing: .04em; }
+.order-status { font-size: .72rem; letter-spacing: .1em; padding: .22rem .7rem; border-radius: 20px; }
+.s-pending { background: rgba(232, 210, 170, 0.5); color: #A07030; }
+.s-paid    { background: rgba(180, 220, 180, 0.5); color: #4A8A4A; }
+.s-failed  { background: rgba(220, 180, 180, 0.5); color: #A04A4A; }
+.order-card-date { font-size: .78rem; color: var(--text-light); margin: .2rem 0 .6rem; }
+.order-card-items { list-style: none; font-size: .88rem; color: var(--text-mid); display: flex; flex-direction: column; gap: .25rem; }
+.order-card-sum { margin-top: .6rem; font-size: .9rem; }
+.member-profile { margin: 0; max-width: 520px; }
+.member-msg { font-size: .88rem; color: var(--text-light); }
