@@ -5,7 +5,10 @@
   // assets directory is "." and .assetsignore keeps backend/dev files off the CDN.
   "name": "oneiroam",
   "compatibility_date": "2026-07-04",
+  // worker.js 只做一件事：把 PAYUNi 付款完成的 POST /order-result.html 303 成 GET
+  "main": "worker.js",
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS"
   }
 }
