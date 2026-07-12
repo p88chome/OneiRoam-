@@ -4,7 +4,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 // 與 scripts/categories.mjs 的 CATEGORIES 同步（瀏覽器端無法 import ESM 建置模組）
 const CATEGORY_OPTIONS = [
   ['puff', '澎袖'], ['collar', '領片'], ['set', '套裝'], ['top', '上衣'],
-  ['bottom', '下著'], ['accessory', '其他配件'], ['select', '選品'],
+  ['bottom', '下著'], ['accessory', '其他配件'], ['select_top', '選品・上衣'], ['select_bottom', '選品・下著'], ['select_acc', '選品・配件'],
 ];
 function categoryOptions(current) {
   const opts = CATEGORY_OPTIONS.map(([v, l]) =>

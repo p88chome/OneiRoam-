@@ -126,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
      ------------------------------------------ */
   const filterBtns  = document.querySelectorAll('.filter-btn');
   // 篩選只作用在原創設計區；選品區有自己的 grid，不參與篩選
-  const productCards = document.querySelectorAll('#collections .product-card');
+  const filterScope = document.getElementById('collections') || document.getElementById('select');
+  const productCards = filterScope ? filterScope.querySelectorAll('.product-card') : [];
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {

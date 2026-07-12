@@ -6,7 +6,7 @@ import { CATEGORIES, catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, 
 test('CATEGORIES: 七個分類、slug 順序固定', () => {
   assert.deepStrictEqual(
     CATEGORIES.map(c => c.slug),
-    ['puff', 'collar', 'set', 'top', 'bottom', 'accessory', 'select']
+    ['puff', 'collar', 'set', 'top', 'bottom', 'accessory', 'select_top', 'select_bottom', 'select_acc']
   );
 });
 
@@ -48,4 +48,17 @@ test('SELECT_TEASER_COUNT: 首頁預告最多 4 件', () => {
   assert.strictEqual(SELECT_TEASER_COUNT, 4);
   const many = Array.from({ length: 6 }, (_, i) => ({ id: `s${i}`, category: 'select' }));
   assert.strictEqual(many.slice(0, SELECT_TEASER_COUNT).length, 4);
+});
+
+test('選品子分類：標籤、normalizeSlug、splitProducts 分流', () => {
+  assert.deepStrictEqual(catLabel('select_top'), ['選品・上衣', 'Select · Tops']);
+  assert.deepStrictEqual(catLabel('select'), ['選品', 'Select Goods']); // 舊制 alias
+  assert.strictEqual(normalizeSlug('select_bottom'), 'select_bottom');
+  assert.strictEqual(normalizeSlug('select'), 'select');
+  const { original, select } = splitProducts([
+    { id: 'a', category: 'select_top' }, { id: 'b', category: 'select' },
+    { id: 'c', category: 'top' },
+  ]);
+  assert.deepStrictEqual(select.map(p => p.id), ['a', 'b']);
+  assert.deepStrictEqual(original.map(p => p.id), ['c']);
 });

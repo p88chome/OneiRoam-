@@ -683,7 +683,7 @@ button { cursor: pointer; }
 .top-tag       { background: rgba(200, 189, 208, 0.5); color: #8B7DA0; }
 .bottom-tag    { background: rgba(184, 196, 208, 0.5); color: #7090A0; }
 .accessory-tag { background: rgba(196, 168, 130, 0.18); color: var(--gold); }
-.select-tag    { background: rgba(180, 220, 200, 0.4); color: #4A8A72; }
+.select-tag, .select_top-tag, .select_bottom-tag, .select_acc-tag { background: rgba(180, 220, 200, 0.4); color: #4A8A72; }
 
 /* Price */
 .product-price {
