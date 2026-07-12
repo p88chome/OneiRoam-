@@ -599,7 +599,10 @@ button { cursor: pointer; }
   text-align: center;
   color: var(--text-light);
   letter-spacing: 0.1em;
-  padding: 2rem 0;
+  padding: 3.5rem 2rem;
+  border: 1px dashed rgba(196, 168, 130, 0.4);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .select-more { text-align: center; margin-top: 2.5rem; }
@@ -810,8 +813,9 @@ button { cursor: pointer; }
   min-width: 190px;
   max-width: 230px;
   padding: 2rem 1.6rem;
-  background: var(--ivory-warm);
+  background: var(--white);
   border: 1px solid rgba(196,168,130,0.18);
+  border-radius: 14px;
   transition: var(--trans);
   text-align: center;
 }
@@ -860,8 +864,9 @@ button { cursor: pointer; }
   margin: 0 auto;
   text-align: center;
   padding: 3.5rem 2.5rem;
-  background: var(--ivory-warm);
+  background: var(--white);
   border: 1px solid rgba(196,168,130,0.18);
+  border-radius: 16px;
 }
 .contact-label {
   font-size: 0.68rem;
@@ -1279,6 +1284,11 @@ body.has-banner #hero    { padding-top: 104px; }
 .cart-row-info { flex: 1; display: flex; flex-direction: column; gap: .2rem; }
 .cart-row-name { font-weight: 500; }
 .cart-row-size, .cart-row-price { font-size: .85rem; color: var(--text-light); }
+.cart-row-img {
+  width: 56px; height: 68px; object-fit: cover; border-radius: 8px;
+  flex-shrink: 0; display: block;
+  background: linear-gradient(135deg, var(--blush), var(--lilac));
+}
 .cart-row-qty { display: inline-flex; align-items: center; border: 1px solid var(--blush-deep); border-radius: 999px; overflow: hidden; background: var(--ivory); }
 .cart-row-qty button { width: 30px; height: 32px; border: none; background: none; font-size: 1.1rem; cursor: pointer; transition: color var(--trans); }
 .cart-row-qty .qval { min-width: 26px; text-align: center; }
