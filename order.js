@@ -2,6 +2,89 @@ document.addEventListener('DOMContentLoaded', () => {
   const esc = s => String(s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  /* ---- 會員：Google 登入 → 自動帶入，下單後回存 ---- */
+  const sbClient = (window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY)
+    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY,
+        { auth: { flowType: 'pkce' } })  // token 不進網址 hash
+    : null;
+
+  const memberEls = () => ({
+    box: document.getElementById('memberBox'),
+    loginBtn: document.getElementById('googleLoginBtn'),
+    info: document.getElementById('memberInfo'),
+    email: document.getElementById('memberEmail'),
+    logoutBtn: document.getElementById('logoutBtn'),
+  });
+
+  // 只填空欄位，不覆蓋客人已輸入的內容
+  function prefillForm(profile) {
+    if (!profile) return;
+    const form = document.getElementById('orderForm');
+    for (const k of ['name', 'phone', 'social', 'email']) {
+      const input = form.elements[k];
+      if (input && !input.value.trim() && profile[k]) input.value = profile[k];
+    }
+  }
+
+  async function refreshMemberUI() {
+    if (!sbClient) return;
+    const els = memberEls();
+    if (!els.box) return;
+    const { data: { session } } = await sbClient.auth.getSession();
+    if (!session) {
+      els.loginBtn.style.display = '';
+      els.info.style.display = 'none';
+      return;
+    }
+    els.loginBtn.style.display = 'none';
+    els.info.style.display = '';
+    els.email.textContent = session.user.email || '';
+    const { data: profile } = await sbClient
+      .from('customer_profiles').select('*').eq('user_id', session.user.id).maybeSingle();
+    prefillForm(profile);
+    // 還沒有會員資料（第一次下單）→ Email 先用 Google 帳號的
+    const emailInput = document.getElementById('orderForm').elements.email;
+    if (emailInput && !emailInput.value.trim() && session.user.email)
+      emailInput.value = session.user.email;
+  }
+
+  async function saveProfile(fields) {
+    if (!sbClient) return;
+    try {
+      // 最多等 4 秒：網路卡住也不能拖住付款跳轉
+      await Promise.race([
+        (async () => {
+          const { data: { session } } = await sbClient.auth.getSession();
+          if (!session) return;
+          await sbClient.from('customer_profiles').upsert({
+            user_id: session.user.id,
+            name: fields.name, phone: fields.phone,
+            social: fields.social, email: fields.email,
+            updated_at: new Date().toISOString(),
+          });
+        })(),
+        new Promise(resolve => setTimeout(resolve, 4000)),
+      ]);
+    } catch (e) {
+      console.warn('profile save skipped:', e);  // 存檔失敗絕不擋付款
+    }
+  }
+
+  if (sbClient) {
+    const els = memberEls();
+    if (els.loginBtn) els.loginBtn.addEventListener('click', () => {
+      sbClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/order.html' },
+      });
+    });
+    if (els.logoutBtn) els.logoutBtn.addEventListener('click', async () => {
+      await sbClient.auth.signOut();
+      refreshMemberUI();
+    });
+    refreshMemberUI();
+  }
+
   /* 語言（與首頁同套） */
   let currentLang = localStorage.getItem('oneiRoamLang') || 'zh';
   function applyLang(lang) {
@@ -111,9 +194,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---- 送出 ---- */
   async function submitOrder(payload, items, amountType) {
+    // 登入狀態下用使用者 token（訂單掛帳號）；任何失敗都退回 anon key，絕不擋結帳
+    let bearer = window.SUPABASE_ANON_KEY;
+    if (sbClient) {
+      try {
+        const { data: { session } } = await sbClient.auth.getSession();
+        if (session) bearer = session.access_token;
+      } catch { /* 匿名結帳 */ }
+    }
     const res = await fetch(`${window.SUPABASE_URL}/functions/v1/create-order`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${window.SUPABASE_ANON_KEY}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${bearer}` },
       body: JSON.stringify({
         items: items.map(it => ({ id: it.id, size: it.size, qty: it.qty })),
         customer: { name: payload.name, phone: payload.phone, social: payload.social, email: payload.email, notes: payload.notes },
@@ -123,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
     if (!data.action || !data.params) throw new Error('create-order response malformed');
+    await saveProfile({ name: payload.name, phone: payload.phone, social: payload.social, email: payload.email });
     const form = document.createElement('form');
     form.method = 'POST'; form.action = data.action;
     for (const [k, v] of Object.entries(data.params)) {

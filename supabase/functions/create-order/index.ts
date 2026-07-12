@@ -45,6 +45,7 @@ Deno.serve(async (req) => {
     // Supabase auto-injects the service role key as SUPABASE_SERVICE_ROLE_KEY
     // (the SUPABASE_ prefix is reserved — you cannot set SUPABASE_SERVICE_KEY yourself).
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
     // Validate required secrets before any DB write
     if (!merId || !hashKey || !hashIV || !supaUrl || !serviceKey) {
@@ -82,12 +83,23 @@ Deno.serve(async (req) => {
     const payAmount = amountType === 'full' ? p.total : p.deposit;
     const no = orderNo();
 
+    // 帶使用者 token 就把訂單掛帳號；anon key / 無效 token = 訪客結帳（null）
+    let userId: string | null = null;
+    try {
+      const userClient = createClient(supaUrl, anonKey, {
+        global: { headers: { Authorization: req.headers.get('Authorization') || '' } },
+      });
+      const { data: { user } } = await userClient.auth.getUser();
+      userId = user?.id ?? null;
+    } catch { /* 訪客結帳 */ }
+
     // 寫訂單（pending）
     const c = body.customer || {};
     const { data: order, error: oErr } = await sb.from('orders').insert({
       order_no: no, name: c.name || '', phone: c.phone || '', social: c.social || '',
       email: c.email || '', notes: c.notes || '', amount_type: amountType,
       subtotal: p.subtotal, discount: p.discount, total: p.total, pay_amount: payAmount,
+      user_id: userId,
     }).select('id').single();
     if (oErr) return json({ error: oErr.message }, 500);
     const { error: iErr } = await sb.from('order_items').insert(lineItems.map(l => ({
