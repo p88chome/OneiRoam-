@@ -19,12 +19,14 @@ Deno.serve(async (req) => {
     const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-    // Gate: must be a logged-in user (signups are disabled → any user = admin).
+    // Gate: must be an ADMIN user (Google signups are open → any-user is NOT enough).
     const userClient = createClient(supaUrl, anonKey, {
       global: { headers: { Authorization: req.headers.get('Authorization') || '' } },
     });
     const { data: { user }, error: uErr } = await userClient.auth.getUser();
     if (uErr || !user) return json({ error: 'unauthorized' }, 401);
+    if ((user.app_metadata as Record<string, unknown> | null)?.role !== 'admin')
+      return json({ error: 'forbidden' }, 403);
 
     // Optional { target: 'staging' } → staging hook; default production.
     let target = 'production';
