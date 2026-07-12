@@ -192,7 +192,7 @@ button { cursor: pointer; }
 #main-nav a:hover { color: var(--text-dark); }
 
 /* 原創設計下拉選單 */
-.nav-drop { position: relative; }
+.nav-drop { position: relative; display: inline-flex; align-items: center; }
 .nav-drop > a::after { transition: width 0.3s ease; }
 .nav-drop:hover > a::after { width: 100%; }
 .drop-menu {
