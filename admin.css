@@ -140,6 +140,9 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .badge-active   { background: #e2f0ea; color: #437a64; }
 .badge-sold_out { background: #f7e6e9; color: #a85a67; }
 .badge-hidden   { background: #eeeaf0; color: #8b8395; }
+.badge-pending  { background: #f7eed8; color: #a07030; }
+.badge-paid     { background: #e2f0ea; color: #437a64; }
+.badge-failed   { background: #f7e6e9; color: #a85a67; }
 
 /* ---- 表單 ---- */
 .form-card { padding: 1.5rem; }

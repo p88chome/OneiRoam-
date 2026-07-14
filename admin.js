@@ -120,7 +120,13 @@ function setActiveNav(view) {
   document.querySelectorAll('.nav-item').forEach(b =>
     b.classList.toggle('active', b.dataset.view === view));
 }
-const VIEWS = { dashboard: renderDashboard, products: () => { setActiveNav('products'); renderProducts(); }, site: renderSiteSettings };
+const VIEWS = {
+  dashboard: renderDashboard,
+  products: () => { setActiveNav('products'); renderProducts(); },
+  orders: () => { setActiveNav('orders'); renderOrders(); },
+  discounts: () => { setActiveNav('discounts'); renderDiscounts(); },
+  site: renderSiteSettings,
+};
 document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => (VIEWS[b.dataset.view] || renderDashboard)());
 
 async function renderDashboard() {
@@ -167,6 +173,110 @@ async function renderDashboard() {
     </div>`;
   document.getElementById('dashNew').onclick = () => { setActiveNav('products'); productForm(null); };
   document.getElementById('dashPublish').onclick = () => publishBtn.click();
+}
+
+const PAY_STATUS_LABEL = { pending: '待付款', paid: '已付款', failed: '付款失敗' };
+const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨' };
+
+async function renderOrders() {
+  const { data: orders, error } = await sb.from('orders')
+    .select('id, order_no, name, phone, email, total, pay_amount, payment_status, fulfillment_status, discount_code, created_at')
+    .order('created_at', { ascending: false }).limit(200);
+  if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
+  viewRoot().innerHTML = `
+    <div class="view-head"><h2>訂單管理</h2></div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>訂單編號</th><th>客人</th><th>金額</th><th>付款</th><th>出貨</th><th>時間</th><th></th></tr></thead>
+        <tbody>${orders.map(o => `
+          <tr>
+            <td>${esc(o.order_no)}${o.discount_code ? ` <span class="muted">(${esc(o.discount_code)})</span>` : ''}</td>
+            <td>${esc(o.name)}<br><span class="muted">${esc(o.phone)}</span></td>
+            <td>NT$ ${esc(Number(o.pay_amount).toLocaleString('en-US'))}<br><span class="muted">合計 ${esc(Number(o.total).toLocaleString('en-US'))}</span></td>
+            <td><span class="badge badge-${esc(o.payment_status)}">${esc(PAY_STATUS_LABEL[o.payment_status] || o.payment_status)}</span></td>
+            <td><span class="badge">${esc(FULFILL_LABEL[o.fulfillment_status] || o.fulfillment_status)}</span></td>
+            <td class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</td>
+            <td>${o.fulfillment_status !== 'shipped'
+              ? `<button class="btn btn-sm" data-ship="${esc(o.id)}">標記已出貨</button>` : ''}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  viewRoot().querySelectorAll('[data-ship]').forEach(b => b.onclick = async () => {
+    b.disabled = true; b.textContent = '處理中…';
+    const { error } = await sb.from('orders').update({ fulfillment_status: 'shipped' }).eq('id', b.dataset.ship);
+    if (error) { b.disabled = false; b.textContent = '標記已出貨'; alert('更新失敗：' + error.message); return; }
+    renderOrders();
+  });
+}
+
+async function renderDiscounts() {
+  const { data: codes, error } = await sb.from('discount_codes').select('*').order('created_at', { ascending: false });
+  if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
+  viewRoot().innerHTML = `
+    <div class="view-head">
+      <h2>折扣碼</h2>
+      <button id="newCodeBtn" class="btn btn-primary">＋ 新增折扣碼</button>
+    </div>
+    <div class="card form-card">
+      <div class="form-grid">
+        <label class="field"><span>代碼（客人輸入，大寫英數）</span>
+          <input id="dc_code" style="text-transform:uppercase" maxlength="30" placeholder="例：WELCOME10"></label>
+        <label class="field"><span>折扣％（跟固定折抵擇一）</span>
+          <input id="dc_percent" type="number" min="1" max="100" placeholder="例：10"></label>
+        <label class="field"><span>固定折抵 NT$（跟折扣％擇一）</span>
+          <input id="dc_amount" type="number" min="1" placeholder="例：100"></label>
+        <label class="field"><span>使用上限（留白＝不限）</span>
+          <input id="dc_max" type="number" min="1"></label>
+        <label class="field"><span>到期日（留白＝不過期）</span>
+          <input id="dc_expires" type="date"></label>
+      </div>
+      <div class="form-actions">
+        <button id="dcSaveBtn" class="btn btn-primary">新增</button>
+        <span id="dcErr" class="err" role="alert"></span>
+      </div>
+    </div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>代碼</th><th>折扣</th><th>已用/上限</th><th>到期</th><th>狀態</th><th></th></tr></thead>
+        <tbody>${codes.map(c => `
+          <tr>
+            <td>${esc(c.code)}</td>
+            <td>${c.percent_off ? esc(c.percent_off) + '%' : 'NT$ ' + esc(c.amount_off)}</td>
+            <td>${esc(c.used_count)} / ${c.max_uses ?? '∞'}</td>
+            <td class="muted">${c.expires_at ? esc(String(c.expires_at).slice(0, 10)) : '—'}</td>
+            <td><span class="badge badge-${c.active ? 'active' : 'hidden'}">${c.active ? '啟用中' : '已停用'}</span></td>
+            <td><button class="btn btn-sm" data-toggle="${esc(c.code)}" data-active="${c.active}">${c.active ? '停用' : '啟用'}</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  document.getElementById('newCodeBtn').onclick = () => document.getElementById('dc_code').focus();
+  document.getElementById('dcSaveBtn').onclick = async () => {
+    const errEl = document.getElementById('dcErr');
+    errEl.textContent = '';
+    const code = document.getElementById('dc_code').value.trim().toUpperCase();
+    const percent = document.getElementById('dc_percent').value.trim();
+    const amount = document.getElementById('dc_amount').value.trim();
+    if (!code) { errEl.textContent = '請輸入代碼。'; return; }
+    if (!percent && !amount) { errEl.textContent = '折扣％與固定折抵至少填一個。'; return; }
+    const row = {
+      code, active: true,
+      percent_off: percent ? parseInt(percent, 10) : null,
+      amount_off: amount ? parseInt(amount, 10) : null,
+      max_uses: document.getElementById('dc_max').value.trim() ? parseInt(document.getElementById('dc_max').value, 10) : null,
+      expires_at: document.getElementById('dc_expires').value || null,
+    };
+    const { error } = await sb.from('discount_codes').insert(row);
+    if (error) { errEl.textContent = friendlyErr(error); return; }
+    renderDiscounts();
+  };
+  viewRoot().querySelectorAll('[data-toggle]').forEach(b => b.onclick = async () => {
+    const active = b.dataset.active !== 'true';
+    const { error } = await sb.from('discount_codes').update({ active }).eq('code', b.dataset.toggle);
+    if (error) { alert('更新失敗：' + error.message); return; }
+    renderDiscounts();
+  });
 }
 
 const STATUS_LABEL = { preorder: '預購中', active: '現貨', sold_out: '售罄', hidden: '隱藏' };

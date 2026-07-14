@@ -116,6 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     paid:    { cls: 's-paid',    zh: '已付款', en: 'Paid' },
     failed:  { cls: 's-failed',  zh: '付款失敗', en: 'Failed' },
   };
+  const FULFILL = {
+    unfulfilled: { cls: 's-pending', zh: '未出貨', en: 'Unfulfilled' },
+    shipped:     { cls: 's-paid',    zh: '已出貨', en: 'Shipped' },
+  };
   let orders = [];
 
   function renderOrders() {
@@ -127,13 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     el.innerHTML = orders.map(o => {
       const st = STATUS[o.payment_status] || STATUS.pending;
+      const fl = FULFILL[o.fulfillment_status] || FULFILL.unfulfilled;
       const items = (o.order_items || []).map(i =>
         `<li>${esc(i.name)}（${esc(i.size)}）× ${esc(i.qty)} — NT$ ${Number(i.price * i.qty).toLocaleString()}</li>`).join('');
       return `
       <div class="order-card">
         <div class="order-card-head">
           <span class="order-card-no">${esc(o.order_no)}</span>
-          <span class="order-status ${st.cls}">${currentLang === 'zh' ? st.zh : st.en}</span>
+          <span class="order-status-group">
+            <span class="order-status ${st.cls}">${currentLang === 'zh' ? st.zh : st.en}</span>
+            ${st.cls === 's-paid' ? `<span class="order-status ${fl.cls}">${currentLang === 'zh' ? fl.zh : fl.en}</span>` : ''}
+          </span>
         </div>
         <p class="order-card-date">${esc((o.created_at || '').slice(0, 10))}</p>
         <ul class="order-card-items">${items}</ul>
@@ -160,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('mEmail').textContent = session.user.email || '';
     const [{ data: os }, { data: profile }] = await Promise.all([
       sbClient.from('orders')
-        .select('order_no, created_at, payment_status, amount_type, total, pay_amount, order_items(name, size, qty, price)')
+        .select('order_no, created_at, payment_status, fulfillment_status, amount_type, total, pay_amount, order_items(name, size, qty, price)')
         // RLS 已限制，只是把「只看自己的」寫明（admin 帳號開這頁也不會看到全店訂單）
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false }),

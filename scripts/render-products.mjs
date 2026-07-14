@@ -26,7 +26,7 @@ export function renderProductCards(products) {
             ${p.badge_zh ? `<span class="product-badge" data-zh="${esc(p.badge_zh)}" data-en="${esc(p.badge_en || p.badge_zh)}">${esc(p.badge_zh)}</span>` : ''}
           </div>
           <div class="product-info">
-            <h3 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h3>
+            <a href="product-${esc(p.id)}.html" class="product-name-link"><h3 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h3></a>
             <p data-zh="${esc(p.desc_zh)}" data-en="${esc(p.desc_en)}">${esc(p.desc_zh)}</p>
             <span class="product-price">NT$ ${fmt(p.price)}</span>
             <div class="product-meta">
