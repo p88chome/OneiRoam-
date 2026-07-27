@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function prefillForm(profile) {
     if (!profile) return;
     const form = document.getElementById('orderForm');
-    for (const k of ['name', 'phone', 'social', 'email']) {
+    for (const k of ['name', 'social', 'email']) {
       const input = form.elements[k];
       if (input && !input.value.trim() && profile[k]) input.value = profile[k];
     }
@@ -58,8 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!session) return;
           await sbClient.from('customer_profiles').upsert({
             user_id: session.user.id,
-            name: fields.name, phone: fields.phone,
-            social: fields.social, email: fields.email,
+            name: fields.name, social: fields.social, email: fields.email,
             updated_at: new Date().toISOString(),
           });
         })(),
@@ -171,8 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sumDiscount').textContent = fmt(p.discount);
     document.getElementById('sumDiscountRow').style.display = p.discount > 0 ? '' : 'none';
     document.getElementById('sumTotal').textContent = fmt(p.total);
-    document.getElementById('sumDeposit').textContent = fmt(p.deposit);
-    document.getElementById('sumCod').textContent = fmt(p.cod);
     applyLang(currentLang);
   }
 
@@ -194,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ---- 送出 ---- */
-  async function submitOrder(payload, items, amountType) {
+  async function submitOrder(payload, items) {
     // 登入狀態下用使用者 token（訂單掛帳號）；任何失敗都退回 anon key，絕不擋結帳
     let bearer = window.SUPABASE_ANON_KEY;
     if (sbClient) {
@@ -208,14 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${bearer}` },
       body: JSON.stringify({
         items: items.map(it => ({ id: it.id, size: it.size, qty: it.qty })),
-        customer: { name: payload.name, phone: payload.phone, social: payload.social, email: payload.email, notes: payload.notes },
-        amount_type: amountType,
+        customer: { name: payload.name, social: payload.social, email: payload.email, notes: payload.notes },
+        amount_type: 'full',
       }),
     });
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
     if (!data.action || !data.params) throw new Error('create-order response malformed');
-    await saveProfile({ name: payload.name, phone: payload.phone, social: payload.social, email: payload.email });
+    await saveProfile({ name: payload.name, social: payload.social, email: payload.email });
     const form = document.createElement('form');
     form.method = 'POST'; form.action = data.action;
     for (const [k, v] of Object.entries(data.params)) {
@@ -244,18 +241,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const fd = new FormData(form);
     const payload = {
       name: fd.get('name').trim(),
-      phone: fd.get('phone').trim(),
-      social: fd.get('social').trim(),
+      social: (fd.get('social') || '').trim(),
       email: fd.get('email').trim(),
       notes: (fd.get('notes') || '').trim(),
     };
 
-    const amountType = (form.querySelector('input[name="amount_type"]:checked') || {}).value || 'deposit';
     submitBtn.disabled = true;
     const orig = submitBtn.textContent;
     submitBtn.textContent = currentLang === 'zh' ? '前往付款…' : 'Redirecting…';
     try {
-      await submitOrder(payload, items, amountType);   // 成功則頁面已跳轉 PAYUNi
+      await submitOrder(payload, items);   // 成功則頁面已跳轉 PAYUNi
     } catch (err) {
       formError.textContent = currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.';
       formError.style.display = '';

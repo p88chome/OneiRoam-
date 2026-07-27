@@ -57,10 +57,6 @@
             <span>− NT$ <span id="sumDiscount">0</span></span></div>
           <div class="sum-row sum-total"><span data-zh="合計" data-en="Total">合計</span>
             <span>NT$ <span id="sumTotal">0</span></span></div>
-          <div class="sum-row sum-deposit"><span data-zh="訂金（立即匯款）" data-en="Deposit (pay now)">訂金（立即匯款）</span>
-            <span>NT$ <span id="sumDeposit">0</span></span></div>
-          <div class="sum-row"><span data-zh="尾款（貨到付款）" data-en="Balance (COD)">尾款（貨到付款）</span>
-            <span>NT$ <span id="sumCod">0</span></span></div>
         </div>
 
         <form id="orderForm" class="order-form" novalidate>
@@ -78,21 +74,12 @@
           </div>
           <label><span data-zh="姓名" data-en="Name">姓名</span>
             <input name="name" type="text" required maxlength="60"></label>
-          <label><span data-zh="電話" data-en="Phone">電話</span>
-            <input name="phone" type="tel" required maxlength="30"></label>
-          <label><span data-zh="Line 暱稱或 IG 帳號" data-en="LINE nickname or IG">Line 暱稱或 IG 帳號</span>
-            <input name="social" type="text" required maxlength="60"></label>
+          <label><span data-zh="Line名稱或IG帳號" data-en="LINE name or IG account">Line名稱或IG帳號</span>
+            <input name="social" type="text" maxlength="60"></label>
           <label><span data-zh="Email（收訂單確認信）" data-en="Email (order confirmation)">Email（收訂單確認信）</span>
             <input name="email" type="email" required maxlength="120"></label>
           <label><span data-zh="備註" data-en="Notes">備註</span>
             <textarea name="notes" maxlength="500"></textarea></label>
-          <fieldset class="pay-choice">
-            <legend data-zh="付款金額" data-en="Pay">付款金額</legend>
-            <label><input type="radio" name="amount_type" value="deposit" checked>
-              <span data-zh="訂金（一半）" data-en="Deposit (half)">訂金（一半）</span></label>
-            <label><input type="radio" name="amount_type" value="full">
-              <span data-zh="全額" data-en="Full">全額</span></label>
-          </fieldset>
           <p id="preorderGate" class="preorder-gate" style="display:none"></p>
           <button type="submit" id="submitBtn" class="btn-primary"
                   data-zh="送出訂單" data-en="Place Order">送出訂單</button>

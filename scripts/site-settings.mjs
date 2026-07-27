@@ -7,10 +7,10 @@ export const THEMES = ['default', 'sage', 'latte', 'mist'];
 const DEFAULTS = {
   hero_img_1: 'images/hero.jpg',
   hero_focus_1: '35',
-  announce_zh: '✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦',
-  announce_en: '✦ Pre-order Now · Limited Handcraft · Message us on LINE ✦',
-  hero_eyebrow_zh: '獨立設計 · 手作限量',
-  hero_eyebrow_en: 'Independent Design · Limited Handcraft',
+  announce_zh: '✦ 現正接受預購 · 限時預訂 · 私訊 LINE 詢問 ✦',
+  announce_en: '✦ Pre-order Now · Limited-time · Message us on LINE ✦',
+  hero_eyebrow_zh: '獨立設計 · 限時預訂',
+  hero_eyebrow_en: 'Independent Design · Limited-time Pre-order',
   hero_desc_zh: '以夢為靈感，每一件都是穿在身上的詩',
   hero_desc_en: 'Inspired by dreams — every piece is poetry you wear',
 };

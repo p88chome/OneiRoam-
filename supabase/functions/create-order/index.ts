@@ -56,7 +56,8 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     const reqItems = Array.isArray(body.items) ? body.items : [];
-    const amountType = body.amount_type === 'full' ? 'full' : 'deposit';
+    // 一律收全額（照商品頁面價格 / 折扣後合計）；不再區分訂金/尾款
+    const amountType = 'full';
     if (!reqItems.length) return json({ error: '購物車是空的' }, 400);
 
     // 伺服器重算：讀現價 + 庫存

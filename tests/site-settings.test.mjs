@@ -45,7 +45,7 @@ test('announceHtml: 沒設定 → 現行預設文案', () => {
 });
 
 test('eyebrowHtml/heroDescHtml: 預設與自訂', () => {
-  assert.match(eyebrowHtml({}), /獨立設計 · 手作限量/);
+  assert.match(eyebrowHtml({}), /獨立設計 · 限時預訂/);
   assert.match(heroDescHtml({ hero_desc_zh: '新的一句詩' }), /data-zh="新的一句詩"/);
   assert.match(eyebrowHtml({}), /class="hero-eyebrow"/);
   assert.match(heroDescHtml({}), /class="hero-desc"/);

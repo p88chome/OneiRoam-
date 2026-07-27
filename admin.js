@@ -288,7 +288,8 @@ async function saveSiteSettings() {
 async function productForm(p) {
   const isNew = !p;
   p = p || { id:'', name_zh:'', name_en:'', desc_zh:'', desc_en:'', category:'top',
-             price:0, badge_zh:'', badge_en:'', status:'preorder', sort_order:0 };
+             price:0, badge_zh:'', badge_en:'', status:'preorder', sort_order:0,
+             needs_shipping:true };
   let variants = [];
   if (!isNew) {
     const { data } = await sb.from('product_variants').select('*').eq('product_id', p.id);
@@ -321,6 +322,8 @@ async function productForm(p) {
         <label class="field"><span>狀態</span>
           <select id="f_status">${['preorder','active','sold_out','hidden']
             .map(s => `<option value="${s}" ${s===p.status?'selected':''}>${STATUS_LABEL[s]}</option>`).join('')}</select></label>
+        <label class="field"><span>需要物流（尾款商品貨到付款打勾；訂金商品免物流取消勾選）</span>
+          <input id="f_needs_shipping" type="checkbox" ${p.needs_shipping ? 'checked' : ''}></label>
         <label class="field"><span>尺寸+庫存（例 小碼:20,大碼:20）</span>
           <input id="f_variants" value="${variants.map(v=>`${esc(v.size)}:${esc(v.stock)}`).join(',')}"></label>
         <label class="field field-wide"><span>商品圖片</span>
@@ -371,6 +374,7 @@ async function saveProduct(isNew) {
     desc_zh: v('f_desc_zh'), desc_en: v('f_desc_en'), category: v('f_category'),
     price: parseInt(v('f_price'),10)||0, badge_zh: v('f_badge_zh'), badge_en: v('f_badge_en'),
     status: v('f_status'), sort_order: parseInt(v('f_sort'),10)||0,
+    needs_shipping: document.getElementById('f_needs_shipping').checked,
   };
   const { error } = await sb.from('products').upsert(row);
   if (error) return fail(friendlyErr(error));
