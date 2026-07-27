@@ -363,12 +363,9 @@ button { cursor: pointer; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* 直式全身照裁成橫幅 banner：對焦人物上半身；center top 只會拍到天空/牆面 */
-  object-position: center 25%;
-  transition: opacity 1.8s ease;
+  /* 對焦人物上半身；實際焦點由 inline style object-position 覆寫 */
+  object-position: center 35%;
 }
-.h-img-1 { opacity: 1; z-index: 1; object-position: center 22%; }
-.h-img-2 { opacity: 0; z-index: 0; object-position: center 32%; }
 
 .hero-overlay {
   position: absolute;
@@ -458,36 +455,6 @@ button { cursor: pointer; }
 .btn-primary:hover { color: var(--ivory); }
 .btn-primary span { position: relative; z-index: 1; }
 
-
-/* =============================================
-   MARQUEE STRIP
-   ============================================= */
-.marquee-strip {
-  overflow: hidden;
-  background: var(--text-dark);
-  padding: 1.1rem 0;
-}
-.marquee-track {
-  display: flex;
-  align-items: center;
-  gap: 1.8rem;
-  white-space: nowrap;
-  animation: marquee 22s linear infinite;
-  width: max-content;
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee-strip:hover .marquee-track { animation-play-state: paused; }
-.marquee-track span {
-  font-family: var(--serif);
-  font-size: 0.88rem;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  color: rgba(250,250,247,0.6);
-}
-.mdot { color: var(--gold) !important; opacity: 1 !important; }
 
 /* =============================================
    ABOUT
@@ -1098,58 +1065,6 @@ button { cursor: pointer; }
   0%   { left: -100%; }
   100% { left: 100%; }
 }
-
-/* =============================================
-   ANNOUNCEMENT BANNER
-   ============================================= */
-#announce-bar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1001;
-  background: var(--text-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.55rem 3rem;
-  transition: transform 0.4s ease;
-}
-#announce-bar.hidden {
-  transform: translateY(-100%);
-}
-.announce-inner {
-  overflow: hidden;
-  flex: 1;
-  text-align: center;
-}
-.announce-text {
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  color: var(--gold-light);
-  white-space: nowrap;
-  display: inline-block;
-  animation: announceTicker 18s linear infinite;
-}
-@keyframes announceTicker {
-  0%   { transform: translateX(30%); }
-  100% { transform: translateX(-100%); }
-}
-.announce-close {
-  position: absolute;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: rgba(250,250,247,0.5);
-  font-size: 1.1rem;
-  line-height: 1;
-  padding: 0.2rem 0.4rem;
-  transition: color 0.2s;
-  flex-shrink: 0;
-}
-.announce-close:hover { color: var(--ivory); }
-
-/* When banner is visible, shift header down */
-body.has-banner #header  { top: 32px; }
-body.has-banner #hero    { padding-top: 104px; }
 
 /* =============================================
    PRODUCT MODAL

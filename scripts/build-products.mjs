@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
 import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASER_COUNT } from './categories.mjs';
 import { injectBlock } from './inject-block.mjs';
-import { heroImgsHtml, announceHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
+import { heroImgsHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -97,7 +97,6 @@ out = injectBlock(out, 'JSONLD', `  ${jsonldTag}`, { endIndent: '  ' });
 out = injectBlock(out, 'HERO', heroImgsHtml(settings), { endIndent: '      ' });
 out = injectBlock(out, 'EYEBROW', eyebrowHtml(settings), { endIndent: '      ' });
 out = injectBlock(out, 'HERODESC', heroDescHtml(settings), { endIndent: '      ' });
-out = injectBlock(out, 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
 out = applyTheme(out, settings.theme);
 
 await writeFile('index.html', out);
@@ -106,7 +105,6 @@ await writeFile('index.html', out);
 try {
   const selPage = await readFile('select.html', 'utf8');
   let selOut = injectBlock(selPage, 'SELECT', selectHtml);
-  selOut = injectBlock(selOut, 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
   selOut = applyTheme(selOut, settings.theme);
   await writeFile('select.html', selOut);
 } catch (err) {
@@ -121,11 +119,10 @@ try {
   console.warn(`order.html not updated: ${err.message}`);
 }
 
-// 會員專區：跑馬燈公告 + 主題
+// 會員專區：主題換色
 try {
   const memberPage = await readFile('member.html', 'utf8');
-  let memberOut = injectBlock(memberPage, 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
-  memberOut = applyTheme(memberOut, settings.theme);
+  const memberOut = applyTheme(memberPage, settings.theme);
   await writeFile('member.html', memberOut);
 } catch (err) {
   console.warn(`member.html not updated: ${err.message}`);

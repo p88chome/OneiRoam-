@@ -8,13 +8,12 @@ test('THEMES: 四組預設配色', () => {
   assert.deepStrictEqual(THEMES, ['default', 'sage', 'latte', 'mist']);
 });
 
-test('heroImgsHtml: 預設圖與焦點', () => {
+test('heroImgsHtml: 預設單圖與焦點', () => {
   const html = heroImgsHtml({});
-  assert.match(html, /src="images\/hero-1\.jpg"[^>]*h-img-1/);
-  assert.match(html, /src="images\/hero-2\.jpg"[^>]*h-img-2/);
-  assert.match(html, /object-position:center 22%/);
-  assert.match(html, /object-position:center 32%/);
-  assert.match(html, /h-img-2[^>]*loading="lazy"/);
+  assert.match(html, /src="images\/hero\.jpg"[^>]*h-img-1/);
+  assert.match(html, /object-position:center 35%/);
+  // 單圖：不應再有第二張輪換圖
+  assert.doesNotMatch(html, /h-img-2/);
 });
 
 test('heroImgsHtml: 自訂圖與焦點、跳脫網址', () => {
@@ -25,10 +24,10 @@ test('heroImgsHtml: 自訂圖與焦點、跳脫網址', () => {
   assert.match(html, /object-position:center 40%/);
 });
 
-test('heroImgsHtml: 焦點非數字/超界 → 25', () => {
-  const html = heroImgsHtml({ hero_focus_1: 'abc', hero_focus_2: '150' });
+test('heroImgsHtml: 焦點非數字 → 25', () => {
+  const html = heroImgsHtml({ hero_focus_1: 'abc' });
   const m = html.match(/object-position:center (\d+)%/g);
-  assert.deepStrictEqual(m, ['object-position:center 25%', 'object-position:center 25%']);
+  assert.deepStrictEqual(m, ['object-position:center 25%']);
 });
 
 test('announceHtml: 自訂文字、en 空白 fallback zh', () => {

@@ -5,10 +5,8 @@ import { esc } from './render-products.mjs';
 export const THEMES = ['default', 'sage', 'latte', 'mist'];
 
 const DEFAULTS = {
-  hero_img_1: 'images/hero-1.jpg',
-  hero_img_2: 'images/hero-2.jpg',
-  hero_focus_1: '22',
-  hero_focus_2: '32',
+  hero_img_1: 'images/hero.jpg',
+  hero_focus_1: '35',
   announce_zh: '✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦',
   announce_en: '✦ Pre-order Now · Limited Handcraft · Message us on LINE ✦',
   hero_eyebrow_zh: '獨立設計 · 手作限量',
@@ -21,13 +19,9 @@ const pick = (s, k) => (s[k] && String(s[k]).trim()) || DEFAULTS[k];
 const focus = v => { const n = parseInt(v, 10); return n >= 0 && n <= 100 ? n : 25; };
 
 export function heroImgsHtml(s) {
-  const imgs = [
-    { src: pick(s, 'hero_img_1'), cls: 'h-img-1', f: focus(pick(s, 'hero_focus_1')), lazy: false },
-    { src: pick(s, 'hero_img_2'), cls: 'h-img-2', f: focus(pick(s, 'hero_focus_2')), lazy: true },
-  ];
-  return imgs.map(i =>
-    `      <img src="${esc(i.src)}" alt="OneiRoam" class="hero-img ${i.cls}" style="object-position:center ${i.f}%"${i.lazy ? ' loading="lazy"' : ''}>`
-  ).join('\n');
+  const src = pick(s, 'hero_img_1');
+  const f = focus(pick(s, 'hero_focus_1'));
+  return `      <img src="${esc(src)}" alt="OneiRoam" class="hero-img h-img-1" width="1178" height="1178" style="object-position:center ${f}%">`;
 }
 
 // zh 有值而 en 空 → en fallback zh（EN 模式不能出現空字）

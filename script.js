@@ -21,25 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  /* ------------------------------------------
-     ANNOUNCEMENT BANNER
-     ------------------------------------------ */
-  const announceBar  = document.getElementById('announce-bar');
-  const announceClose = document.getElementById('announceClose');
-  const BANNER_KEY   = 'oneiRoamBannerClosed';
-
-  if (sessionStorage.getItem(BANNER_KEY)) {
-    announceBar.classList.add('hidden');
-  } else {
-    document.body.classList.add('has-banner');
-  }
-
-  announceClose.addEventListener('click', () => {
-    announceBar.classList.add('hidden');
-    document.body.classList.remove('has-banner');
-    sessionStorage.setItem(BANNER_KEY, '1');
-  });
-
 
   /* ------------------------------------------
      LANGUAGE TOGGLE
@@ -114,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = document.querySelector(href);
       if (!target) return;
       e.preventDefault();
-      const bannerH = announceBar.classList.contains('hidden') ? 0 : 32;
-      const offset  = window.scrollY + target.getBoundingClientRect().top - 72 - bannerH;
+      const offset  = window.scrollY + target.getBoundingClientRect().top - 72;
       window.scrollTo({ top: offset, behavior: 'smooth' });
     });
   });
@@ -350,25 +330,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-
-  /* ------------------------------------------
-     HERO IMAGE CROSSFADE
-     ------------------------------------------ */
-  const img1 = document.querySelector('.h-img-1');
-  const img2 = document.querySelector('.h-img-2');
-  if (img1 && img2) {
-    let loaded = 0;
-    const onLoad = () => {
-      if (++loaded < 2) return;
-      let showing = true;
-      setInterval(() => {
-        img1.style.opacity = showing ? '0' : '1';
-        img2.style.opacity = showing ? '1' : '0';
-        showing = !showing;
-      }, 5000);
-    };
-    if (img1.complete) onLoad(); else img1.addEventListener('load', onLoad);
-    if (img2.complete) onLoad(); else img2.addEventListener('load', onLoad);
-  }
 
 });
