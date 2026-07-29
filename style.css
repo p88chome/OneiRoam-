@@ -429,6 +429,60 @@ button { cursor: pointer; }
   animation: heroUp 1.2s 0.45s var(--ease) both;
 }
 
+/* Desktop (>960px): split layout — text left / uncropped photo right.
+   ≤960px is untouched (rules above this block still apply as-is). */
+@media (min-width: 961px) {
+  #hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    height: auto;
+    min-height: clamp(480px, 62vh, 720px);
+  }
+
+  .hero-bg {
+    position: relative;
+    inset: auto;
+    order: 2;
+  }
+  .hero-bg::after {
+    content: "";
+    position: absolute;
+    bottom: -16px;
+    right: -16px;
+    width: 45%;
+    height: 45%;
+    border: 1px solid var(--gold-light);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .hero-overlay { display: none; }
+
+  .hero-content {
+    order: 1;
+    z-index: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    background: linear-gradient(-45deg, var(--blush), var(--lilac), var(--misty-blue), var(--blush-deep));
+    background-size: 400% 400%;
+    animation: heroUp 1.2s var(--ease) both, gradientShift 12s ease infinite;
+  }
+
+  .hero-eyebrow { color: var(--text-mid); }
+}
+
+@media (min-width: 961px) and (prefers-reduced-motion: reduce) {
+  .hero-content {
+    animation: heroUp 1.2s var(--ease) both;
+    background-position: 30% 50%;
+  }
+}
+
 /* Primary Button */
 .btn-primary {
   display: inline-flex;
