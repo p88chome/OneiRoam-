@@ -3,7 +3,8 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
 import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASER_COUNT } from './categories.mjs';
 import { injectBlock } from './inject-block.mjs';
-import { heroImgsHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
+import { heroImgsHtml, announceHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
+import { renderProductPage } from './product-pages.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -69,7 +70,7 @@ const jsonld = {
         priceCurrency: 'TWD',
         price: String(p.price),
         availability: `https://schema.org/${AVAIL[p.status] || 'PreOrder'}`,
-        url: 'https://www.oneiroam.com/#products',
+        url: `https://www.oneiroam.com/product-${p.id}.html`,
       },
     },
   })),
@@ -128,5 +129,18 @@ try {
   console.warn(`member.html not updated: ${err.message}`);
 }
 
+// 商品獨立頁：每件商品各一頁（SEO／IG／LINE 可直連單品）
+let pageCount = 0;
+for (const p of normalized) {
+  try {
+    let page = injectBlock(renderProductPage(p), 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
+    page = applyTheme(page, settings.theme);
+    await writeFile(`product-${p.id}.html`, page);
+    pageCount++;
+  } catch (err) {
+    console.warn(`product-${p.id}.html not written: ${err.message}`);
+  }
+}
+
 await writeFile('data/storefront.json', JSON.stringify(buildStorefrontData(settings), null, 2));
-console.log(`built ${original.length} original + ${select.length} select (${teaser.length} teased)`);
+console.log(`built ${original.length} original + ${select.length} select (${teaser.length} teased), ${pageCount} product pages`);

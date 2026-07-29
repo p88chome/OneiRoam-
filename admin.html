@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://static.cloudflareinsights.com;
+    content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com;
              style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
              font-src https://fonts.gstatic.com;
-             img-src 'self' data: https:;
-             connect-src 'self' https://*.supabase.co https://cloudflareinsights.com https://cdn.jsdelivr.net;
+             img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co;
+             connect-src 'self' https://*.supabase.co https://cloudflareinsights.com;
              base-uri 'self'">
   <title>OneiRoam 後台</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,12 +55,14 @@
     <nav class="sidenav">
       <button data-view="dashboard" class="nav-item active">總覽</button>
       <button data-view="products" class="nav-item">商品</button>
+      <button data-view="orders" class="nav-item">訂單</button>
+      <button data-view="discounts" class="nav-item">折扣碼</button>
       <button data-view="site" class="nav-item">網站設定</button>
     </nav>
     <main id="viewRoot" class="view-root"></main>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="vendor/supabase.js"></script>
   <script src="admin.config.js"></script>
   <script src="dashboard-stats.js"></script>
   <script src="admin.js"></script>

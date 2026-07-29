@@ -100,3 +100,9 @@ Dashboard → Authentication：
 - [ ] 登入下單 → member.html 看得到這筆訂單
 - [ ] 訪客（未登入）下單 → 任何客人的 member.html 都看不到這筆訂單
 - [ ] 客人 A 登入 member.html → 看不到客人 B 的訂單
+
+## 上線前最後檢查（資安審查 2026-07-12 增補）
+
+- [ ] `order.js` 的 `PREORDER_END` 改回真實預購結束日（現在為了測試金流暫設 2026-12-31，不改的話隨時都能下單）
+- [ ] 移除 `payuni-notify` 的 DIAG console.log（解密內容不該長期進日誌）並完成 isPaid/isFailed sandbox 校準後重新部署
+- [ ] 確認第 5 步的 Storage 權限真的有套（bucket 權限只存在 Dashboard，migration 管不到）

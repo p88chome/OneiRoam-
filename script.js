@@ -3,6 +3,8 @@
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const escHtml = v => String(v ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ------------------------------------------
      LOADING SCREEN
@@ -106,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
      ------------------------------------------ */
   const filterBtns  = document.querySelectorAll('.filter-btn');
   // 篩選只作用在原創設計區；選品區有自己的 grid，不參與篩選
-  const productCards = document.querySelectorAll('#collections .product-card');
+  const filterScope = document.getElementById('collections') || document.getElementById('select');
+  const productCards = filterScope ? filterScope.querySelectorAll('.product-card') : [];
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -184,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeSel = document.getElementById('modalSize');
     const sizes = (card.dataset.sizes || 'S,M,L,XL').split(',');
     const customLabel = lang === 'zh' ? '自訂' : 'Custom';
-    sizeSel.innerHTML = sizes.map(s => `<option value="${s}">${s}</option>`).join('')
+    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('')
       + `<option value="__custom">${customLabel}</option>`;
     document.getElementById('modalSizeCustom').style.display = 'none';
     document.getElementById('modalSizeCustom').value = '';

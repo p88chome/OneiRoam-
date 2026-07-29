@@ -51,6 +51,11 @@ test('renderProductCards: 跳脫引號避免破壞屬性', () => {
   assert.match(html, /data-modal-name-zh="雙&quot;引號&quot;款"/);
 });
 
+test('renderProductCards: 商品名連到獨立頁 product-{id}.html', () => {
+  const html = renderProductCards([sample]);
+  assert.match(html, /<a href="product-sea-gcd-short-jelly\.html" class="product-name-link"><h3/);
+});
+
 test('buildStorefrontData: 解析設定', () => {
   const data = buildStorefrontData({
     deposit_rate: '0.5', bank_name: '玉山銀行', bank_code: '808',

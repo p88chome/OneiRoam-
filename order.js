@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const esc = s => String(s).replace(/[&<>"']/g, c =>
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ---- 會員：Google 登入 → 自動帶入，下單後回存 ---- */
@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         items: items.map(it => ({ id: it.id, size: it.size, qty: it.qty })),
         customer: { name: payload.name, social: payload.social, email: payload.email, notes: payload.notes },
         amount_type: 'full',
+        discount_code: payload.discountCode || undefined,
       }),
     });
     const data = await res.json();
@@ -244,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
       social: (fd.get('social') || '').trim(),
       email: fd.get('email').trim(),
       notes: (fd.get('notes') || '').trim(),
+      discountCode: (fd.get('discount_code') || '').trim(),
     };
 
     submitBtn.disabled = true;
@@ -252,7 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       await submitOrder(payload, items);   // 成功則頁面已跳轉 PAYUNi
     } catch (err) {
-      formError.textContent = currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.';
+      // 折扣碼/驗證類錯誤直接顯示伺服器訊息，方便客人修正重試；其餘一律顯示通用訊息避免洩漏內部細節
+      const passthrough = ['折扣碼無效', '折扣碼已過期', '折扣碼已達使用上限', '請完成人機驗證', '人機驗證失敗，請重新整理再試一次'];
+      formError.textContent = passthrough.includes(err.message) ? err.message
+        : (currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.');
       formError.style.display = '';
       submitBtn.disabled = false;
       submitBtn.textContent = orig;

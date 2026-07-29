@@ -1,15 +1,58 @@
-<!DOCTYPE html>
+// scripts/product-pages.mjs
+// 商品獨立頁（SEO/分享直連）：/product-{id}.html。沿用 select.html 的殼，內容改單一商品
+// 完整資訊＋直接加入購物車（不經彈窗）。發布時由 build-products.mjs 逐商品產生。
+import { esc } from './render-products.mjs';
+
+const AVAIL = { sold_out: 'OutOfStock', active: 'InStock', preorder: 'PreOrder' };
+
+export function renderProductPage(p) {
+  const canonical = `https://www.oneiroam.com/product-${p.id}.html`;
+  const image = p.image
+    ? (p.image.startsWith('http') ? p.image : `https://www.oneiroam.com${p.image}`)
+    : 'https://www.oneiroam.com/favicon.svg';
+  const desc = p.desc_zh || p.name_zh;
+
+  const jsonld = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.name_zh,
+    ...(p.name_en ? { alternateName: p.name_en } : {}),
+    ...(p.desc_zh ? { description: p.desc_zh } : {}),
+    image,
+    brand: { '@type': 'Brand', name: 'OneiRoam' },
+    offers: {
+      '@type': 'Offer', priceCurrency: 'TWD', price: String(p.price),
+      availability: `https://schema.org/${AVAIL[p.status] || 'PreOrder'}`, url: canonical,
+    },
+  };
+  const jsonldTag = `<script type="application/ld+json">\n${
+    JSON.stringify(jsonld, null, 2).replace(/</g, '\\u003c')
+  }\n  </script>`;
+
+  return `<!DOCTYPE html>
 <html lang="zh-TW" data-theme="default">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="OneiRoam 夢遊 — 會員專區，查看訂單狀態、管理個人資料">
+  <meta name="description" content="${esc(desc)}">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
-  <title>會員專區 — OneiRoam</title>
-  <link rel="canonical" href="https://www.oneiroam.com/member.html">
-  <meta name="robots" content="noindex, follow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <title>${esc(p.name_zh)} — OneiRoam 夢遊</title>
+  <link rel="canonical" href="${canonical}">
+  <meta name="robots" content="index, follow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="${esc(p.name_zh)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:image" content="${esc(image)}">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:site_name" content="OneiRoam">
+  <meta property="og:locale" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${esc(p.name_zh)}">
+  <meta name="twitter:description" content="${esc(desc)}">
+  <meta name="twitter:image" content="${esc(image)}">
+  ${jsonldTag}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
@@ -24,6 +67,16 @@
       <span class="loader-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
       <div class="loader-line"></div>
     </div>
+  </div>
+
+  <!-- ===== ANNOUNCEMENT BANNER ===== -->
+  <div id="announce-bar">
+    <div class="announce-inner">
+      <!-- BUILD:ANNOUNCE:START -->
+      <span class="announce-text" data-zh="✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦" data-en="✦ Pre-order Now · Limited Handcraft · Message us on LINE ✦">✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦</span>
+      <!-- BUILD:ANNOUNCE:END -->
+    </div>
+    <button class="announce-close" id="announceClose" aria-label="關閉">×</button>
   </div>
 
   <!-- ===== HEADER ===== -->
@@ -100,45 +153,44 @@
     </div>
   </div>
 
-  <!-- ===== MEMBER PAGE ===== -->
-  <main class="member-page">
-    <section id="member">
-      <div class="container">
-        <div class="section-header">
-          <p class="section-label" data-zh="會員專區" data-en="My Account">會員專區</p>
-          <h2 data-zh="妳的夢遊足跡" data-en="Your OneiRoam Journey">妳的夢遊足跡</h2>
+  <!-- ===== PRODUCT DETAIL ===== -->
+  <main class="product-page">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="index.html" data-zh="首頁" data-en="Home">首頁</a> ／
+        <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a> ／
+        <span data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</span>
+      </nav>
+      <div class="pd-grid" data-id="${esc(p.id)}" data-sizes="${esc(p.sizes.join(','))}" data-max-qty="${esc(p.max_qty)}" data-price="${esc(p.price)}">
+        <div class="pd-img-wrap">
+          ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="pd-img">` : ''}
         </div>
-
-        <div id="memberLogin" class="member-login" style="display:none">
-          <p data-zh="登入後可查看訂單狀態、管理妳的資料" data-en="Sign in to view orders and manage your info">登入後可查看訂單狀態、管理妳的資料</p>
-          <button type="button" id="googleLoginBtn" class="btn-google">
-            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            <span data-zh="用 Google 登入" data-en="Sign in with Google">用 Google 登入</span>
-          </button>
-        </div>
-
-        <div id="memberArea" style="display:none">
-          <p class="member-info">
-            <span data-zh="已登入" data-en="Signed in as">已登入</span>
-            <span id="mEmail"></span>
-            <button type="button" id="mLogout" class="btn-logout" data-zh="登出" data-en="Sign out">登出</button>
-          </p>
-
-          <h3 class="member-h" data-zh="我的訂單" data-en="My Orders">我的訂單</h3>
-          <div id="orderList" class="order-list"></div>
-
-          <h3 class="member-h" data-zh="我的資料" data-en="My Info">我的資料</h3>
-          <form id="profileForm" class="order-form member-profile" novalidate>
-            <label><span data-zh="姓名" data-en="Name">姓名</span><input name="name" maxlength="60"></label>
-            <label><span data-zh="電話" data-en="Phone">電話</span><input name="phone" maxlength="30"></label>
-            <label><span data-zh="Line 暱稱或 IG 帳號" data-en="LINE nickname or IG">Line 暱稱或 IG 帳號</span><input name="social" maxlength="60"></label>
-            <label><span data-zh="Email" data-en="Email">Email</span><input name="email" type="email" maxlength="120"></label>
-            <button type="submit" class="btn-primary" data-zh="儲存" data-en="Save">儲存</button>
-            <p id="profileMsg" class="member-msg" role="status"></p>
-          </form>
+        <div class="pd-info">
+          <p class="section-label" data-zh="${esc(p.cat_zh)}" data-en="${esc(p.cat_en)}">${esc(p.cat_zh)}</p>
+          <h1 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h1>
+          <p class="pd-desc" data-zh="${esc(p.desc_zh)}" data-en="${esc(p.desc_en)}">${esc(p.desc_zh)}</p>
+          <p class="pd-price">NT$ ${esc(p.price.toLocaleString('en-US'))}</p>
+          <div class="modal-order">
+            <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
+            <select id="pdSize" class="modal-size-select"></select>
+            <input id="pdSizeCustom" class="modal-size-custom js-hidden" type="text"
+                   placeholder="輸入自訂尺寸" maxlength="40">
+            <div class="modal-qty">
+              <button type="button" id="pdQtyMinus" aria-label="減少">−</button>
+              <span id="pdQty">1</span>
+              <button type="button" id="pdQtyPlus" aria-label="增加">+</button>
+            </div>
+            <button id="pdAdd" class="btn-primary"
+                    data-zh="加入訂單" data-en="Add to Order">加入訂單</button>
+            <span id="pdAdded" class="modal-added js-hidden"
+                  data-zh="已加入 ✓" data-en="Added ✓">已加入 ✓</span>
+          </div>
+          <a href="order.html" id="pdCheckout" class="btn-primary modal-checkout js-hidden"
+             data-zh="前往結帳 →" data-en="Go to Checkout →">前往結帳 →</a>
+          <p class="modal-note" data-zh="✦ 限量手作，售完即止" data-en="✦ Limited handcraft, while stocks last">✦ 限量手作，售完即止</p>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -171,8 +223,8 @@
   </footer>
 
   <script src="cart.js"></script>
-  <script src="admin.config.js"></script>
-  <script src="vendor/supabase.js"></script>
-  <script src="member.js"></script>
+  <script src="product.js"></script>
 </body>
 </html>
+`;
+}

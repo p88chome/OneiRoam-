@@ -86,6 +86,7 @@ a { color: inherit; text-decoration: none; transition: var(--trans); }
 button { cursor: pointer; }
 
 /* ---- Utility ---- */
+.js-hidden { display: none !important; } /* CSP style-src 未開 unsafe-inline，行內 style="display:none" 會被忽略，一律用這個 class；!important 確保贏過同權重的元件 class（如 .modal-checkout 設 display:inline-flex） */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
 .section-label {
@@ -579,6 +580,21 @@ button { cursor: pointer; }
 
 .select-more { text-align: center; margin-top: 2.5rem; }
 
+/* ===== 商品獨立頁 (product-{id}.html) ===== */
+.product-page { padding: 10rem 0 6rem; }
+.breadcrumb { font-size: .8rem; color: var(--text-light); letter-spacing: .04em; margin-bottom: 2rem; }
+.breadcrumb a:hover { color: var(--gold); }
+.pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+.pd-img-wrap { aspect-ratio: 3 / 4; overflow: hidden; border-radius: 12px; background: linear-gradient(135deg, var(--blush), var(--lilac)); }
+.pd-img-wrap .pd-img { width: 100%; height: 100%; object-fit: cover; }
+.pd-info h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 300; letter-spacing: .05em; color: var(--text-dark); margin: .3rem 0 1rem; }
+.pd-desc { font-size: .92rem; color: var(--text-mid); line-height: 1.9; margin-bottom: 1.2rem; }
+.pd-price { font-size: 1.3rem; font-weight: 500; color: var(--text-dark); margin-bottom: 1.4rem; }
+@media (max-width: 640px) {
+  .product-page { padding: 8rem 0 4rem; }
+  .pd-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
 /* 選物獨立頁 */
 .select-page #select { padding: 10rem 0 6rem; min-height: 70vh; }
 #main-nav a.nav-active { color: var(--text-dark); }
@@ -649,6 +665,8 @@ button { cursor: pointer; }
 }
 
 .product-info { padding: 1rem 0.3rem 0; }
+.product-name-link { color: inherit; }
+.product-name-link:hover h3 { color: var(--gold); }
 .product-info h3 {
   font-family: var(--serif);
   font-size: 0.95rem;
@@ -677,7 +695,7 @@ button { cursor: pointer; }
 .top-tag       { background: rgba(200, 189, 208, 0.5); color: #8B7DA0; }
 .bottom-tag    { background: rgba(184, 196, 208, 0.5); color: #7090A0; }
 .accessory-tag { background: rgba(196, 168, 130, 0.18); color: var(--gold); }
-.select-tag    { background: rgba(180, 220, 200, 0.4); color: #4A8A72; }
+.select-tag, .select_top-tag, .select_bottom-tag, .select_acc-tag { background: rgba(180, 220, 200, 0.4); color: #4A8A72; }
 
 /* Price */
 .product-price {
@@ -1246,6 +1264,7 @@ button { cursor: pointer; }
 .order-form textarea { min-height: 80px; resize: vertical; }
 .order-form .btn-primary { margin-top: .8rem; justify-content: center; border-radius: 8px; }
 .form-error { color: #C05A5A; font-size: .9rem; text-align: center; }
+.discount-code-input { text-transform: uppercase; }
 
 /* 付款金額選項 */
 .pay-choice {
@@ -1322,6 +1341,7 @@ button { cursor: pointer; }
 }
 .order-card:hover { box-shadow: var(--shadow); }
 .order-card-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.order-status-group { display: flex; align-items: center; gap: .4rem; flex-shrink: 0; }
 .order-card-no { font-weight: 500; letter-spacing: .04em; }
 .order-status { font-size: .72rem; letter-spacing: .1em; padding: .22rem .7rem; border-radius: 20px; }
 .s-pending { background: rgba(232, 210, 170, 0.5); color: #A07030; }
