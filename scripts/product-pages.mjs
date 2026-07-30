@@ -37,7 +37,7 @@ export function renderProductPage(p) {
   <meta name="description" content="${esc(desc)}">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
-  <title>${esc(p.name_zh)} — OneiRoam 夢遊</title>
+  <title>${esc(p.name_zh)} — OneiRoam 夢游</title>
   <link rel="canonical" href="${canonical}">
   <meta name="robots" content="index, follow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -64,7 +64,7 @@ export function renderProductPage(p) {
   <div id="loader">
     <div class="loader-inner">
       <span class="loader-brand">OneiRoam</span>
-      <span class="loader-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+      <span class="loader-sub" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
       <div class="loader-line"></div>
     </div>
   </div>
@@ -77,7 +77,7 @@ export function renderProductPage(p) {
       </button>
       <a href="index.html" class="logo">
         <span class="logo-brand">OneiRoam</span>
-        <span class="logo-sub" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+        <span class="logo-sub" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
       </a>
       <nav id="main-nav">
         <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
@@ -94,7 +94,7 @@ export function renderProductPage(p) {
         </div>
         <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
         <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
-        <a href="index.html#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
+        <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoam">關於夢游</a>
       </nav>
       <button class="lang-toggle" id="langToggle" aria-label="語言切換">
         <span class="l-zh active">中</span>
@@ -131,7 +131,7 @@ export function renderProductPage(p) {
       </div>
       <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
       <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
-      <a href="index.html#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
+      <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoam">關於夢游</a>
       <a href="member.html" data-zh="會員專區" data-en="My Account">會員專區</a>
     </nav>
     <div class="mobile-overlay-lang">
@@ -188,13 +188,13 @@ export function renderProductPage(p) {
     <div class="footer-inner">
       <div class="footer-brand">
         <span class="footer-logo-en">OneiRoam</span>
-        <span class="footer-logo-zh" data-zh="夢遊" data-en="Wander Through Dreams">夢遊</span>
+        <span class="footer-logo-zh" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
       </div>
       <nav class="footer-nav">
         <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
         <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
         <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
-        <a href="index.html#about" data-zh="關於夢遊" data-en="About OneiRoam">關於夢遊</a>
+        <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoam">關於夢游</a>
       </nav>
       <div class="footer-social">
         <a href="https://www.instagram.com/oneiroam?igsh=MW5rZGF3Z3BpNms2eQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">

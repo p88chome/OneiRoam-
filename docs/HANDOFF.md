@@ -4,7 +4,7 @@
 
 ## 這是什麼
 
-OneiRoam 夢遊 = 獨立設計女裝**預購**電商。純靜態前台 + Supabase 後台。
+OneiRoam 夢游 = 獨立設計女裝**預購**電商。純靜態前台 + Supabase 後台。
 
 - **線上站**：https://www.oneiroam.com （Cloudflare 部署，repo `p88chome/OneiRoam-`）
 - **後台**：https://www.oneiroam.com/admin.html （Supabase Auth 登入）

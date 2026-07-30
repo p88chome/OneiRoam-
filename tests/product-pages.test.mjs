@@ -13,7 +13,7 @@ const sample = {
 
 test('renderProductPage: 標題／canonical／OG／JSON-LD 齊全', () => {
   const html = renderProductPage(sample);
-  assert.match(html, /<title>花嫁之夢 — OneiRoam 夢遊<\/title>/);
+  assert.match(html, /<title>花嫁之夢 — OneiRoam 夢游<\/title>/);
   assert.match(html, /<link rel="canonical" href="https:\/\/www\.oneiroam\.com\/product-dress-white-lace\.html">/);
   assert.match(html, /"@type": "Product"/);
   assert.match(html, /"price": "1690"/);
