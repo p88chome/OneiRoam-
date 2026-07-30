@@ -69,16 +69,6 @@ export function renderProductPage(p) {
     </div>
   </div>
 
-  <!-- ===== ANNOUNCEMENT BANNER ===== -->
-  <div id="announce-bar">
-    <div class="announce-inner">
-      <!-- BUILD:ANNOUNCE:START -->
-      <span class="announce-text" data-zh="✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦" data-en="✦ Pre-order Now · Limited Handcraft · Message us on LINE ✦">✦ 現正接受預購 · 限量手作 · 私訊 LINE 詢問 ✦</span>
-      <!-- BUILD:ANNOUNCE:END -->
-    </div>
-    <button class="announce-close" id="announceClose" aria-label="關閉">×</button>
-  </div>
-
   <!-- ===== HEADER ===== -->
   <header id="header">
     <div class="header-inner">
@@ -187,7 +177,7 @@ export function renderProductPage(p) {
           </div>
           <a href="order.html" id="pdCheckout" class="btn-primary modal-checkout js-hidden"
              data-zh="前往結帳 →" data-en="Go to Checkout →">前往結帳 →</a>
-          <p class="modal-note" data-zh="✦ 限量手作，售完即止" data-en="✦ Limited handcraft, while stocks last">✦ 限量手作，售完即止</p>
+          <p class="modal-note" data-zh="✦ 限時預訂，售完即止" data-en="✦ Limited-time pre-order, while stocks last">✦ 限時預訂，售完即止</p>
         </div>
       </div>
     </div>

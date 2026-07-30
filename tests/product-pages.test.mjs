@@ -21,12 +21,6 @@ test('renderProductPage: 標題／canonical／OG／JSON-LD 齊全', () => {
   assert.match(html, /data-sizes="S,M,L,XL"/);
 });
 
-test('renderProductPage: BUILD:ANNOUNCE 標記存在（供 build 注入公告文字）', () => {
-  const html = renderProductPage(sample);
-  assert.match(html, /<!-- BUILD:ANNOUNCE:START -->/);
-  assert.match(html, /<!-- BUILD:ANNOUNCE:END -->/);
-});
-
 test('renderProductPage: 跳脫商品名避免破壞屬性', () => {
   const html = renderProductPage({ ...sample, name_zh: '雙"引號"款' });
   assert.match(html, /data-zh="雙&quot;引號&quot;款"/);

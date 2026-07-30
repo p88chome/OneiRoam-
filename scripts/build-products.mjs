@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { renderProductCards, buildStorefrontData } from './render-products.mjs';
 import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASER_COUNT } from './categories.mjs';
 import { injectBlock } from './inject-block.mjs';
-import { heroImgsHtml, announceHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
+import { heroImgsHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
 import { renderProductPage } from './product-pages.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
@@ -133,8 +133,7 @@ try {
 let pageCount = 0;
 for (const p of normalized) {
   try {
-    let page = injectBlock(renderProductPage(p), 'ANNOUNCE', announceHtml(settings), { endIndent: '      ' });
-    page = applyTheme(page, settings.theme);
+    const page = applyTheme(renderProductPage(p), settings.theme);
     await writeFile(`product-${p.id}.html`, page);
     pageCount++;
   } catch (err) {
