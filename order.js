@@ -1,6 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const esc = s => String(s).replace(/[&<>"']/g, c =>
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  /* ---- 會員：Google 登入 → 自動帶入，下單後回存 ---- */
+  const sbClient = (window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY)
+    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY,
+        { auth: { flowType: 'pkce' } })  // token 不進網址 hash
+    : null;
+
+  const memberEls = () => ({
+    box: document.getElementById('memberBox'),
+    loginBtn: document.getElementById('googleLoginBtn'),
+    info: document.getElementById('memberInfo'),
+    email: document.getElementById('memberEmail'),
+    logoutBtn: document.getElementById('logoutBtn'),
+  });
+
+  // 只填空欄位，不覆蓋客人已輸入的內容
+  function prefillForm(profile) {
+    if (!profile) return;
+    const form = document.getElementById('orderForm');
+    for (const k of ['name', 'social', 'email']) {
+      const input = form.elements[k];
+      if (input && !input.value.trim() && profile[k]) input.value = profile[k];
+    }
+  }
+
+  async function refreshMemberUI() {
+    if (!sbClient) return;
+    const els = memberEls();
+    if (!els.box) return;
+    const { data: { session } } = await sbClient.auth.getSession();
+    if (!session) {
+      els.loginBtn.style.display = '';
+      els.info.style.display = 'none';
+      return;
+    }
+    els.loginBtn.style.display = 'none';
+    els.info.style.display = '';
+    els.email.textContent = session.user.email || '';
+    const { data: profile } = await sbClient
+      .from('customer_profiles').select('*').eq('user_id', session.user.id).maybeSingle();
+    prefillForm(profile);
+    // 還沒有會員資料（第一次下單）→ Email 先用 Google 帳號的
+    const emailInput = document.getElementById('orderForm').elements.email;
+    if (emailInput && !emailInput.value.trim() && session.user.email)
+      emailInput.value = session.user.email;
+  }
+
+  async function saveProfile(fields) {
+    if (!sbClient) return;
+    try {
+      // 最多等 4 秒：網路卡住也不能拖住付款跳轉
+      await Promise.race([
+        (async () => {
+          const { data: { session } } = await sbClient.auth.getSession();
+          if (!session) return;
+          await sbClient.from('customer_profiles').upsert({
+            user_id: session.user.id,
+            name: fields.name, social: fields.social, email: fields.email,
+            updated_at: new Date().toISOString(),
+          });
+        })(),
+        new Promise(resolve => setTimeout(resolve, 4000)),
+      ]);
+    } catch (e) {
+      console.warn('profile save skipped:', e);  // 存檔失敗絕不擋付款
+    }
+  }
+
+  if (sbClient) {
+    const els = memberEls();
+    if (els.loginBtn) els.loginBtn.addEventListener('click', () => {
+      sbClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/order.html' },
+      });
+    });
+    if (els.logoutBtn) els.logoutBtn.addEventListener('click', async () => {
+      await sbClient.auth.signOut();
+      refreshMemberUI();
+    });
+    refreshMemberUI();
+  }
 
   /* 語言（與首頁同套） */
   let currentLang = localStorage.getItem('oneiRoamLang') || 'zh';
@@ -21,7 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* 預售日期閘門 */
   const PREORDER_START = '2026-06-23';
-  const PREORDER_END = '2026-06-30';
+  // TEMP for PAYUNi testing — extended so today falls inside the window.
+  // TODO before go-live: restore the real preorder window (was '2026-06-30').
+  const PREORDER_END = '2026-12-31';
   function preorderStatus(now = new Date()) {
     const day = now.getFullYear() + '-' +
       String(now.getMonth() + 1).padStart(2, '0') + '-' +
@@ -67,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     areaEl.style.display = '';
     listEl.innerHTML = items.map(it => `
       <div class="cart-row" data-id="${esc(it.id)}" data-size="${esc(it.size)}">
+        ${it.img ? `<img class="cart-row-img" src="${esc(it.img)}" alt="">` : '<span class="cart-row-img"></span>'}
         <div class="cart-row-info">
           <span class="cart-row-name">${esc(it.name)}</span>
           <span class="cart-row-size">${currentLang === 'zh' ? '尺寸' : 'Size'}: ${esc(it.size)}</span>
@@ -85,8 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sumDiscount').textContent = fmt(p.discount);
     document.getElementById('sumDiscountRow').style.display = p.discount > 0 ? '' : 'none';
     document.getElementById('sumTotal').textContent = fmt(p.total);
-    document.getElementById('sumDeposit').textContent = fmt(p.deposit);
-    document.getElementById('sumCod').textContent = fmt(p.cod);
     applyLang(currentLang);
   }
 
@@ -108,40 +191,39 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ---- 送出 ---- */
-  const WEB3FORMS_KEY = '4145687f-468f-489d-ab01-6e1d95d5f5b9';
-
-  function buildItemsText(items) {
-    return items.map(it =>
-      `- ${it.name} / ${currentLang === 'zh' ? '尺寸' : 'Size'} ${it.size} x${it.qty} = NT$ ${it.price * it.qty}`
-    ).join('\n');
-  }
-
-  async function submitOrder(payload) {
-    const res = await fetch('https://api.web3forms.com/submit', {
+  async function submitOrder(payload, items) {
+    // 登入狀態下用使用者 token（訂單掛帳號）；任何失敗都退回 anon key，絕不擋結帳
+    let bearer = window.SUPABASE_ANON_KEY;
+    if (sbClient) {
+      try {
+        const { data: { session } } = await sbClient.auth.getSession();
+        if (session) bearer = session.access_token;
+      } catch { /* 匿名結帳 */ }
+    }
+    const res = await fetch(`${window.SUPABASE_URL}/functions/v1/create-order`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${bearer}` },
       body: JSON.stringify({
-        access_key: WEB3FORMS_KEY,
-        subject: `新訂單 ${payload.orderNo}`,
-        from_name: 'OneiRoam 訂單',
-        replyto: payload.email,
-        order_no: payload.orderNo,
-        items: payload.itemsText,
-        total: payload.total,
-        deposit: payload.deposit,
-        cod: payload.cod,
-        name: payload.name,
-        phone: payload.phone,
-        social: payload.social,
-        pay_last5: payload.payLast5,
-        email: payload.email,
-        notes: payload.notes,
+        items: items.map(it => ({ id: it.id, size: it.size, qty: it.qty })),
+        customer: { name: payload.name, social: payload.social, email: payload.email, notes: payload.notes },
+        amount_type: 'full',
+        discount_code: payload.discountCode || undefined,
       }),
     });
-    if (!res.ok) throw new Error('submit failed');
     const data = await res.json();
-    if (!data.success) throw new Error('web3forms error');
-    return data;
+    if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
+    if (!data.action || !data.params) throw new Error('create-order response malformed');
+    await saveProfile({ name: payload.name, social: payload.social, email: payload.email });
+    const form = document.createElement('form');
+    form.method = 'POST'; form.action = data.action;
+    for (const [k, v] of Object.entries(data.params)) {
+      const inp = document.createElement('input');
+      inp.type = 'hidden'; inp.name = k; inp.value = String(v);
+      form.appendChild(inp);
+    }
+    document.body.appendChild(form);
+    Cart.clear();
+    form.submit();
   }
 
   const form = document.getElementById('orderForm');
@@ -158,41 +240,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!form.checkValidity()) { form.reportValidity(); return; }
 
     const fd = new FormData(form);
-    const orderNo = makeOrderNo();
-    const p = computePricing(items, { bundles: BUNDLES });
     const payload = {
-      orderNo,
-      itemsText: buildItemsText(items),
-      total: p.total,
-      subtotal: p.subtotal,
-      discount: p.discount,
-      deposit: p.deposit,
-      cod: p.cod,
       name: fd.get('name').trim(),
-      phone: fd.get('phone').trim(),
-      social: fd.get('social').trim(),
-      payLast5: fd.get('pay_last5').trim(),
+      social: (fd.get('social') || '').trim(),
       email: fd.get('email').trim(),
       notes: (fd.get('notes') || '').trim(),
+      discountCode: (fd.get('discount_code') || '').trim(),
     };
 
     submitBtn.disabled = true;
     const orig = submitBtn.textContent;
-    submitBtn.textContent = currentLang === 'zh' ? '送出中…' : 'Sending…';
+    submitBtn.textContent = currentLang === 'zh' ? '前往付款…' : 'Redirecting…';
     try {
-      await submitOrder(payload);
-      document.getElementById('resultOrderNo').textContent = orderNo;
-      document.getElementById('resultDeposit').textContent = payload.deposit.toLocaleString();
-      document.getElementById('cartArea').style.display = 'none';
-      document.getElementById('orderSuccess').style.display = '';
-      Cart.clear();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      await submitOrder(payload, items);   // 成功則頁面已跳轉 PAYUNi
     } catch (err) {
-      formError.textContent = currentLang === 'zh'
-        ? '送出失敗，請改用 LINE 直接聯絡我們。'
-        : 'Submission failed. Please contact us via LINE.';
+      // 折扣碼/驗證類錯誤直接顯示伺服器訊息，方便客人修正重試；其餘一律顯示通用訊息避免洩漏內部細節
+      const passthrough = ['折扣碼無效', '折扣碼已過期', '折扣碼已達使用上限', '請完成人機驗證', '人機驗證失敗，請重新整理再試一次'];
+      formError.textContent = passthrough.includes(err.message) ? err.message
+        : (currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.');
       formError.style.display = '';
-    } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = orig;
     }

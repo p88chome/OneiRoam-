@@ -1,4 +1,4 @@
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+export const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const fmt = n => Number(n).toLocaleString('en-US');
@@ -19,14 +19,14 @@ export function renderProductCards(products) {
           data-modal-desc-zh="${esc(p.desc_zh)}" data-modal-desc-en="${esc(p.desc_en)}"
           data-modal-cat-zh="${esc(p.cat_zh)}" data-modal-cat-en="${esc(p.cat_en)}">
           <div class="product-img-wrap">
-            <img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="product-img" loading="lazy">
+            ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="product-img" loading="lazy">` : ''}
             <div class="product-hover">
               <button class="btn-inquire open-modal" data-zh="查看詳情" data-en="View Details">查看詳情</button>
             </div>
-            <span class="product-badge" data-zh="${esc(p.badge_zh)}" data-en="${esc(p.badge_en)}">${esc(p.badge_zh)}</span>
+            ${p.badge_zh ? `<span class="product-badge" data-zh="${esc(p.badge_zh)}" data-en="${esc(p.badge_en || p.badge_zh)}">${esc(p.badge_zh)}</span>` : ''}
           </div>
           <div class="product-info">
-            <h3 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h3>
+            <a href="product-${esc(p.id)}.html" class="product-name-link"><h3 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h3></a>
             <p data-zh="${esc(p.desc_zh)}" data-en="${esc(p.desc_en)}">${esc(p.desc_zh)}</p>
             <span class="product-price">NT$ ${fmt(p.price)}</span>
             <div class="product-meta">

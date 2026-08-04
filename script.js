@@ -3,6 +3,8 @@
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const escHtml = v => String(v ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ------------------------------------------
      LOADING SCREEN
@@ -20,25 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(hideLoader, 600);
   });
 
-
-  /* ------------------------------------------
-     ANNOUNCEMENT BANNER
-     ------------------------------------------ */
-  const announceBar  = document.getElementById('announce-bar');
-  const announceClose = document.getElementById('announceClose');
-  const BANNER_KEY   = 'oneiRoamBannerClosed';
-
-  if (sessionStorage.getItem(BANNER_KEY)) {
-    announceBar.classList.add('hidden');
-  } else {
-    document.body.classList.add('has-banner');
-  }
-
-  announceClose.addEventListener('click', () => {
-    announceBar.classList.add('hidden');
-    document.body.classList.remove('has-banner');
-    sessionStorage.setItem(BANNER_KEY, '1');
-  });
 
 
   /* ------------------------------------------
@@ -114,8 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = document.querySelector(href);
       if (!target) return;
       e.preventDefault();
-      const bannerH = announceBar.classList.contains('hidden') ? 0 : 32;
-      const offset  = window.scrollY + target.getBoundingClientRect().top - 72 - bannerH;
+      const offset  = window.scrollY + target.getBoundingClientRect().top - 72;
       window.scrollTo({ top: offset, behavior: 'smooth' });
     });
   });
@@ -125,7 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
      COLLECTIONS FILTER
      ------------------------------------------ */
   const filterBtns  = document.querySelectorAll('.filter-btn');
-  const productCards = document.querySelectorAll('.product-card');
+  // 篩選只作用在原創設計區；選品區有自己的 grid，不參與篩選
+  const filterScope = document.getElementById('collections') || document.getElementById('select');
+  const productCards = filterScope ? filterScope.querySelectorAll('.product-card') : [];
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -141,6 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
           card.style.animation = 'cardIn 0.45s var(--ease) both';
         }
       });
+    });
+  });
+
+  // 導覽列分類連結：捲動到原創設計區並套用對應篩選
+  document.querySelectorAll('[data-filter-link]').forEach(link => {
+    link.addEventListener('click', () => {
+      const btn = document.querySelector(`.filter-btn[data-filter="${link.dataset.filterLink}"]`);
+      if (btn) btn.click();
     });
   });
 
@@ -185,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openModal(card) {
     const lang = currentLang;
-    modalImg.style.display = '';
+    modalImg.style.display = card.dataset.modalImg ? '' : 'none'; // 沒圖就不留空白框
     modalImg.src    = card.dataset.modalImg || '';
     modalImg.alt    = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     modalName.textContent = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
@@ -195,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeSel = document.getElementById('modalSize');
     const sizes = (card.dataset.sizes || 'S,M,L,XL').split(',');
     const customLabel = lang === 'zh' ? '自訂' : 'Custom';
-    sizeSel.innerHTML = sizes.map(s => `<option value="${s}">${s}</option>`).join('')
+    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('')
       + `<option value="__custom">${customLabel}</option>`;
     document.getElementById('modalSizeCustom').style.display = 'none';
     document.getElementById('modalSizeCustom').value = '';
@@ -205,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalCheckout').style.display = 'none';
     // 暫存目前商品供加入鈕使用
     modal.dataset.curId = card.dataset.id;
+    modal.dataset.curImg = card.dataset.modalImg || '';
     modal.dataset.curMaxQty = card.dataset.maxQty || '';
     modal.dataset.curName = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     const priceText = card.querySelector('.product-price').textContent;
@@ -262,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
       size,
       qty: parseInt(qtyEl.textContent, 10),
       maxQty: parseInt(modal.dataset.curMaxQty, 10) || undefined,
+      img: modal.dataset.curImg || '',
     });
     updateCartBadge();
     document.getElementById('modalAdd').style.display = 'none';
@@ -300,6 +294,11 @@ document.addEventListener('DOMContentLoaded', () => {
     card.dataset.delay = String(i * 75);
     observer.observe(card);
   });
+  document.querySelectorAll('#select .product-card').forEach((card, i) => {
+    card.classList.add('fade-up');
+    card.dataset.delay = String(i * 75);
+    observer.observe(card);
+  });
   document.querySelectorAll('.step').forEach((step, i) => {
     step.classList.add('fade-up');
     step.dataset.delay = String(i * 100);
@@ -316,41 +315,23 @@ document.addEventListener('DOMContentLoaded', () => {
      LOOKBOOK DRAG SCROLL
      ------------------------------------------ */
   const lookbook    = document.getElementById('lookbookScroll');
-  let isDragging    = false;
-  let dragStartX    = 0;
-  let scrollStart   = 0;
+  if (lookbook) {
+    let isDragging    = false;
+    let dragStartX    = 0;
+    let scrollStart   = 0;
 
-  lookbook.addEventListener('mousedown', e => {
-    isDragging = true; dragStartX = e.pageX - lookbook.offsetLeft;
-    scrollStart = lookbook.scrollLeft; lookbook.classList.add('grabbing');
-  });
-  lookbook.addEventListener('mouseleave', () => { isDragging = false; lookbook.classList.remove('grabbing'); });
-  lookbook.addEventListener('mouseup',    () => { isDragging = false; lookbook.classList.remove('grabbing'); });
-  lookbook.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    e.preventDefault();
-    lookbook.scrollLeft = scrollStart - (e.pageX - lookbook.offsetLeft - dragStartX) * 1.4;
-  });
-
-
-  /* ------------------------------------------
-     HERO IMAGE CROSSFADE
-     ------------------------------------------ */
-  const img1 = document.querySelector('.h-img-1');
-  const img2 = document.querySelector('.h-img-2');
-  if (img1 && img2) {
-    let loaded = 0;
-    const onLoad = () => {
-      if (++loaded < 2) return;
-      let showing = true;
-      setInterval(() => {
-        img1.style.opacity = showing ? '0' : '1';
-        img2.style.opacity = showing ? '1' : '0';
-        showing = !showing;
-      }, 5000);
-    };
-    if (img1.complete) onLoad(); else img1.addEventListener('load', onLoad);
-    if (img2.complete) onLoad(); else img2.addEventListener('load', onLoad);
+    lookbook.addEventListener('mousedown', e => {
+      isDragging = true; dragStartX = e.pageX - lookbook.offsetLeft;
+      scrollStart = lookbook.scrollLeft; lookbook.classList.add('grabbing');
+    });
+    lookbook.addEventListener('mouseleave', () => { isDragging = false; lookbook.classList.remove('grabbing'); });
+    lookbook.addEventListener('mouseup',    () => { isDragging = false; lookbook.classList.remove('grabbing'); });
+    lookbook.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      lookbook.scrollLeft = scrollStart - (e.pageX - lookbook.offsetLeft - dragStartX) * 1.4;
+    });
   }
+
 
 });

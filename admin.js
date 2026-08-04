@@ -1,6 +1,20 @@
 // admin.js
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+// 與 scripts/categories.mjs 的 CATEGORIES 同步（瀏覽器端無法 import ESM 建置模組）
+const CATEGORY_OPTIONS = [
+  ['puff', '澎袖'], ['collar', '領片'], ['set', '套裝'], ['top', '上衣'],
+  ['bottom', '下著'], ['accessory', '其他配件'], ['select_top', '選品・上衣'], ['select_bottom', '選品・下著'], ['select_acc', '選品・配件'],
+];
+function categoryOptions(current) {
+  const opts = CATEGORY_OPTIONS.map(([v, l]) =>
+    `<option value="${v}" ${v === current ? 'selected' : ''}>${l}</option>`);
+  // 舊分類值保留為選項，避免編輯舊商品時被靜默改掉
+  if (current && !CATEGORY_OPTIONS.some(([v]) => v === current))
+    opts.unshift(`<option value="${esc(current)}" selected>${esc(current)}（舊分類）</option>`);
+  return opts.join('');
+}
+
 // ---- 開機防呆：函式庫 / 設定沒載到就明白告知，而非靜默失效 ----
 function bootFail(msg) {
   const el = document.getElementById('bootError');
@@ -75,9 +89,23 @@ publishBtn.onclick = async () => {
   publishBtn.disabled = true;
   msg.textContent = '發布中…';
   try {
-    const { data } = await sb.from('settings').select('value').eq('key', 'deploy_hook_url').single();
-    if (!data || !data.value) { msg.textContent = '未設定 deploy hook'; return; }
-    await fetch(data.value, { method: 'POST' });
+    // 經 trigger-deploy 代理觸發（server 端 POST hook：避開 CORS、hook 不進瀏覽器）
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { msg.textContent = '請重新登入'; return; }
+    const res = await fetch(`${window.SUPABASE_URL}/functions/v1/trigger-deploy`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': window.SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+    const out = await res.json();
+    if (!res.ok || out.error) {
+      msg.textContent = out.error === 'hook not configured' ? '未設定 deploy hook' : '發布失敗';
+      return;
+    }
     msg.textContent = '✓ 已觸發發布，數分鐘後生效';
   } catch {
     msg.textContent = '發布失敗';
@@ -92,10 +120,14 @@ function setActiveNav(view) {
   document.querySelectorAll('.nav-item').forEach(b =>
     b.classList.toggle('active', b.dataset.view === view));
 }
-document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => {
-  if (b.dataset.view === 'dashboard') renderDashboard();
-  else { setActiveNav('products'); renderProducts(); }
-});
+const VIEWS = {
+  dashboard: renderDashboard,
+  products: () => { setActiveNav('products'); renderProducts(); },
+  orders: () => { setActiveNav('orders'); renderOrders(); },
+  discounts: () => { setActiveNav('discounts'); renderDiscounts(); },
+  site: renderSiteSettings,
+};
+document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => (VIEWS[b.dataset.view] || renderDashboard)());
 
 async function renderDashboard() {
   setActiveNav('dashboard');
@@ -143,6 +175,110 @@ async function renderDashboard() {
   document.getElementById('dashPublish').onclick = () => publishBtn.click();
 }
 
+const PAY_STATUS_LABEL = { pending: '待付款', paid: '已付款', failed: '付款失敗' };
+const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨' };
+
+async function renderOrders() {
+  const { data: orders, error } = await sb.from('orders')
+    .select('id, order_no, name, phone, email, total, pay_amount, payment_status, fulfillment_status, discount_code, created_at')
+    .order('created_at', { ascending: false }).limit(200);
+  if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
+  viewRoot().innerHTML = `
+    <div class="view-head"><h2>訂單管理</h2></div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>訂單編號</th><th>客人</th><th>金額</th><th>付款</th><th>出貨</th><th>時間</th><th></th></tr></thead>
+        <tbody>${orders.map(o => `
+          <tr>
+            <td>${esc(o.order_no)}${o.discount_code ? ` <span class="muted">(${esc(o.discount_code)})</span>` : ''}</td>
+            <td>${esc(o.name)}<br><span class="muted">${esc(o.phone)}</span></td>
+            <td>NT$ ${esc(Number(o.pay_amount).toLocaleString('en-US'))}<br><span class="muted">合計 ${esc(Number(o.total).toLocaleString('en-US'))}</span></td>
+            <td><span class="badge badge-${esc(o.payment_status)}">${esc(PAY_STATUS_LABEL[o.payment_status] || o.payment_status)}</span></td>
+            <td><span class="badge">${esc(FULFILL_LABEL[o.fulfillment_status] || o.fulfillment_status)}</span></td>
+            <td class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</td>
+            <td>${o.fulfillment_status !== 'shipped'
+              ? `<button class="btn btn-sm" data-ship="${esc(o.id)}">標記已出貨</button>` : ''}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  viewRoot().querySelectorAll('[data-ship]').forEach(b => b.onclick = async () => {
+    b.disabled = true; b.textContent = '處理中…';
+    const { error } = await sb.from('orders').update({ fulfillment_status: 'shipped' }).eq('id', b.dataset.ship);
+    if (error) { b.disabled = false; b.textContent = '標記已出貨'; alert('更新失敗：' + error.message); return; }
+    renderOrders();
+  });
+}
+
+async function renderDiscounts() {
+  const { data: codes, error } = await sb.from('discount_codes').select('*').order('created_at', { ascending: false });
+  if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
+  viewRoot().innerHTML = `
+    <div class="view-head">
+      <h2>折扣碼</h2>
+      <button id="newCodeBtn" class="btn btn-primary">＋ 新增折扣碼</button>
+    </div>
+    <div class="card form-card">
+      <div class="form-grid">
+        <label class="field"><span>代碼（客人輸入，大寫英數）</span>
+          <input id="dc_code" style="text-transform:uppercase" maxlength="30" placeholder="例：WELCOME10"></label>
+        <label class="field"><span>折扣％（跟固定折抵擇一）</span>
+          <input id="dc_percent" type="number" min="1" max="100" placeholder="例：10"></label>
+        <label class="field"><span>固定折抵 NT$（跟折扣％擇一）</span>
+          <input id="dc_amount" type="number" min="1" placeholder="例：100"></label>
+        <label class="field"><span>使用上限（留白＝不限）</span>
+          <input id="dc_max" type="number" min="1"></label>
+        <label class="field"><span>到期日（留白＝不過期）</span>
+          <input id="dc_expires" type="date"></label>
+      </div>
+      <div class="form-actions">
+        <button id="dcSaveBtn" class="btn btn-primary">新增</button>
+        <span id="dcErr" class="err" role="alert"></span>
+      </div>
+    </div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>代碼</th><th>折扣</th><th>已用/上限</th><th>到期</th><th>狀態</th><th></th></tr></thead>
+        <tbody>${codes.map(c => `
+          <tr>
+            <td>${esc(c.code)}</td>
+            <td>${c.percent_off ? esc(c.percent_off) + '%' : 'NT$ ' + esc(c.amount_off)}</td>
+            <td>${esc(c.used_count)} / ${c.max_uses ?? '∞'}</td>
+            <td class="muted">${c.expires_at ? esc(String(c.expires_at).slice(0, 10)) : '—'}</td>
+            <td><span class="badge badge-${c.active ? 'active' : 'hidden'}">${c.active ? '啟用中' : '已停用'}</span></td>
+            <td><button class="btn btn-sm" data-toggle="${esc(c.code)}" data-active="${c.active}">${c.active ? '停用' : '啟用'}</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  document.getElementById('newCodeBtn').onclick = () => document.getElementById('dc_code').focus();
+  document.getElementById('dcSaveBtn').onclick = async () => {
+    const errEl = document.getElementById('dcErr');
+    errEl.textContent = '';
+    const code = document.getElementById('dc_code').value.trim().toUpperCase();
+    const percent = document.getElementById('dc_percent').value.trim();
+    const amount = document.getElementById('dc_amount').value.trim();
+    if (!code) { errEl.textContent = '請輸入代碼。'; return; }
+    if (!percent && !amount) { errEl.textContent = '折扣％與固定折抵至少填一個。'; return; }
+    const row = {
+      code, active: true,
+      percent_off: percent ? parseInt(percent, 10) : null,
+      amount_off: amount ? parseInt(amount, 10) : null,
+      max_uses: document.getElementById('dc_max').value.trim() ? parseInt(document.getElementById('dc_max').value, 10) : null,
+      expires_at: document.getElementById('dc_expires').value || null,
+    };
+    const { error } = await sb.from('discount_codes').insert(row);
+    if (error) { errEl.textContent = friendlyErr(error); return; }
+    renderDiscounts();
+  };
+  viewRoot().querySelectorAll('[data-toggle]').forEach(b => b.onclick = async () => {
+    const active = b.dataset.active !== 'true';
+    const { error } = await sb.from('discount_codes').update({ active }).eq('code', b.dataset.toggle);
+    if (error) { alert('更新失敗：' + error.message); return; }
+    renderDiscounts();
+  });
+}
+
 const STATUS_LABEL = { preorder: '預購中', active: '現貨', sold_out: '售罄', hidden: '隱藏' };
 
 async function renderProducts() {
@@ -172,10 +308,98 @@ async function renderProducts() {
     b.onclick = () => productForm(products.find(p => p.id === b.dataset.edit)));
 }
 
+// 與 scripts/site-settings.mjs 的 THEMES 同步
+const THEME_OPTIONS = [
+  ['default', '夢幻粉紫（現行）', ['#FAFAF7', '#E0CDD5', '#C4A882']],
+  ['sage',    '米綠',            ['#F5F4EA', '#C9D0B5', '#9A9160']],
+  ['latte',   '奶茶',            ['#FAF6F0', '#D8C2AC', '#A8845C']],
+  ['mist',    '霧藍',            ['#F5F7F8', '#C2CED8', '#7A8FA0']],
+];
+const SITE_TEXT_FIELDS = [
+  ['announce_zh', '公告列（中）'], ['announce_en', '公告列（英，可留白）'],
+  ['hero_eyebrow_zh', '首圖上方小標（中）'], ['hero_eyebrow_en', '首圖上方小標（英，可留白）'],
+  ['hero_desc_zh', '首圖描述（中）'], ['hero_desc_en', '首圖描述（英，可留白）'],
+];
+
+async function renderSiteSettings() {
+  setActiveNav('site');
+  const { data, error } = await sb.from('settings').select('*');
+  if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
+  const s = Object.fromEntries((data || []).map(r => [r.key, r.value]));
+  const theme = s.theme || 'default';
+  viewRoot().innerHTML = `
+    <div class="view-head"><h2>網站設定</h2></div>
+    <div class="card form-card">
+      <h3>首圖 Banner</h3>
+      <p class="muted">建議橫式照片；直式照片可用「焦點」調整裁切位置（0=頂、100=底）。存檔後按「發布到網站」才會生效。</p>
+      <div class="form-grid">
+        <label class="field"><span>Banner 圖（現用：${esc(s.hero_img_1 || '內建')}）</span>
+          <input id="s_hero1" type="file" accept="image/*"></label>
+        <label class="field"><span>焦點（0-100，預設 35）</span>
+          <input id="s_focus1" type="number" min="0" max="100" value="${esc(s.hero_focus_1 || '35')}"></label>
+      </div>
+      <h3>配色主題</h3>
+      <div class="theme-row">
+        ${THEME_OPTIONS.map(([v, label, sw]) => `
+          <label class="theme-opt">
+            <input type="radio" name="s_theme" value="${v}" ${v === theme ? 'checked' : ''}>
+            <span class="swatches">${sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>
+            <span>${label}</span>
+          </label>`).join('')}
+      </div>
+      <h3>文字</h3>
+      <div class="form-grid">
+        ${SITE_TEXT_FIELDS.map(([k, label]) => `
+          <label class="field field-wide"><span>${label}</span>
+            <input id="s_${k}" value="${esc(s[k] || '')}" placeholder="留白＝用內建文案"></label>`).join('')}
+      </div>
+      <div class="form-actions">
+        <button id="siteSaveBtn" class="btn btn-primary">儲存</button>
+        <span id="siteMsg" class="muted" role="status"></span>
+        <span id="siteErr" class="err" role="alert"></span>
+      </div>
+    </div>`;
+  document.getElementById('siteSaveBtn').onclick = saveSiteSettings;
+}
+
+async function saveSiteSettings() {
+  const btn = document.getElementById('siteSaveBtn');
+  const msg = document.getElementById('siteMsg');
+  const errEl = document.getElementById('siteErr');
+  errEl.textContent = ''; msg.textContent = '';
+  btn.disabled = true; btn.textContent = '儲存中…';
+  const fail = m => { errEl.textContent = m; btn.disabled = false; btn.textContent = '儲存'; };
+  try {
+    const rows = [];
+    // 圖片上傳（有選檔才傳）
+    for (const [inputId, key] of [['s_hero1', 'hero_img_1']]) {
+      const file = document.getElementById(inputId).files[0];
+      if (!file) continue;
+      const ext = (file.name.includes('.') ? file.name.split('.').pop() : '') || (file.type.split('/')[1] || 'jpg');
+      const path = `site/${key}-${Date.now()}.${ext}`;
+      const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
+      if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
+      const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
+      rows.push({ key, value: pub.publicUrl });
+    }
+    rows.push({ key: 'hero_focus_1', value: document.getElementById('s_focus1').value.trim() });
+    rows.push({ key: 'theme', value: (document.querySelector('input[name="s_theme"]:checked') || {}).value || 'default' });
+    for (const [k] of SITE_TEXT_FIELDS)
+      rows.push({ key: k, value: document.getElementById(`s_${k}`).value.trim() });
+    const { error } = await sb.from('settings').upsert(rows);
+    if (error) return fail(friendlyErr(error));
+    msg.textContent = '✓ 已儲存，記得按「發布到網站」';
+    btn.disabled = false; btn.textContent = '儲存';
+  } catch (e) {
+    fail(friendlyErr(e));
+  }
+}
+
 async function productForm(p) {
   const isNew = !p;
   p = p || { id:'', name_zh:'', name_en:'', desc_zh:'', desc_en:'', category:'top',
-             price:0, badge_zh:'', badge_en:'', status:'preorder', sort_order:0 };
+             price:0, badge_zh:'', badge_en:'', status:'preorder', sort_order:0,
+             needs_shipping:true };
   let variants = [];
   if (!isNew) {
     const { data } = await sb.from('product_variants').select('*').eq('product_id', p.id);
@@ -188,7 +412,7 @@ async function productForm(p) {
         <label class="field"><span>ID（slug，英數-）</span>
           <input id="f_id" value="${esc(p.id)}" ${isNew ? '' : 'disabled'}></label>
         <label class="field"><span>分類</span>
-          <input id="f_category" value="${esc(p.category)}"></label>
+          <select id="f_category">${categoryOptions(p.category)}</select></label>
         <label class="field"><span>中文名</span>
           <input id="f_name_zh" value="${esc(p.name_zh)}"></label>
         <label class="field"><span>英文名</span>
@@ -208,6 +432,8 @@ async function productForm(p) {
         <label class="field"><span>狀態</span>
           <select id="f_status">${['preorder','active','sold_out','hidden']
             .map(s => `<option value="${s}" ${s===p.status?'selected':''}>${STATUS_LABEL[s]}</option>`).join('')}</select></label>
+        <label class="field"><span>需要物流（尾款商品貨到付款打勾；訂金商品免物流取消勾選）</span>
+          <input id="f_needs_shipping" type="checkbox" ${p.needs_shipping ? 'checked' : ''}></label>
         <label class="field"><span>尺寸+庫存（例 小碼:20,大碼:20）</span>
           <input id="f_variants" value="${variants.map(v=>`${esc(v.size)}:${esc(v.stock)}`).join(',')}"></label>
         <label class="field field-wide"><span>商品圖片</span>
@@ -216,11 +442,31 @@ async function productForm(p) {
       <div class="form-actions">
         <button id="saveBtn" class="btn btn-primary">儲存</button>
         <button id="cancelBtn" class="btn btn-ghost">取消</button>
+        ${isNew ? '' : '<button id="deleteBtn" class="btn btn-danger">刪除商品</button>'}
         <span id="formErr" class="err" role="alert"></span>
       </div>
     </div>`;
   document.getElementById('cancelBtn').onclick = renderProducts;
   document.getElementById('saveBtn').onclick = () => saveProduct(isNew);
+  if (!isNew) document.getElementById('deleteBtn').onclick = () => deleteProduct(p);
+}
+
+async function deleteProduct(p) {
+  // 永久刪除：variants/images 由 DB cascade 帶走；order_items 是文字快照不受影響。
+  // 暫時下架請改用狀態「隱藏」。
+  if (!confirm(`確定永久刪除「${p.name_zh || p.id}」？\n\n訂單紀錄不受影響，但商品無法復原。\n若只是暫時下架，請改用狀態「隱藏」。`)) return;
+  const btn = document.getElementById('deleteBtn');
+  const formErr = document.getElementById('formErr');
+  btn.disabled = true;
+  btn.textContent = '刪除中…';
+  const { error } = await sb.from('products').delete().eq('id', p.id);
+  if (error) {
+    formErr.textContent = friendlyErr(error);
+    btn.disabled = false;
+    btn.textContent = '刪除商品';
+    return;
+  }
+  renderProducts();
 }
 
 async function saveProduct(isNew) {
@@ -238,6 +484,7 @@ async function saveProduct(isNew) {
     desc_zh: v('f_desc_zh'), desc_en: v('f_desc_en'), category: v('f_category'),
     price: parseInt(v('f_price'),10)||0, badge_zh: v('f_badge_zh'), badge_en: v('f_badge_en'),
     status: v('f_status'), sort_order: parseInt(v('f_sort'),10)||0,
+    needs_shipping: document.getElementById('f_needs_shipping').checked,
   };
   const { error } = await sb.from('products').upsert(row);
   if (error) return fail(friendlyErr(error));

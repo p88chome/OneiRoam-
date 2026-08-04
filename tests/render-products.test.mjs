@@ -32,9 +32,28 @@ test('renderProductCards: sold_out 狀態顯示售罄', () => {
   assert.match(html, /售罄/);
 });
 
+test('renderProductCards: 徽章留白不輸出空框；英文留白 fallback 中文', () => {
+  const none = renderProductCards([{ ...sample, badge_zh: '', badge_en: '' }]);
+  assert.doesNotMatch(none, /product-badge/);
+  const zhOnly = renderProductCards([{ ...sample, badge_zh: '新品', badge_en: '' }]);
+  assert.match(zhOnly, /data-zh="新品" data-en="新品"/);
+});
+
+test('renderProductCards: 沒圖不輸出 img，卡片留漸層底', () => {
+  const html = renderProductCards([{ ...sample, image: '' }]);
+  assert.doesNotMatch(html, /<img/);
+  assert.match(html, /data-modal-img=""/);
+  assert.match(html, /product-img-wrap/);
+});
+
 test('renderProductCards: 跳脫引號避免破壞屬性', () => {
   const html = renderProductCards([{ ...sample, name_zh: '雙"引號"款' }]);
   assert.match(html, /data-modal-name-zh="雙&quot;引號&quot;款"/);
+});
+
+test('renderProductCards: 商品名連到獨立頁 product-{id}.html', () => {
+  const html = renderProductCards([sample]);
+  assert.match(html, /<a href="product-sea-gcd-short-jelly\.html" class="product-name-link"><h3/);
 });
 
 test('buildStorefrontData: 解析設定', () => {

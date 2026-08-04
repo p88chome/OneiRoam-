@@ -1,14 +1,17 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  // Cloudflare Workers static-assets deploy for the OneiRoam storefront.
+  // The site is plain static HTML/CSS/JS at the repo root (build-products.mjs
+  // edits index.html in place — there is no separate build output dir), so the
+  // assets directory is "." and .assetsignore keeps backend/dev files off the CDN.
   "name": "oneiroam",
-  "compatibility_date": "2026-06-21",
-  "observability": {
-    "enabled": true
-  },
+  "compatibility_date": "2026-07-04",
+  // worker.js 只做一件事：把 PAYUNi 付款完成的 POST /order-result.html 303 成 GET
+  "main": "worker.js",
   "assets": {
-    "directory": "."
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+    "directory": ".",
+    "binding": "ASSETS",
+    // 路徑對到資產時預設不進 Worker（非 GET 會被資產層直接 405）——
+    // 這條要先進 Worker 才能把 PAYUNi 的 POST 轉成 GET
+    "run_worker_first": ["/order-result.html"]
+  }
 }

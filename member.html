@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OneiRoam 夢游 — 會員專區，查看訂單狀態、管理個人資料">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <title>會員專區 — OneiRoam</title>
+  <link rel="canonical" href="https://www.oneiroam.com/member.html">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-lang="zh">
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div id="loader">
+    <div class="loader-inner">
+      <span class="loader-brand">OneiRoam</span>
+      <span class="loader-sub" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
+      <div class="loader-line"></div>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header id="header">
+    <div class="header-inner">
+      <button class="hamburger" id="hamburger" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="index.html" class="logo">
+        <span class="logo-brand">OneiRoam</span>
+        <span class="logo-sub" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
+      </a>
+      <nav id="main-nav">
+        <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
+        <div class="nav-drop">
+          <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+          <div class="drop-menu">
+            <a href="index.html#collections" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+            <a href="index.html#collections" data-zh="領片" data-en="Collars">領片</a>
+            <a href="index.html#collections" data-zh="套裝" data-en="Sets">套裝</a>
+            <a href="index.html#collections" data-zh="上衣" data-en="Tops">上衣</a>
+            <a href="index.html#collections" data-zh="下著" data-en="Bottoms">下著</a>
+            <a href="index.html#collections" data-zh="其他配件" data-en="Accessories">其他配件</a>
+          </div>
+        </div>
+        <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoam">關於夢游</a>
+      </nav>
+      <button class="lang-toggle" id="langToggle" aria-label="語言切換">
+        <span class="l-zh active">中</span>
+        <span class="l-div">|</span>
+        <span class="l-en">EN</span>
+      </button>
+      <a href="member.html" class="member-link" aria-label="會員專區">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22">
+          <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/>
+        </svg>
+      </a>
+      <a href="order.html" class="cart-link" aria-label="訂單" id="cartLink">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="22" height="22">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Mobile Overlay Nav -->
+  <div class="mobile-overlay" id="mobileOverlay">
+    <nav class="mobile-nav">
+      <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
+      <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+      <div class="mobile-subnav">
+        <a href="index.html#collections" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
+        <a href="index.html#collections" data-zh="領片" data-en="Collars">領片</a>
+        <a href="index.html#collections" data-zh="套裝" data-en="Sets">套裝</a>
+        <a href="index.html#collections" data-zh="上衣" data-en="Tops">上衣</a>
+        <a href="index.html#collections" data-zh="下著" data-en="Bottoms">下著</a>
+        <a href="index.html#collections" data-zh="其他配件" data-en="Accessories">其他配件</a>
+      </div>
+      <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
+      <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+      <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoam">關於夢游</a>
+      <a href="member.html" data-zh="會員專區" data-en="My Account">會員專區</a>
+    </nav>
+    <div class="mobile-overlay-lang">
+      <button class="lang-toggle-mobile" id="langToggleMobile">
+        <span class="l-zh active">中</span>
+        <span class="l-div">|</span>
+        <span class="l-en">EN</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MEMBER PAGE ===== -->
+  <main class="member-page">
+    <section id="member">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label" data-zh="會員專區" data-en="My Account">會員專區</p>
+          <h2 data-zh="妳的夢游足跡" data-en="Your OneiRoam Journey">妳的夢游足跡</h2>
+        </div>
+
+        <div id="memberLogin" class="member-login" style="display:none">
+          <p data-zh="登入後可查看訂單狀態、管理妳的資料" data-en="Sign in to view orders and manage your info">登入後可查看訂單狀態、管理妳的資料</p>
+          <button type="button" id="googleLoginBtn" class="btn-google">
+            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            <span data-zh="用 Google 登入" data-en="Sign in with Google">用 Google 登入</span>
+          </button>
+        </div>
+
+        <div id="memberArea" style="display:none">
+          <p class="member-info">
+            <span data-zh="已登入" data-en="Signed in as">已登入</span>
+            <span id="mEmail"></span>
+            <button type="button" id="mLogout" class="btn-logout" data-zh="登出" data-en="Sign out">登出</button>
+          </p>
+
+          <h3 class="member-h" data-zh="我的訂單" data-en="My Orders">我的訂單</h3>
+          <div id="orderList" class="order-list"></div>
+
+          <h3 class="member-h" data-zh="我的資料" data-en="My Info">我的資料</h3>
+          <form id="profileForm" class="order-form member-profile" novalidate>
+            <label><span data-zh="姓名" data-en="Name">姓名</span><input name="name" maxlength="60"></label>
+            <label><span data-zh="電話" data-en="Phone">電話</span><input name="phone" maxlength="30"></label>
+            <label><span data-zh="Line 暱稱或 IG 帳號" data-en="LINE nickname or IG">Line 暱稱或 IG 帳號</span><input name="social" maxlength="60"></label>
+            <label><span data-zh="Email" data-en="Email">Email</span><input name="email" type="email" maxlength="120"></label>
+            <button type="submit" class="btn-primary" data-zh="儲存" data-en="Save">儲存</button>
+            <p id="profileMsg" class="member-msg" role="status"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo-en">OneiRoam</span>
+        <span class="footer-logo-zh" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+        <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
+        <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+        <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoam">關於夢游</a>
+      </nav>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/oneiroam?igsh=MW5rZGF3Z3BpNms2eQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://line.me/R/ti/p/@547hgbaz" aria-label="LINE" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 .999C5.926.999 1 5.4 1 10.827c0 4.73 4.195 8.687 9.866 9.44.384.083.907.253 1.04.581.119.298.078.764.038 1.065l-.168.994c-.051.297-.237 1.163 1.028.634 1.264-.528 6.817-4 9.297-6.855C23.22 14.851 24 12.928 24 10.827 24 5.4 18.075.999 12 .999zm-4.667 13.5H5.167a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.333a.833.833 0 1 1 0 1.666zm2.5-.833a.833.833 0 1 1-1.666 0V9.499a.833.833 0 1 1 1.666 0v4.167zm5.167 0a.833.833 0 0 1-.815-.658l-1.685-3.342v3.167a.833.833 0 1 1-1.667 0V9.499a.833.833 0 0 1 1.648-.174l1.685 3.342V9.499a.833.833 0 1 1 1.667 0v4.167a.833.833 0 0 1-.833.833zm3.667 0h-2.5a.833.833 0 0 1-.834-.833V9.499a.833.833 0 1 1 1.667 0v3.334h1.667a.833.833 0 1 1 0 1.666z"/></svg>
+        </a>
+      </div>
+      <p class="footer-copy" data-zh="© 2026 OneiRoam. 保留所有權利。" data-en="© 2026 OneiRoam. All rights reserved.">© 2026 OneiRoam. 保留所有權利。</p>
+    </div>
+  </footer>
+
+  <script src="cart.js"></script>
+  <script src="admin.config.js"></script>
+  <script src="vendor/supabase.js"></script>
+  <script src="member.js"></script>
+</body>
+</html>

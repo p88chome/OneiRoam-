@@ -10,6 +10,9 @@ package.json
 !.env.example
 *.local
 
+# local SQL paste helpers — may contain the deploy hook URL; never commit
+supabase/_apply*.sql
+
 # build artifacts (generated from Supabase at build time)
 data/storefront.json
 

@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /order.html
+Disallow: /order-result.html
+Disallow: /admin.html
 
 Sitemap: https://www.oneiroam.com/sitemap.xml

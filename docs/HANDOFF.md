@@ -1,14 +1,30 @@
 # OneiRoam — Agent Handoff
 
-給接手的 AI agent / 開發者的現況與下一步。最後更新：2026-06-22。
+給接手的 AI agent / 開發者的現況與下一步。最後更新：2026-07-28。
 
 ## 這是什麼
 
-OneiRoam 夢遊 = 獨立設計女裝**預購**電商。純靜態前台 + Supabase 後台。
+OneiRoam 夢游 = 獨立設計女裝**預購**電商。純靜態前台 + Supabase 後台。
 
 - **線上站**：https://www.oneiroam.com （Cloudflare 部署，repo `p88chome/OneiRoam-`）
 - **後台**：https://www.oneiroam.com/admin.html （Supabase Auth 登入）
-- **預售窗口**：2026-06-23 ~ 06-30，8 月出貨。訂金一半、其餘貨到付款。
+- **預售窗口**：2026-06-23 ~ 06-30，8 月出貨。**收款一律全額**（照商品頁面價格 / 折扣後合計）；物流/貨到付款目前線下自理，未串接。
+
+## 最近變更（2026-07-28，branch `staging`）
+
+前台 UI + 訂單流程調整，均已 push 到 `staging`（commits `14ea425`、`91fa668`）。**尚未合 main、尚未部署後端**（見文末待辦）。
+
+- **首圖**：從雙圖 5 秒輪換 → 單張靜態圖 `images/hero.jpg`。移除輪換 JS、`.h-img-2` CSS、後台第 2 張 banner 欄位；`heroImgsHtml` 改單圖輸出。og/twitter/JSON-LD 圖同步。
+- **移除頂部預購公告條（announce-bar）**：index/select/member 三頁 + build 注入 + JS/CSS 全清（`announceHtml`/admin 文字欄仍留著但無處 render）。
+- **移除 Hero 下方跑馬燈**（marquee）。
+- **首頁標題**：刪「夢境衣櫥」，「原創設計」升為 h2。
+- **文案**：全站「限量」→「限時預訂」（含 SEO title/og/JSON-LD、中英）。
+- **關於區大合照**：移除 `images/about.jpg`，改單欄置中。
+- **訂單表單**：刪電話欄；Line/IG 欄改**選填**、標題「Line名稱或IG帳號」。
+- **付款**：刪「訂金/全額」選項與訂金/尾款金額列，**一律收全額**（`create-order` 強制 `amount_type=full` → `p.total`）。`orders.amount_type` 欄保留、一律寫 `full`。
+- **商品物流旗標（新）**：`products.needs_shipping`（migration `0006_product_shipping.sql`，預設 true）+ 後台商品表單勾選。**目前僅資訊用**，未串 PAYUNi 物流 API（PAYUNi 金流與物流是兩個獨立產品，物流需另申請 + 另串）。
+
+> 未用檔案（可刪）：`images/hero-1.jpg`、`hero-2.jpg`、`about.jpg`。
 
 ## 技術棧
 
@@ -31,6 +47,10 @@ OneiRoam 夢遊 = 獨立設計女裝**預購**電商。純靜態前台 + Supabas
 
 ## 待辦（owner/dashboard 手動，非寫碼）
 
+- [ ] **部署 2026-07-28 這批**（`staging` 已 push，尚未生效）：
+  - [ ] `supabase functions deploy create-order`（全額收款生效）
+  - [ ] Supabase SQL Editor 執行 `supabase/migrations/0006_product_shipping.sql`（加 `products.needs_shipping`，否則後台物流勾選存檔會報錯）
+  - [ ] 於 staging preview 驗畫面 OK → 合併 `staging` → `main` 上正式站
 - [ ] Supabase 建 `product-images` public bucket + policies（圖片上傳需要）。
 - [ ] Cloudflare：Build command `node scripts/build-products.mjs` + 環境變數 SUPABASE_URL/SERVICE_KEY + 建 Deploy Hook → 填進 Supabase `settings.deploy_hook_url`（發布鈕與前台切換 Supabase 來源需要）。
 - [ ] **關閉 Supabase 自由註冊**（RLS 寫入 = 任何登入者）。
