@@ -118,6 +118,7 @@
     const root = fieldsRoot();
     root.innerHTML = siteFieldsHtml();
     wireSitePanel(root);
+    post({ type: 'lang', lang: 'zh' }); // 面板重繪＝語言鈕回未勾(中)，同步預覽避免改中文卻看不到變化
   }
 
   // ---- 商品面板 ----
@@ -178,6 +179,7 @@
     const root = fieldsRoot();
     root.innerHTML = productFieldsHtml(id);
     wireProductPanel(root, id);
+    post({ type: 'lang', lang: 'zh' }); // 同 renderSitePanel：面板語言鈕與預覽同步為中
   }
 
   window.renderVisualEditor = async () => {
