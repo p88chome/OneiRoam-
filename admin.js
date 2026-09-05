@@ -375,19 +375,15 @@ async function saveSiteSettings() {
     for (const [inputId, key] of [['s_hero1', 'hero_img_1']]) {
       const file = document.getElementById(inputId).files[0];
       if (!file) continue;
-      const ext = (file.name.includes('.') ? file.name.split('.').pop() : '') || (file.type.split('/')[1] || 'jpg');
-      const path = `site/${key}-${Date.now()}.${ext}`;
-      const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
-      if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
-      const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
-      rows.push({ key, value: pub.publicUrl });
+      try {
+        rows.push({ key, value: await window.adminData.uploadImage(file, key) });
+      } catch (e) { return fail('圖片上傳失敗：' + friendlyErr(e)); }
     }
     rows.push({ key: 'hero_focus_1', value: document.getElementById('s_focus1').value.trim() });
     rows.push({ key: 'theme', value: (document.querySelector('input[name="s_theme"]:checked') || {}).value || 'default' });
     for (const [k] of SITE_TEXT_FIELDS)
       rows.push({ key: k, value: document.getElementById(`s_${k}`).value.trim() });
-    const { error } = await sb.from('settings').upsert(rows);
-    if (error) return fail(friendlyErr(error));
+    try { await window.adminData.saveSettings(rows); } catch (e) { return fail(friendlyErr(e)); }
     msg.textContent = '✓ 已儲存，記得按「發布到網站」';
     btn.disabled = false; btn.textContent = '儲存';
   } catch (e) {
