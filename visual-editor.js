@@ -1,7 +1,9 @@
 // visual-editor.js — 視覺編輯視圖：左 iframe 預覽、右屬性面板、postMessage 橋、草稿 + 存檔/發布。
 // 依賴 admin.js 的 window.sb 與 admin-data.js 的 window.adminData；載入順序在兩者之後。
 (() => {
-  const escAttr = s => String(s ?? '').replace(/"/g, '&quot;');
+  // 完整 escape（& < > " '），與 admin.js / preview-render 一致，避免日後移到屬性外的 context 誤用
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const PREVIEW_ORIGIN = location.origin;
 
   // 右欄文字欄位（key 對 settings key）；區塊點擊 → 聚焦第一個相關欄位
@@ -42,11 +44,11 @@
         <h3>首頁內容</h3>
         ${TEXT_FIELDS.map(([k, label]) => `
           <label class="field field-wide"><span>${label}</span>
-            <input id="ve_${k}" data-key="${k}" value="${escAttr(draft[k] || '')}"></label>`).join('')}
+            <input id="ve_${k}" data-key="${k}" value="${esc(draft[k] || '')}"></label>`).join('')}
         <h3>Hero 圖</h3>
         <label class="field"><span>更換圖片</span><input id="ve_hero_file" type="file" accept="image/*"></label>
         <label class="field"><span>焦點（0-100）</span>
-          <input id="ve_s_focus1" data-key="hero_focus_1" type="number" min="0" max="100" value="${escAttr(draft.hero_focus_1 || '35')}"></label>
+          <input id="ve_s_focus1" data-key="hero_focus_1" type="number" min="0" max="100" value="${esc(draft.hero_focus_1 || '35')}"></label>
         <h3>配色</h3>
         <div class="ve-themes">
           ${THEME_OPTIONS.map(([v, l]) => `
