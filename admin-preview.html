@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self';
+             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+             font-src https://fonts.gstatic.com;
+             img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co;
+             connect-src 'self'; base-uri 'self'; frame-ancestors 'self'">
+  <title>OneiRoam 預覽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    [data-edit]{cursor:pointer;outline:2px dashed transparent;outline-offset:3px;transition:outline-color .15s}
+    [data-edit]:hover{outline-color:var(--accent,#C4A882)}
+  </style>
+</head>
+<body>
+  <div class="announce-bar"><span data-edit="announce"></span></div>
+  <section id="hero">
+    <div class="hero-bg" data-edit="hero_img"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span data-edit="hero_eyebrow"></span>
+      <h1 class="hero-title">OneiRoam</h1>
+      <p class="hero-tagline" data-zh="夢游" data-en="Wander Through Dreams">夢游</p>
+      <span data-edit="hero_desc"></span>
+    </div>
+  </section>
+  <script type="module" src="preview-harness.mjs"></script>
+</body>
+</html>
