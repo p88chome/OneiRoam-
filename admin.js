@@ -126,6 +126,7 @@ const VIEWS = {
   orders: () => { setActiveNav('orders'); renderOrders(); },
   discounts: () => { setActiveNav('discounts'); renderDiscounts(); },
   site: renderSiteSettings,
+  visual: () => { setActiveNav('visual'); (window.renderVisualEditor || (() => {}))(); },
 };
 document.querySelectorAll('.nav-item').forEach(b => b.onclick = () => (VIEWS[b.dataset.view] || renderDashboard)());
 
