@@ -18,11 +18,20 @@
     ['default', '夢幻粉紫'], ['sage', '米綠'], ['latte', '奶茶'], ['mist', '霧藍'],
   ];
 
-  let draft = {};   // 目前草稿 settings
+  let draft = {};      // 目前草稿 settings
   let iframe = null;
+  let ready = false;   // iframe(harness)是否已回報 ready
 
   const post = msg => iframe && iframe.contentWindow &&
     iframe.contentWindow.postMessage({ source: 'oneiroam-editor', ...msg }, PREVIEW_ORIGIN);
+
+  // 只有在 iframe 已 ready 才推送；renderVisualEditor 載完設定與 ready 事件都會呼叫，
+  // 兩者誰先到都行（避免 ready 早於 loadSettings 時預覽卡在預設值）。
+  function pushRender() {
+    if (!ready) return;
+    post({ type: 'render', settings: draft });
+    post({ type: 'theme', value: draft.theme || 'default' });
+  }
 
   async function loadSettings() {
     const { data } = await window.sb.from('settings').select('*');
@@ -99,6 +108,7 @@
   }
 
   window.renderVisualEditor = async () => {
+    ready = false;   // 重新進入本視圖 → 新 iframe，等新的 ready
     const root = document.getElementById('viewRoot');
     root.innerHTML = `
       <div class="view-head"><h2>視覺編輯</h2><p class="muted">點左邊要改的地方 → 右邊編輯 → 儲存 → 發布</p></div>
@@ -110,6 +120,7 @@
     await loadSettings();
     root.querySelector('#ve_fields').innerHTML = fieldsHtml();
     wirePanel(root);
+    pushRender();   // 設定載完；若 iframe 已 ready 立即推送，否則等 ready 事件
   };
 
   // iframe → parent：ready 送初始草稿；select 聚焦對應欄位
@@ -117,7 +128,7 @@
     if (e.origin !== PREVIEW_ORIGIN) return;
     const m = e.data || {};
     if (m.source !== 'oneiroam-preview') return;
-    if (m.type === 'ready') { post({ type: 'render', settings: draft }); post({ type: 'theme', value: draft.theme || 'default' }); }
+    if (m.type === 'ready') { ready = true; pushRender(); }
     else if (m.type === 'select') {
       const fieldId = EDIT_TO_FIELD[m.editKey];
       const el = fieldId && document.getElementById('ve_' + fieldId);
