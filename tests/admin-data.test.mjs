@@ -33,3 +33,19 @@ test('admin-data.uploadImage returns public url', async () => {
   const file = { name: 'a.jpg', type: 'image/jpeg' };
   assert.strictEqual(await adminData.uploadImage(file, 'hero_img_1'), 'https://cdn/x.jpg');
 });
+
+test('admin-data.saveProduct updates products by id', async () => {
+  let got = null;
+  const sb = { from: t => ({ update: fields => ({ eq: (col, val) => {
+    got = { t, fields, col, val }; return Promise.resolve({ error: null });
+  } }) }) };
+  const adminData = await loadAdminData(sb);
+  await adminData.saveProduct('bag-x', { price: 100, name_zh: 'x' });
+  assert.deepStrictEqual(got, { t: 'products', fields: { price: 100, name_zh: 'x' }, col: 'id', val: 'bag-x' });
+});
+
+test('admin-data.saveProduct throws on error', async () => {
+  const sb = { from: () => ({ update: () => ({ eq: () => Promise.resolve({ error: new Error('rls') }) }) }) };
+  const adminData = await loadAdminData(sb);
+  await assert.rejects(() => adminData.saveProduct('x', {}), /rls/);
+});

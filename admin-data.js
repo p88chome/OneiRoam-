@@ -12,4 +12,8 @@ window.adminData = {
     const { error } = await window.sb.from('settings').upsert(rows);
     if (error) throw error;
   },
+  async saveProduct(id, fields) {
+    const { error } = await window.sb.from('products').update(fields).eq('id', id);
+    if (error) throw error;
+  },
 };
