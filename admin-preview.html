@@ -23,6 +23,12 @@
     .ve-preview-body .hero-eyebrow:hover,
     .ve-preview-body .hero-desc:hover,
     .ve-preview-body .hero-img:hover{outline-color:var(--accent,#C4A882)}
+    /* 預覽不執行 index.html 的 script.js：手動關掉靠 JS 才會消失/顯示的初始狀態，
+       否則 #loader 預載動畫會一直轉、fade-up 區塊會卡在透明看不到。 */
+    .ve-preview-body #loader{display:none!important}
+    .ve-preview-body .fade-up,
+    .ve-preview-body .fade-left,
+    .ve-preview-body .fade-right{opacity:1!important;transform:none!important}
   </style>
 </head>
 <body>
