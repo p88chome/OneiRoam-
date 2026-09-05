@@ -6,13 +6,11 @@
 
   // 右欄文字欄位（key 對 settings key）；區塊點擊 → 聚焦第一個相關欄位
   const TEXT_FIELDS = [
-    ['announce_zh', '公告列（中）'], ['announce_en', '公告列（英，可留白）'],
     ['hero_eyebrow_zh', 'Hero 小標（中）'], ['hero_eyebrow_en', 'Hero 小標（英，可留白）'],
     ['hero_desc_zh', 'Hero 描述（中）'], ['hero_desc_en', 'Hero 描述（英，可留白）'],
   ];
   const EDIT_TO_FIELD = {
-    announce: 'announce_zh', hero_eyebrow: 'hero_eyebrow_zh',
-    hero_desc: 'hero_desc_zh', hero_img: 's_focus1',
+    hero_eyebrow: 'hero_eyebrow_zh', hero_desc: 'hero_desc_zh', hero_img: 's_focus1',
   };
   const THEME_OPTIONS = [
     ['default', '夢幻粉紫'], ['sage', '米綠'], ['latte', '奶茶'], ['mist', '霧藍'],

@@ -16,22 +16,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    [data-edit]{cursor:pointer;outline:2px dashed transparent;outline-offset:3px;transition:outline-color .15s}
-    [data-edit]:hover{outline-color:var(--accent,#C4A882)}
+    /* 可編輯熱點：真 index.html 的元素本身沒有 data-edit，直接用它們的 class 標示 */
+    .ve-preview-body .hero-eyebrow,
+    .ve-preview-body .hero-desc,
+    .ve-preview-body .hero-img{cursor:pointer;outline:2px dashed transparent;outline-offset:4px;transition:outline-color .15s}
+    .ve-preview-body .hero-eyebrow:hover,
+    .ve-preview-body .hero-desc:hover,
+    .ve-preview-body .hero-img:hover{outline-color:var(--accent,#C4A882)}
   </style>
 </head>
 <body>
-  <div class="announce-bar"><span data-edit="announce"></span></div>
-  <section id="hero">
-    <div class="hero-bg" data-edit="hero_img"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <span data-edit="hero_eyebrow"></span>
-      <h1 class="hero-title">OneiRoam</h1>
-      <p class="hero-tagline" data-zh="夢游" data-en="Wander Through Dreams">夢游</p>
-      <span data-edit="hero_desc"></span>
-    </div>
-  </section>
+  <!-- 全頁真預覽：preview-harness.mjs 抓真 index.html 的 <body> 注入這裡 -->
   <script type="module" src="preview-harness.mjs"></script>
 </body>
 </html>
