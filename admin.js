@@ -180,7 +180,7 @@ const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨' };
 
 async function renderOrders() {
   const { data: orders, error } = await sb.from('orders')
-    .select('id, order_no, name, phone, email, total, pay_amount, payment_status, fulfillment_status, discount_code, created_at')
+    .select('id, order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, discount_code, created_at, order_items(name, size, price, qty)')
     .order('created_at', { ascending: false }).limit(200);
   if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
   viewRoot().innerHTML = `
@@ -191,17 +191,30 @@ async function renderOrders() {
         <tbody>${orders.map(o => `
           <tr>
             <td>${esc(o.order_no)}${o.discount_code ? ` <span class="muted">(${esc(o.discount_code)})</span>` : ''}</td>
-            <td>${esc(o.name)}<br><span class="muted">${esc(o.phone)}</span></td>
+            <td>${esc(o.name)}${o.social ? `<br><span class="muted">${esc(o.social)}</span>` : ''}</td>
             <td>NT$ ${esc(Number(o.pay_amount).toLocaleString('en-US'))}<br><span class="muted">合計 ${esc(Number(o.total).toLocaleString('en-US'))}</span></td>
             <td><span class="badge badge-${esc(o.payment_status)}">${esc(PAY_STATUS_LABEL[o.payment_status] || o.payment_status)}</span></td>
             <td><span class="badge">${esc(FULFILL_LABEL[o.fulfillment_status] || o.fulfillment_status)}</span></td>
             <td class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</td>
-            <td>${o.fulfillment_status !== 'shipped'
+            <td><button class="btn btn-sm" data-detail="${esc(o.id)}">明細</button>
+              ${o.fulfillment_status !== 'shipped'
               ? `<button class="btn btn-sm" data-ship="${esc(o.id)}">標記已出貨</button>` : ''}</td>
+          </tr>
+          <tr data-detail-row="${esc(o.id)}" style="display:none">
+            <td colspan="7" class="order-detail">
+              <p><b>Line/IG：</b>${esc(o.social || '—')}　<b>Email：</b>${esc(o.email || '—')}${o.phone ? `　<b>電話：</b>${esc(o.phone)}` : ''}</p>
+              <p class="order-notes"><b>備註：</b>${esc(o.notes || '—')}</p>
+              <ul>${(o.order_items || []).map(i =>
+                `<li>${esc(i.name)}${i.size ? `（${esc(i.size)}）` : ''} × ${esc(i.qty)}　NT$ ${esc(Number(i.price * i.qty).toLocaleString('en-US'))}</li>`).join('')}</ul>
+            </td>
           </tr>`).join('')}
         </tbody>
       </table>
     </div>`;
+  viewRoot().querySelectorAll('[data-detail]').forEach(b => b.onclick = () => {
+    const row = viewRoot().querySelector(`[data-detail-row="${b.dataset.detail}"]`);
+    row.style.display = row.style.display === 'none' ? '' : 'none';
+  });
   viewRoot().querySelectorAll('[data-ship]').forEach(b => b.onclick = async () => {
     b.disabled = true; b.textContent = '處理中…';
     const { error } = await sb.from('orders').update({ fulfillment_status: 'shipped' }).eq('id', b.dataset.ship);
