@@ -1,0 +1,37 @@
+# 防止 Supabase Free 方案因 7 天無活動被自動暫停
+# 每 3 天用 anon key 查一筆 products（公開可讀，RLS: "public read products"）
+# 需在 GitHub repo Settings → Secrets and variables → Actions 設定：
+#   SUPABASE_URL       例：https://xxxx.supabase.co
+#   SUPABASE_ANON_KEY  anon public key（不要用 service role key）
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: "17 3 */3 * *" # UTC 03:17，每 3 天一次
+  workflow_dispatch: # 可在 Actions 頁面手動觸發測試
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Query Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::缺少 SUPABASE_URL 或 SUPABASE_ANON_KEY secret"
+            exit 1
+          fi
+          status=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            --retry 3 --retry-delay 10 \
+            "$SUPABASE_URL/rest/v1/products?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+          echo "HTTP $status"
+          cat /tmp/body.json; echo
+          if [ "$status" -ne 200 ]; then
+            echo "::error::Supabase 回應 $status（專案可能已暫停，需到 dashboard 手動 Resume）"
+            exit 1
+          fi
