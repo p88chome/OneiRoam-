@@ -110,12 +110,24 @@ Deno.serve(async (req) => {
     if (turnstileSecret) {
       const token = typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
       if (!token) return json({ error: '請完成人機驗證' }, 400);
+      if (token.length > 2048) return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+      // 驗證結果必須來自我們的網域、而且是結帳這個動作（防止別站的 token 拿來用）。
+      // 正式環境不可含 localhost；本機測試可用 TURNSTILE_HOSTNAMES 覆寫。
+      const hostnames = new Set((Deno.env.get('TURNSTILE_HOSTNAMES') || 'oneiroam.com,www.oneiroam.com')
+        .split(',').map(h => h.trim()).filter(Boolean));
+      const remoteip = req.headers.get('cf-connecting-ip') || (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+      const params = new URLSearchParams({ secret: turnstileSecret, response: token });
+      if (remoteip) params.set('remoteip', remoteip);
       const verify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ secret: turnstileSecret, response: token }),
-      }).then(r => r.json()).catch(() => ({ success: false }));
-      if (!verify.success) return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+        signal: AbortSignal.timeout(10_000),
+        body: params,
+      }).then(r => (r.ok ? r.json() : { success: false })).catch(() => ({ success: false }));
+      if (!verify.success || verify.action !== 'checkout' || !hostnames.has(verify.hostname)) {
+        console.error('turnstile rejected', { success: verify.success, action: verify.action, hostname: verify.hostname, codes: verify['error-codes'] });
+        return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+      }
     }
 
     const p = computePricing(lineItems.map(l => ({ id: l.id, price: l.price, qty: l.qty })));

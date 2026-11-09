@@ -3,4 +3,4 @@ window.SUPABASE_URL = 'https://ywzsjhaqgidgxnjmyyeg.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3enNqaGFxZ2lkZ3huam15eWVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNDYzMjUsImV4cCI6MjA5NzYyMjMyNX0.GVsWO45sxBxGg7H41Xi-2WEX7vfuNEFRDxp8UfEdUPc';
 // Cloudflare Turnstile site key（公開值）。空字串 = 結帳不顯示人機驗證；
 // 填入後還要在 Supabase 設 TURNSTILE_SECRET_KEY，伺服器才會強制檢查。
-window.TURNSTILE_SITE_KEY = '';
+window.TURNSTILE_SITE_KEY = '0x4AAAAAAF5d9-IdqaPLrv5o';

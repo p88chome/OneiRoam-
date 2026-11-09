@@ -190,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onTurnstileLoad = () => {
       turnstile.id = window.turnstile.render('#turnstileBox', {
         sitekey: window.TURNSTILE_SITE_KEY,
+        action: 'checkout',
         language: currentLang === 'zh' ? 'zh-tw' : 'en',
         callback: t => { turnstile.token = t; },
         'expired-callback': () => { turnstile.token = ''; },
