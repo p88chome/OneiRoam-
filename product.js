@@ -1,5 +1,5 @@
 /* =============================================
-   OneiRoam — Product Detail Page (product-{id}.html)
+   OneiRoaM — Product Detail Page (product-{id}.html)
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {

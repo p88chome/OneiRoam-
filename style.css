@@ -1,5 +1,5 @@
 /* =============================================
-   OneiRoam — Style Sheet
+   OneiRoaM — Style Sheet
    Ethereal Dream Aesthetic
    ============================================= */
 
@@ -564,6 +564,14 @@ button { cursor: pointer; }
   line-height: 1.95;
   margin-bottom: 1rem;
 }
+.about-text p.about-etymology {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.8rem;
+}
 .about-tags {
   display: flex;
   flex-wrap: wrap;
@@ -843,63 +851,34 @@ button { cursor: pointer; }
   background: var(--ivory);
 }
 
-.order-steps {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0;
-  margin-bottom: 5rem;
-  flex-wrap: wrap;
-}
-
-.step {
-  flex: 1;
-  min-width: 190px;
-  max-width: 230px;
-  padding: 2rem 1.6rem;
+.order-notes {
+  list-style: none;
+  max-width: 720px;
+  margin: 0 auto 5rem;
+  padding: 2.5rem 2.75rem;
   background: var(--white);
   border: 1px solid rgba(196,168,130,0.18);
-  border-radius: 14px;
-  transition: var(--trans);
-  text-align: center;
+  border-radius: 16px;
 }
-.step:hover {
-  border-color: var(--gold-light);
-  box-shadow: var(--shadow);
-  transform: translateY(-5px);
-}
-.step-num {
-  font-family: var(--serif);
-  font-size: 2.8rem;
-  font-weight: 300;
-  color: var(--gold-pale);
-  line-height: 1;
-  margin-bottom: 1rem;
-}
-.step h4 {
+.order-notes li {
+  position: relative;
+  padding-left: 1.4rem;
   font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--text-dark);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.6rem;
-}
-.step p {
-  font-size: 0.78rem;
   font-weight: 300;
   color: var(--text-mid);
-  line-height: 1.75;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
 }
-
-.step-arrow {
-  align-self: center;
-  flex-shrink: 0;
-  padding: 0 0.5rem;
-  color: var(--gold-light);
-}
-.step-arrow svg {
-  width: 28px;
-  height: 28px;
-  display: block;
+.order-notes li + li { margin-top: 1.1rem; }
+.order-notes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.8em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-light);
 }
 
 /* Contact block */
@@ -1047,9 +1026,6 @@ button { cursor: pointer; }
     gap: 1.5rem 1.25rem;
   }
 
-  .order-steps { flex-direction: column; align-items: center; gap: 0; }
-  .step { max-width: 100%; width: 100%; }
-  .step-arrow { transform: rotate(90deg); padding: 0.5rem 0; }
 }
 
 @media (max-width: 640px) {
@@ -1067,10 +1043,9 @@ button { cursor: pointer; }
   .lookbook-item.tall { height: 400px; }
 
   .contact-block { padding: 2.5rem 1.5rem; }
+  .order-notes { padding: 1.75rem 1.4rem; margin-bottom: 3.5rem; }
 
   .hero-title { letter-spacing: 0.08em; }
-
-  .order-steps { gap: 0; }
 }
 
 @media (max-width: 380px) {

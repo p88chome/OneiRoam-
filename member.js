@@ -1,5 +1,5 @@
 /* =============================================
-   OneiRoam — Member Zone (member.html)
+   OneiRoaM — Member Zone (member.html)
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {

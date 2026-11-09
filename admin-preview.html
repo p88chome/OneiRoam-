@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self';
+             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+             font-src https://fonts.gstatic.com;
+             img-src 'self' data: https://ywzsjhaqgidgxnjmyyeg.supabase.co;
+             connect-src 'self'; base-uri 'self'; frame-ancestors 'self'">
+  <title>OneiRoaM 預覽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 可編輯熱點：真 index.html 的元素本身沒有 data-edit，直接用它們的 class 標示 */
+    .ve-preview-body .hero-eyebrow,
+    .ve-preview-body .hero-desc,
+    .ve-preview-body .hero-img{cursor:pointer;outline:2px dashed transparent;outline-offset:4px;transition:outline-color .15s}
+    .ve-preview-body .hero-eyebrow:hover,
+    .ve-preview-body .hero-desc:hover,
+    .ve-preview-body .hero-img:hover{outline-color:var(--accent,#C4A882)}
+    /* 預覽不執行 index.html 的 script.js：手動關掉靠 JS 才會消失/顯示的初始狀態，
+       否則 #loader 預載動畫會一直轉、fade-up 區塊會卡在透明看不到。 */
+    .ve-preview-body #loader{display:none!important}
+    .ve-preview-body .fade-up,
+    .ve-preview-body .fade-left,
+    .ve-preview-body .fade-right{opacity:1!important;transform:none!important}
+    /* P2 商品卡熱點 */
+    .ve-preview-body .product-name-link h3,
+    .ve-preview-body .product-info > p,
+    .ve-preview-body .product-price,
+    .ve-preview-body .product-badge{cursor:pointer;outline:2px dashed transparent;outline-offset:3px;transition:outline-color .15s}
+    .ve-preview-body .product-name-link h3:hover,
+    .ve-preview-body .product-info > p:hover,
+    .ve-preview-body .product-price:hover,
+    .ve-preview-body .product-badge:hover{outline-color:var(--accent,#C4A882)}
+  </style>
+</head>
+<body>
+  <!-- 全頁真預覽：preview-harness.mjs 抓真 index.html 的 <body> 注入這裡 -->
+  <script type="module" src="preview-harness.mjs"></script>
+</body>
+</html>
