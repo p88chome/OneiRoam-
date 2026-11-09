@@ -1382,3 +1382,8 @@ button { cursor: pointer; }
 .order-card-sum { margin-top: .6rem; font-size: .9rem; }
 .member-profile { margin: 0; max-width: 520px; }
 .member-msg { font-size: .88rem; color: var(--text-light); }
+
+/* CSP 擋 style=""：初始隱藏用屬性，cart.js 載入後轉為 style.display */
+[data-hide] { display: none !important; }
+.turnstile-box:not(:empty) { margin: .5rem 0 1rem; }
+.result-box { text-align: center; padding: 4rem 1rem; }

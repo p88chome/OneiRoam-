@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     const no = inner.MerTradeNo;
     if (!no) { console.error('notify missing MerTradeNo'); return ok200(); }
 
-    const { data: order } = await sb.from('orders').select('id,payment_status,pay_amount').eq('order_no', no).single();
+    const { data: order } = await sb.from('orders').select('id,payment_status,pay_amount,discount_code,discount_counted').eq('order_no', no).single();
     if (!order) { console.error('order not found', no); return ok200(); }
 
     if (isPaid(inner)) {
@@ -72,6 +72,19 @@ Deno.serve(async (req) => {
       if (!claimed || claimed.length === 0) {
         // 已被先前/同時的 notify 認領過，幂等略過，不重複扣庫存。
         return ok200();
+      }
+
+      // 折扣碼用量在付款成功這一刻才 +1（只會跑一次：上面的 pending→paid 認領已保證幂等）。
+      // discount_counted=true 代表下單時已算過（0011 之前的舊訂單），不重複計。
+      if (order.discount_code && !order.discount_counted) {
+        const { data: withinLimit, error: dcErr } = await sb.rpc('count_discount_use', { p_code: order.discount_code });
+        if (dcErr) console.error('count_discount_use failed', no, dcErr);
+        else await sb.from('orders').update({ discount_counted: true }).eq('id', order.id);
+        if (dcErr || withinLimit !== true) {
+          // 計數失敗、碼已刪除，或多張 pending 同時付款超過上限 → 店主人工判斷
+          const { error: reviewErr } = await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
+          if (reviewErr) console.error('needs_review update failed', no, reviewErr);
+        }
       }
 
       const { data: stockOk, error: rpcErr } = await sb.rpc('decrement_stock', { p_order_id: order.id });

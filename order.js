@@ -184,6 +184,29 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
   });
 
+  /* ---- 人機驗證（Cloudflare Turnstile）：有設 site key 才載入 ---- */
+  const turnstile = { id: null, token: '' };
+  if (window.TURNSTILE_SITE_KEY) {
+    window.onTurnstileLoad = () => {
+      turnstile.id = window.turnstile.render('#turnstileBox', {
+        sitekey: window.TURNSTILE_SITE_KEY,
+        language: currentLang === 'zh' ? 'zh-tw' : 'en',
+        callback: t => { turnstile.token = t; },
+        'expired-callback': () => { turnstile.token = ''; },
+        'error-callback': () => { turnstile.token = ''; },
+      });
+    };
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  function resetTurnstile() {
+    // token 只能用一次：送出失敗後要重新驗證
+    turnstile.token = '';
+    if (turnstile.id != null && window.turnstile) window.turnstile.reset(turnstile.id);
+  }
+
   /* ---- 送出 ---- */
   async function submitOrder(payload, items) {
     // 登入狀態下用使用者 token（訂單掛帳號）；任何失敗都退回 anon key，絕不擋結帳
@@ -202,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         customer: { name: payload.name, social: payload.social, email: payload.email, notes: payload.notes },
         amount_type: 'full',
         discount_code: payload.discountCode || undefined,
+        turnstileToken: turnstile.token || undefined,
       }),
     });
     const data = await res.json();
@@ -232,6 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = Cart.getItems();
     if (items.length === 0) return;
     if (!form.checkValidity()) { form.reportValidity(); return; }
+    if (window.TURNSTILE_SITE_KEY && !turnstile.token) {
+      formError.textContent = currentLang === 'zh' ? '請完成人機驗證' : 'Please complete the verification';
+      formError.style.display = '';
+      return;
+    }
 
     const fd = new FormData(form);
     const payload = {
@@ -253,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
       formError.textContent = passthrough.includes(err.message) ? err.message
         : (currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.');
       formError.style.display = '';
+      resetTurnstile();
       submitBtn.disabled = false;
       submitBtn.textContent = orig;
     }
