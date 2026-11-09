@@ -102,7 +102,7 @@ out = applyTheme(out, settings.theme);
 
 await writeFile('index.html', out);
 
-// 選物獨立頁：完整列表
+// 選品獨立頁：完整列表
 try {
   const selPage = await readFile('select.html', 'utf8');
   let selOut = injectBlock(selPage, 'SELECT', selectHtml);
