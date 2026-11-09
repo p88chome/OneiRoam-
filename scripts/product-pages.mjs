@@ -82,7 +82,7 @@ export function renderProductPage(p) {
       <nav id="main-nav">
         <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
         <div class="nav-drop">
-          <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+          <a href="index.html#collections" data-zh="獨立設計" data-en="Independent Design">獨立設計</a>
           <div class="drop-menu">
             <a href="index.html#collections" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
             <a href="index.html#collections" data-zh="領片" data-en="Collars">領片</a>
@@ -120,7 +120,7 @@ export function renderProductPage(p) {
   <div class="mobile-overlay" id="mobileOverlay">
     <nav class="mobile-nav">
       <a href="index.html#hero" data-zh="首頁" data-en="Home">首頁</a>
-      <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+      <a href="index.html#collections" data-zh="獨立設計" data-en="Independent Design">獨立設計</a>
       <div class="mobile-subnav">
         <a href="index.html#collections" data-zh="澎袖" data-en="Puff Sleeves">澎袖</a>
         <a href="index.html#collections" data-zh="領片" data-en="Collars">領片</a>
@@ -148,7 +148,7 @@ export function renderProductPage(p) {
     <div class="container">
       <nav class="breadcrumb">
         <a href="index.html" data-zh="首頁" data-en="Home">首頁</a> ／
-        <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a> ／
+        <a href="index.html#collections" data-zh="獨立設計" data-en="Independent Design">獨立設計</a> ／
         <span data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</span>
       </nav>
       <div class="pd-grid" data-id="${esc(p.id)}" data-sizes="${esc(p.sizes.join(','))}" data-max-qty="${esc(p.max_qty)}" data-price="${esc(p.price)}">
@@ -191,7 +191,7 @@ export function renderProductPage(p) {
         <span class="footer-logo-zh" data-zh="夢游" data-en="Wander Through Dreams">夢游</span>
       </div>
       <nav class="footer-nav">
-        <a href="index.html#collections" data-zh="原創設計" data-en="Original Design">原創設計</a>
+        <a href="index.html#collections" data-zh="獨立設計" data-en="Independent Design">獨立設計</a>
         <a href="select.html" data-zh="選品" data-en="Select Goods">選品</a>
         <a href="index.html#order" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
         <a href="index.html#about" data-zh="關於夢游" data-en="About OneiRoaM">關於夢游</a>
