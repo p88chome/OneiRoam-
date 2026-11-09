@@ -1,5 +1,5 @@
 /* =============================================
-   OneiRoam — Main Script
+   OneiRoaM — Main Script
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', () => {

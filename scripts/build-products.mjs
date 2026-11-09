@@ -64,7 +64,7 @@ const jsonld = {
       image: !p.image ? 'https://www.oneiroam.com/favicon.svg'
         : p.image.startsWith('http') ? p.image
         : `https://www.oneiroam.com${p.image}`,
-      brand: { '@type': 'Brand', name: 'OneiRoam' },
+      brand: { '@type': 'Brand', name: 'OneiRoaM' },
       offers: {
         '@type': 'Offer',
         priceCurrency: 'TWD',
