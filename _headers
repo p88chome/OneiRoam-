@@ -15,5 +15,16 @@
   Content-Security-Policy: frame-ancestors 'self'; object-src 'none'; base-uri 'self'
   X-Robots-Tag: noindex, nofollow
 
+# Cloudflare 會把 .html 307 轉到無副檔名網址，iframe 最後載入的是這個
+/admin-preview
+  ! X-Frame-Options
+  ! Content-Security-Policy
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'; object-src 'none'; base-uri 'self'
+  X-Robots-Tag: noindex, nofollow
+
 /admin.html
+  X-Robots-Tag: noindex, nofollow
+
+/admin
   X-Robots-Tag: noindex, nofollow
