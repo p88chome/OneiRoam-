@@ -64,3 +64,9 @@ test('renderProductPage: 單圖 → 不出縮圖列', () => {
   assert.strictEqual((html.match(/class="gallery-slide"/g) || []).length, 1);
   assert.match(html, /class="gallery-thumbs js-hidden"/);
 });
+
+test('renderProductPage: 有全額 → 顯示全額＋訂金', () => {
+  const html = renderProductPage({ ...sample, price: 1100, full_price: 4200 });
+  assert.match(html, /class="pd-full-price">.*全額<\/span> NT\$ 4,200/);
+  assert.match(html, /class="pd-price">.*訂金<\/span> <span class="price-num">NT\$ 1,100/);
+});

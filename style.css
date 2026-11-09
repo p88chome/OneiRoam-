@@ -1436,3 +1436,21 @@ button { cursor: pointer; }
 @media (max-width: 640px) {
   .gallery-thumb { width: 52px; }
 }
+
+/* ===== 全額／訂金（render-products.priceBlock） ===== */
+.product-prices, .pd-prices { display: flex; flex-direction: column; gap: .15rem; }
+.product-prices { margin: .35rem 0 .5rem; }
+.product-prices .product-price { margin-bottom: 0; }
+.product-full-price, .pd-full-price {
+  font-size: .72rem;
+  font-weight: 300;
+  color: var(--text-light);
+  letter-spacing: .03em;
+}
+.pd-full-price { font-size: .9rem; }
+.pd-prices { margin-bottom: 1.4rem; }
+.pd-prices .pd-price { margin-bottom: 0; }
+.price-label { font-size: .78em; font-weight: 400; color: var(--text-mid); margin-right: .15em; }
+.product-full-price .price-label, .pd-full-price .price-label { color: inherit; font-size: 1em; }
+.modal-full-price { margin: .6rem 0 -.4rem; font-size: .85rem; color: var(--text-light); }
+.modal-full-price .mp-label { font-size: .85rem; }

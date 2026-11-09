@@ -1,7 +1,7 @@
 // scripts/product-pages.mjs
 // 商品獨立頁（SEO/分享直連）：/product-{id}.html。沿用 select.html 的殼，內容改單一商品
 // 完整資訊＋直接加入購物車（不經彈窗）。發布時由 build-products.mjs 逐商品產生。
-import { esc } from './render-products.mjs';
+import { esc, priceBlock } from './render-products.mjs';
 
 const AVAIL = { sold_out: 'OutOfStock', active: 'InStock', preorder: 'PreOrder' };
 
@@ -174,7 +174,7 @@ export function renderProductPage(p) {
           <p class="section-label" data-zh="${esc(p.cat_zh)}" data-en="${esc(p.cat_en)}">${esc(p.cat_zh)}</p>
           <h1 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h1>
           <p class="pd-desc" data-zh="${esc(p.desc_zh)}" data-en="${esc(p.desc_en)}">${esc(p.desc_zh)}</p>
-          <p class="pd-price">NT$ ${esc(p.price.toLocaleString('en-US'))}</p>
+          ${priceBlock(p, 'pd')}
           <div class="modal-order">
             <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
             <select id="pdSize" class="modal-size-select"></select>

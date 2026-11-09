@@ -206,6 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.dataset.curPrice = priceText.replace(/[^0-9]/g, '');
     // 價格與小計
     document.getElementById('modalUnit').textContent = (parseInt(modal.dataset.curPrice, 10) || 0).toLocaleString();
+    // 有全額 → 多一行「全額」，單價標籤改「訂金」
+    const full = parseInt(card.dataset.fullPrice, 10) || 0;
+    document.getElementById('modalFullRow').classList.toggle('js-hidden', !full);
+    document.getElementById('modalFull').textContent = full ? full.toLocaleString() : '';
+    const unitLabel = document.getElementById('modalUnitLabel');
+    unitLabel.dataset.zh = full ? '訂金' : '單價';
+    unitLabel.dataset.en = full ? 'Deposit' : 'Unit';
+    unitLabel.textContent = lang === 'zh' ? unitLabel.dataset.zh : unitLabel.dataset.en;
     updateModalSubtotal();
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
