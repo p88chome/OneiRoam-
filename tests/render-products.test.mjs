@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert';
-import { renderProductCards, buildStorefrontData } from '../scripts/render-products.mjs';
+import { renderProductCards, buildStorefrontData, esc } from '../scripts/render-products.mjs';
 
 const sample = {
   id: 'sea-gcd-short-jelly', category: 'top', price: 980,
@@ -65,4 +65,10 @@ test('buildStorefrontData: 解析設定', () => {
   assert.strictEqual(data.deposit_rate, 0.5);
   assert.strictEqual(data.bank.holder, '王小明');
   assert.strictEqual(data.preorder.start, '2026-06-23');
+});
+
+test('renderProductCards: data-modal-imgs 帶完整圖片陣列（已跳脫）', () => {
+  const html = renderProductCards([{ ...sample, images: ['/a.jpg', '/b"x.jpg'] }]);
+  assert.ok(html.includes(`data-modal-imgs="${esc(JSON.stringify(['/a.jpg', '/b"x.jpg']))}"`));
+  assert.doesNotMatch(html, /\/b"x/);
 });

@@ -129,13 +129,15 @@ document.addEventListener('DOMContentLoaded', () => {
     qtyEl.textContent = parseInt(qtyEl.textContent, 10) + 1;
   });
 
+  if (window.Gallery) Gallery.wire(document.querySelector('.pd-gallery'));
+
   document.getElementById('pdAdd').addEventListener('click', () => {
     let size = sizeSel.value;
     if (size === '__custom') {
       size = document.getElementById('pdSizeCustom').value.trim();
       if (!size) { document.getElementById('pdSizeCustom').focus(); return; }
     }
-    const img = grid.querySelector('.pd-img');
+    const img = grid.querySelector('.gallery-slide'); // 第一張＝封面
     const h1 = document.querySelector('h1');
     Cart.addItem({
       id: grid.dataset.id,

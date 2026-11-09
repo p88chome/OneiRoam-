@@ -405,15 +405,53 @@ async function saveSiteSettings() {
   }
 }
 
+// 商品圖片編輯狀態：[{ url }]（已上傳）或 [{ file, preview }]（待上傳）；順序＝sort_order
+let productImgs = [];
+
+function renderImgList() {
+  const box = document.getElementById('imgList');
+  if (!box) return;
+  if (!productImgs.length) { box.innerHTML = '<p class="muted">尚未上傳圖片</p>'; return; }
+  box.innerHTML = productImgs.map((im, i) => `
+    <div class="img-item${i === 0 ? ' is-cover' : ''}">
+      <img src="${esc(im.url || im.preview)}" alt="">
+      ${i === 0 ? '<span class="img-cover-tag">封面</span>' : ''}
+      ${im.file ? '<span class="img-new-tag">待上傳</span>' : ''}
+      <div class="img-actions">
+        <button type="button" class="btn btn-ghost btn-sm" data-act="left" data-i="${i}" ${i === 0 ? 'disabled' : ''} aria-label="往前">←</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-act="right" data-i="${i}" ${i === productImgs.length - 1 ? 'disabled' : ''} aria-label="往後">→</button>
+        <button type="button" class="btn btn-danger btn-sm" data-act="del" data-i="${i}" aria-label="刪除">✕</button>
+      </div>
+    </div>`).join('');
+  box.onclick = e => {
+    const b = e.target.closest('button[data-act]');
+    if (!b) return;
+    const i = parseInt(b.dataset.i, 10);
+    const swap = j => { [productImgs[i], productImgs[j]] = [productImgs[j], productImgs[i]]; };
+    if (b.dataset.act === 'left' && i > 0) swap(i - 1);
+    else if (b.dataset.act === 'right' && i < productImgs.length - 1) swap(i + 1);
+    else if (b.dataset.act === 'del') {
+      const [gone] = productImgs.splice(i, 1);
+      if (gone.preview) URL.revokeObjectURL(gone.preview);
+    }
+    renderImgList();
+  };
+}
+
 async function productForm(p) {
   const isNew = !p;
   p = p || { id:'', name_zh:'', name_en:'', desc_zh:'', desc_en:'', category:'top',
              price:0, badge_zh:'', badge_en:'', status:'preorder', sort_order:0,
              needs_shipping:true };
   let variants = [];
+  productImgs = [];
   if (!isNew) {
-    const { data } = await sb.from('product_variants').select('*').eq('product_id', p.id);
+    const [{ data }, { data: imgs }] = await Promise.all([
+      sb.from('product_variants').select('*').eq('product_id', p.id),
+      sb.from('product_images').select('url,sort_order').eq('product_id', p.id).order('sort_order'),
+    ]);
     variants = data || [];
+    productImgs = (imgs || []).map(i => ({ url: i.url }));
   }
   viewRoot().innerHTML = `
     <div class="view-head"><h2>${isNew ? '新增商品' : '編輯商品'}</h2></div>
@@ -446,8 +484,9 @@ async function productForm(p) {
           <input id="f_needs_shipping" type="checkbox" ${p.needs_shipping ? 'checked' : ''}></label>
         <label class="field"><span>尺寸+庫存（例 小碼:20,大碼:20）</span>
           <input id="f_variants" value="${variants.map(v=>`${esc(v.size)}:${esc(v.stock)}`).join(',')}"></label>
-        <label class="field field-wide"><span>商品圖片</span>
-          <input id="f_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></label>
+        <div class="field field-wide"><span>商品圖片（第一張是封面，可用箭頭調整順序）</span>
+          <div id="imgList" class="img-list"></div>
+          <input id="f_image" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif"></div>
       </div>
       <div class="form-actions">
         <button id="saveBtn" class="btn btn-primary">儲存</button>
@@ -456,6 +495,18 @@ async function productForm(p) {
         <span id="formErr" class="err" role="alert"></span>
       </div>
     </div>`;
+  renderImgList();
+  document.getElementById('f_image').onchange = e => {
+    const formErr = document.getElementById('formErr');
+    formErr.textContent = '';
+    for (const file of e.target.files) {
+      try { window.adminData.imageExt(file); }
+      catch (err) { formErr.textContent = `${file.name}：${err.message}`; continue; }
+      productImgs.push({ file, preview: URL.createObjectURL(file) });
+    }
+    e.target.value = '';
+    renderImgList();
+  };
   document.getElementById('cancelBtn').onclick = renderProducts;
   document.getElementById('saveBtn').onclick = () => saveProduct(isNew);
   if (!isNew) document.getElementById('deleteBtn').onclick = () => deleteProduct(p);
@@ -487,8 +538,6 @@ async function saveProduct(isNew) {
   if (!v('f_id')) { formErr.textContent = '請填 ID（slug）。'; return; }
   // ID 會變成檔名 product-{id}.html 與網址，只允許小寫英數與 -（舊商品 ID 不可改，只檢查新建）
   if (isNew && !/^[a-z0-9-]{1,64}$/.test(v('f_id'))) { formErr.textContent = 'ID 只能用小寫英文、數字和 -'; return; }
-  const imgFile = document.getElementById('f_image').files[0];
-  if (imgFile) { try { window.adminData.imageExt(imgFile); } catch (e) { formErr.textContent = e.message; return; } }
   saveBtn.disabled = true;
   const orig = saveBtn.textContent;
   saveBtn.textContent = '儲存中…';
@@ -512,17 +561,25 @@ async function saveProduct(isNew) {
     const { error: varErr } = await sb.from('product_variants').insert(vars);
     if (varErr) return fail(friendlyErr(varErr));
   }
-  // 圖片上傳
-  const file = document.getElementById('f_image').files[0];
-  if (file) {
-    let ext;
-    try { ext = window.adminData.imageExt(file); } catch (e) { return fail(e.message); }
-    const path = `${row.id}-${Date.now()}.${ext}`;
-    const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
+  // 圖片：先把待上傳的傳完（失敗就中止、不動既有圖），再整批重寫 product_images 的順序
+  const urls = [];
+  for (const [i, im] of productImgs.entries()) {
+    if (!im.file) { urls.push(im.url); continue; }
+    saveBtn.textContent = `上傳圖片 ${i + 1}/${productImgs.length}…`;
+    const ext = window.adminData.imageExt(im.file);
+    const path = `${row.id}-${Date.now()}-${i}.${ext}`;
+    const up = await sb.storage.from('product-images').upload(path, im.file, { upsert: true });
     if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
     const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
-    await sb.from('product_images').delete().eq('product_id', row.id);
-    const { error: imgErr } = await sb.from('product_images').insert({ product_id: row.id, url: pub.publicUrl, sort_order: 0 });
+    URL.revokeObjectURL(im.preview);
+    productImgs[i] = { url: pub.publicUrl };
+    urls.push(pub.publicUrl);
+  }
+  const { error: delErr } = await sb.from('product_images').delete().eq('product_id', row.id);
+  if (delErr) return fail(friendlyErr(delErr));
+  if (urls.length) {
+    const { error: imgErr } = await sb.from('product_images')
+      .insert(urls.map((url, i) => ({ product_id: row.id, url, sort_order: i })));
     if (imgErr) return fail(friendlyErr(imgErr));
   }
   renderProducts();

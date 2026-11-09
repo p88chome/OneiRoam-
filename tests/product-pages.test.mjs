@@ -49,3 +49,18 @@ test('renderProductPage: 絕對網址圖片（Supabase Storage）不重複補網
   const html = renderProductPage({ ...sample, image: 'https://x.supabase.co/a.jpg' });
   assert.match(html, /og:image" content="https:\/\/x\.supabase\.co\/a\.jpg"/);
 });
+
+test('renderProductPage: 多圖 → 每張一個 slide＋縮圖，第一張為 active', () => {
+  const html = renderProductPage({ ...sample, images: ['/a.jpg', '/b.jpg', '/c.jpg'] });
+  assert.strictEqual((html.match(/class="gallery-slide"/g) || []).length, 3);
+  assert.strictEqual((html.match(/class="gallery-thumb[ "]/g) || []).length, 3);
+  assert.match(html, /class="gallery-thumb is-active" data-i="0"/);
+  assert.match(html, /<script src="gallery\.js"><\/script>/);
+  assert.match(html, /"image": \[\s*"https:\/\/www\.oneiroam\.com\/a\.jpg"/);
+});
+
+test('renderProductPage: 單圖 → 不出縮圖列', () => {
+  const html = renderProductPage(sample);
+  assert.strictEqual((html.match(/class="gallery-slide"/g) || []).length, 1);
+  assert.match(html, /class="gallery-thumbs js-hidden"/);
+});

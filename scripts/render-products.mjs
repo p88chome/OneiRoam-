@@ -14,7 +14,7 @@ export function renderProductCards(products) {
     const st = STATUS[p.status] || STATUS.preorder;
     return `        <div class="product-card" data-category="${esc(p.category)}"
           data-id="${esc(p.id)}" data-sizes="${esc(p.sizes.join(','))}" data-max-qty="${esc(p.max_qty)}"
-          data-modal-img="${esc(p.image)}"
+          data-modal-img="${esc(p.image)}" data-modal-imgs="${esc(JSON.stringify(p.images || (p.image ? [p.image] : [])))}"
           data-modal-name-zh="${esc(p.name_zh)}" data-modal-name-en="${esc(p.name_en)}"
           data-modal-desc-zh="${esc(p.desc_zh)}" data-modal-desc-en="${esc(p.desc_en)}"
           data-modal-cat-zh="${esc(p.cat_zh)}" data-modal-cat-en="${esc(p.cat_en)}">
