@@ -17,3 +17,12 @@ wrangler.jsonc
 README.md
 *.log
 worker.js
+.env.*
+*.local
+.agents
+skills-lock.json
+package.json
+package-lock.json
+.DS_Store
+*.tmp
+.gitkeep

@@ -257,7 +257,7 @@ async function renderDiscounts() {
           <tr>
             <td>${esc(c.code)}</td>
             <td>${c.percent_off ? esc(c.percent_off) + '%' : 'NT$ ' + esc(c.amount_off)}</td>
-            <td>${esc(c.used_count)} / ${c.max_uses ?? '∞'}</td>
+            <td>${esc(c.used_count)} / ${esc(c.max_uses ?? '∞')}</td>
             <td class="muted">${c.expires_at ? esc(String(c.expires_at).slice(0, 10)) : '—'}</td>
             <td><span class="badge badge-${c.active ? 'active' : 'hidden'}">${c.active ? '啟用中' : '已停用'}</span></td>
             <td><button class="btn btn-sm" data-toggle="${esc(c.code)}" data-active="${c.active}">${c.active ? '停用' : '啟用'}</button></td>
@@ -428,9 +428,9 @@ async function productForm(p) {
         <label class="field"><span>英文名</span>
           <input id="f_name_en" value="${esc(p.name_en)}"></label>
         <label class="field field-wide"><span>中文描述</span>
-          <input id="f_desc_zh" value="${esc(p.desc_zh)}"></label>
+          <textarea id="f_desc_zh" rows="5">${esc(p.desc_zh)}</textarea></label>
         <label class="field field-wide"><span>英文描述</span>
-          <input id="f_desc_en" value="${esc(p.desc_en)}"></label>
+          <textarea id="f_desc_en" rows="5">${esc(p.desc_en)}</textarea></label>
         <label class="field"><span>價格 (NT$)</span>
           <input id="f_price" type="number" value="${esc(p.price)}"></label>
         <label class="field"><span>排序</span>
@@ -447,7 +447,7 @@ async function productForm(p) {
         <label class="field"><span>尺寸+庫存（例 小碼:20,大碼:20）</span>
           <input id="f_variants" value="${variants.map(v=>`${esc(v.size)}:${esc(v.stock)}`).join(',')}"></label>
         <label class="field field-wide"><span>商品圖片</span>
-          <input id="f_image" type="file" accept="image/*"></label>
+          <input id="f_image" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></label>
       </div>
       <div class="form-actions">
         <button id="saveBtn" class="btn btn-primary">儲存</button>
@@ -485,6 +485,10 @@ async function saveProduct(isNew) {
   const saveBtn = document.getElementById('saveBtn');
   formErr.textContent = '';
   if (!v('f_id')) { formErr.textContent = '請填 ID（slug）。'; return; }
+  // ID 會變成檔名 product-{id}.html 與網址，只允許小寫英數與 -（舊商品 ID 不可改，只檢查新建）
+  if (isNew && !/^[a-z0-9-]{1,64}$/.test(v('f_id'))) { formErr.textContent = 'ID 只能用小寫英文、數字和 -'; return; }
+  const imgFile = document.getElementById('f_image').files[0];
+  if (imgFile) { try { window.adminData.imageExt(imgFile); } catch (e) { formErr.textContent = e.message; return; } }
   saveBtn.disabled = true;
   const orig = saveBtn.textContent;
   saveBtn.textContent = '儲存中…';
@@ -511,7 +515,9 @@ async function saveProduct(isNew) {
   // 圖片上傳
   const file = document.getElementById('f_image').files[0];
   if (file) {
-    const path = `${row.id}-${Date.now()}.${file.name.split('.').pop()}`;
+    let ext;
+    try { ext = window.adminData.imageExt(file); } catch (e) { return fail(e.message); }
+    const path = `${row.id}-${Date.now()}.${ext}`;
     const up = await sb.storage.from('product-images').upload(path, file, { upsert: true });
     if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
     const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);

@@ -38,10 +38,19 @@ Deno.serve(async (req) => {
     const no = inner.MerTradeNo;
     if (!no) { console.error('notify missing MerTradeNo'); return ok200(); }
 
-    const { data: order } = await sb.from('orders').select('id,payment_status').eq('order_no', no).single();
+    const { data: order } = await sb.from('orders').select('id,payment_status,pay_amount').eq('order_no', no).single();
     if (!order) { console.error('order not found', no); return ok200(); }
 
     if (isPaid(inner)) {
+      // 縱深防禦：金額與商店代號必須和我方訂單一致，不符不標已付款，改人工核對
+      const merId = Deno.env.get('PAYUNI_MER_ID');
+      const amtOk = Number(inner.TradeAmt) === Number(order.pay_amount);
+      const merOk = !merId || !inner.MerID || inner.MerID === merId;
+      if (!amtOk || !merOk) {
+        console.error('PAYUNi notify mismatch', no, { tradeAmt: inner.TradeAmt, payAmount: order.pay_amount, merOk });
+        await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
+        return ok200();
+      }
       // 原子「認領」：只有 pending→paid 這個 row-level 條件更新會成功且恰好一次；
       // 併發/重送的 notify 若晚到，這裡 affected rows 會是 0，直接視為已處理（幂等），不再扣庫存。
       const { data: claimed, error: claimErr } = await sb

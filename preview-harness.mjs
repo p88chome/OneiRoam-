@@ -75,7 +75,10 @@ async function boot() {
     document.body.innerHTML = doc.body.innerHTML;
     document.body.classList.add('ve-preview-body');
   } catch (e) {
-    document.body.innerHTML = '<p style="padding:2rem">預覽載入失敗：' + (e && e.message || e) + '</p>';
+    const p = document.createElement('p');
+    p.style.padding = '2rem';
+    p.textContent = '預覽載入失敗：' + (e && e.message || e);
+    document.body.replaceChildren(p);
   }
 
   window.addEventListener('message', e => {
