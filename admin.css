@@ -186,3 +186,17 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .order-detail p { margin: 0 0 .3rem; }
 .order-detail ul { margin: .3rem 0 0; padding-left: 1.2rem; }
 .order-notes { white-space: pre-wrap; }
+
+/* ---- 商品多圖 ---- */
+.img-list { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: .5rem; }
+.img-item { position: relative; width: 120px; display: flex; flex-direction: column; gap: .35rem; }
+.img-item img { width: 120px; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); background: #f1eef4; }
+.img-item.is-cover img { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(185, 163, 201, .35); }
+.img-cover-tag, .img-new-tag { position: absolute; left: 6px; font-size: .7rem; padding: .1rem .45rem; border-radius: 999px; color: #fff; }
+.img-cover-tag { top: 6px; background: var(--accent); }
+.img-new-tag { top: 28px; background: #9aa6b8; }
+.img-item.is-cover .img-new-tag { top: 28px; }
+.img-item:not(.is-cover) .img-new-tag { top: 6px; }
+.img-actions { display: flex; gap: .25rem; justify-content: space-between; }
+.img-actions .btn { flex: 1; padding: .3rem 0; margin-left: 0; }
+.img-actions .btn:disabled { opacity: .35; cursor: default; transform: none; }

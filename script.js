@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal        = document.getElementById('productModal');
   const modalBackdrop = document.getElementById('modalBackdrop');
   const modalClose   = document.getElementById('modalClose');
-  const modalImg     = document.getElementById('modalImg');
+  const modalGallery = document.getElementById('modalGallery');
   const modalName    = document.getElementById('modalName');
   const modalDesc    = document.getElementById('modalDesc');
   const modalCat     = document.getElementById('modalCategory');
@@ -177,9 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openModal(card) {
     const lang = currentLang;
-    modalImg.style.display = card.dataset.modalImg ? '' : 'none'; // 沒圖就不留空白框
-    modalImg.src    = card.dataset.modalImg || '';
-    modalImg.alt    = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
+    // 多圖：data-modal-imgs 是 JSON 陣列；舊卡片只有 data-modal-img 就退回單張
+    let imgs = [];
+    try { imgs = JSON.parse(card.dataset.modalImgs || '[]'); } catch (e) { imgs = []; }
+    if (!Array.isArray(imgs) || !imgs.length) imgs = card.dataset.modalImg ? [card.dataset.modalImg] : [];
+    Gallery.set(modalGallery, imgs, lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn);
     modalName.textContent = lang === 'zh' ? card.dataset.modalNameZh : card.dataset.modalNameEn;
     modalDesc.textContent = lang === 'zh' ? card.dataset.modalDescZh : card.dataset.modalDescEn;
     modalCat.textContent  = lang === 'zh' ? card.dataset.modalCatZh  : card.dataset.modalCatEn;

@@ -5,12 +5,29 @@ import { esc } from './render-products.mjs';
 
 const AVAIL = { sold_out: 'OutOfStock', active: 'InStock', preorder: 'PreOrder' };
 
+// 多圖：大圖 scroll-snap 軌道＋縮圖列（結構需與 gallery.js 的 set() 一致）
+export function galleryHtml(p) {
+  const imgs = (p.images && p.images.length ? p.images : (p.image ? [p.image] : [])).filter(Boolean);
+  const slides = imgs.map((u, i) =>
+    `<img src="${esc(u)}" alt="${esc(p.name_zh)}" class="gallery-slide"${i ? ' loading="lazy"' : ''}>`).join('');
+  const thumbs = imgs.length > 1
+    ? imgs.map((u, i) =>
+        `<button type="button" class="gallery-thumb${i ? '' : ' is-active'}" data-i="${i}" aria-label="第 ${i + 1} 張" aria-current="${i ? 'false' : 'true'}"><img src="${esc(u)}" alt="" loading="lazy"></button>`).join('')
+    : '';
+  return `<div class="gallery pd-gallery">
+          <div class="gallery-track pd-img-wrap">${slides}</div>
+          <div class="gallery-thumbs${imgs.length > 1 ? '' : ' js-hidden'}">${thumbs}</div>
+        </div>`;
+}
+
 export function renderProductPage(p) {
   const canonical = `https://www.oneiroam.com/product-${p.id}.html`;
   const image = p.image
     ? (p.image.startsWith('http') ? p.image : `https://www.oneiroam.com${p.image}`)
     : 'https://www.oneiroam.com/favicon.svg';
   const desc = p.desc_zh || p.name_zh;
+  const abs = u => (u.startsWith('http') ? u : `https://www.oneiroam.com${u}`);
+  const allImages = (p.images && p.images.length ? p.images : (p.image ? [p.image] : [])).map(abs);
 
   const jsonld = {
     '@context': 'https://schema.org',
@@ -18,7 +35,7 @@ export function renderProductPage(p) {
     name: p.name_zh,
     ...(p.name_en ? { alternateName: p.name_en } : {}),
     ...(p.desc_zh ? { description: p.desc_zh } : {}),
-    image,
+    image: allImages.length > 1 ? allImages : image,
     brand: { '@type': 'Brand', name: 'OneiRoaM' },
     offers: {
       '@type': 'Offer', priceCurrency: 'TWD', price: String(p.price),
@@ -152,9 +169,7 @@ export function renderProductPage(p) {
         <span data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</span>
       </nav>
       <div class="pd-grid" data-id="${esc(p.id)}" data-sizes="${esc(p.sizes.join(','))}" data-max-qty="${esc(p.max_qty)}" data-price="${esc(p.price)}">
-        <div class="pd-img-wrap">
-          ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="pd-img">` : ''}
-        </div>
+        ${galleryHtml(p)}
         <div class="pd-info">
           <p class="section-label" data-zh="${esc(p.cat_zh)}" data-en="${esc(p.cat_en)}">${esc(p.cat_zh)}</p>
           <h1 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h1>
@@ -213,6 +228,7 @@ export function renderProductPage(p) {
   </footer>
 
   <script src="cart.js"></script>
+  <script src="gallery.js"></script>
   <script src="product.js"></script>
 </body>
 </html>

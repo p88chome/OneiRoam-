@@ -31,14 +31,17 @@ const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
 
 const normalized = products.map(p => {
   const vs = variants.filter(v => v.product_id === p.id);
-  const img = images.find(i => i.product_id === p.id);
+  // 已依 sort_order 排序；只收 https / 站內相對路徑（與 gallery.js 同規則）
+  const imgs = images.filter(i => i.product_id === p.id).map(i => i.url)
+    .filter(u => typeof u === 'string' && /^(https:\/\/|\/(?!\/)|images\/)/.test(u));
   const [cat_zh, cat_en] = catLabel(p.category);
   return {
     id: p.id, category: normalizeSlug(p.category), price: p.price,
     name_zh: p.name_zh, name_en: p.name_en, desc_zh: p.desc_zh, desc_en: p.desc_en,
     badge_zh: p.badge_zh, badge_en: p.badge_en, cat_zh, cat_en,
     status: vs.length && vs.every(v => v.stock <= 0) ? 'sold_out' : p.status,
-    image: img ? img.url : '',  // 沒圖 → 卡片顯示漸層底（不能塞 favicon，會被拉伸）
+    image: imgs[0] || '',  // 封面；沒圖 → 卡片顯示漸層底（不能塞 favicon，會被拉伸）
+    images: imgs,
     sizes: vs.map(v => v.size), max_qty: vs.length ? Math.min(...vs.map(v => v.max_qty)) : 1,
   };
 });
