@@ -9,6 +9,17 @@ const STATUS = {
   sold_out: { cls: 'status-soldout',  zh: '售罄',   en: 'Sold Out' },
 };
 
+// 價格：有全額 → 「全額 NT$x」小字＋「訂金 NT$y」大字；沒有 → 只顯示 NT$y。
+// 卡片不放描述（點進彈窗/商品頁才看）。.product-price 只含訂金數字，script.js 靠它取價格。
+export function priceBlock(p, prefix) {
+  const full = p.full_price > p.price ? p.full_price : null;
+  const fullHtml = full
+    ? `<span class="${prefix}-full-price"><span class="price-label" data-zh="全額" data-en="Full price">全額</span> NT$ ${fmt(full)}</span>`
+    : '';
+  const label = full ? `<span class="price-label" data-zh="訂金" data-en="Deposit">訂金</span> ` : '';
+  return `<div class="${prefix}-prices">${fullHtml}<span class="${prefix}-price">${label}<span class="price-num">NT$ ${fmt(p.price)}</span></span></div>`;
+}
+
 export function renderProductCards(products) {
   return products.map(p => {
     const st = STATUS[p.status] || STATUS.preorder;
@@ -17,7 +28,8 @@ export function renderProductCards(products) {
           data-modal-img="${esc(p.image)}" data-modal-imgs="${esc(JSON.stringify(p.images || (p.image ? [p.image] : [])))}"
           data-modal-name-zh="${esc(p.name_zh)}" data-modal-name-en="${esc(p.name_en)}"
           data-modal-desc-zh="${esc(p.desc_zh)}" data-modal-desc-en="${esc(p.desc_en)}"
-          data-modal-cat-zh="${esc(p.cat_zh)}" data-modal-cat-en="${esc(p.cat_en)}">
+          data-modal-cat-zh="${esc(p.cat_zh)}" data-modal-cat-en="${esc(p.cat_en)}"
+          data-full-price="${esc(p.full_price > p.price ? p.full_price : '')}">
           <div class="product-img-wrap">
             ${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.name_zh)}" class="product-img" loading="lazy">` : ''}
             <div class="product-hover">
@@ -27,8 +39,7 @@ export function renderProductCards(products) {
           </div>
           <div class="product-info">
             <a href="product-${esc(p.id)}.html" class="product-name-link"><h3 data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</h3></a>
-            <p data-zh="${esc(p.desc_zh)}" data-en="${esc(p.desc_en)}">${esc(p.desc_zh)}</p>
-            <span class="product-price">NT$ ${fmt(p.price)}</span>
+            ${priceBlock(p, 'product')}
             <div class="product-meta">
               <span class="product-tag ${esc(p.category)}-tag" data-zh="${esc(p.cat_zh)}" data-en="${esc(p.cat_en)}">${esc(p.cat_zh)}</span>
               <span class="product-status ${st.cls}" data-zh="${st.zh}" data-en="${st.en}">${st.zh}</span>

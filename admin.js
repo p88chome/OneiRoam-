@@ -469,8 +469,10 @@ async function productForm(p) {
           <textarea id="f_desc_zh" rows="5">${esc(p.desc_zh)}</textarea></label>
         <label class="field field-wide"><span>英文描述</span>
           <textarea id="f_desc_en" rows="5">${esc(p.desc_en)}</textarea></label>
-        <label class="field"><span>價格 (NT$)</span>
-          <input id="f_price" type="number" value="${esc(p.price)}"></label>
+        <label class="field"><span>價格 NT$（結帳收的金額；預購填訂金）</span>
+          <input id="f_price" type="number" min="0" value="${esc(p.price)}"></label>
+        <label class="field"><span>全額 NT$（選填；有填就顯示「全額／訂金」）</span>
+          <input id="f_full_price" type="number" min="0" value="${esc(p.full_price ?? '')}"></label>
         <label class="field"><span>排序</span>
           <input id="f_sort" type="number" value="${esc(p.sort_order)}"></label>
         <label class="field"><span>徽章（中）</span>
@@ -545,7 +547,9 @@ async function saveProduct(isNew) {
   const row = {
     id: v('f_id'), name_zh: v('f_name_zh'), name_en: v('f_name_en'),
     desc_zh: v('f_desc_zh'), desc_en: v('f_desc_en'), category: v('f_category'),
-    price: parseInt(v('f_price'),10)||0, badge_zh: v('f_badge_zh'), badge_en: v('f_badge_en'),
+    price: parseInt(v('f_price'),10)||0,
+    full_price: parseInt(v('f_full_price'),10) > 0 ? parseInt(v('f_full_price'),10) : null,
+    badge_zh: v('f_badge_zh'), badge_en: v('f_badge_en'),
     status: v('f_status'), sort_order: parseInt(v('f_sort'),10)||0,
     needs_shipping: document.getElementById('f_needs_shipping').checked,
   };

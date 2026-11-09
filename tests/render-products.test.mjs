@@ -72,3 +72,21 @@ test('renderProductCards: data-modal-imgs 帶完整圖片陣列（已跳脫）',
   assert.ok(html.includes(`data-modal-imgs="${esc(JSON.stringify(['/a.jpg', '/b"x.jpg']))}"`));
   assert.doesNotMatch(html, /\/b"x/);
 });
+
+test('priceBlock / 卡片：有全額 → 全額小字＋訂金標籤；卡片不放描述', () => {
+  const html = renderProductCards([{ ...sample, price: 1100, full_price: 4200 }]);
+  assert.match(html, /class="product-full-price"><span class="price-label" data-zh="全額"[^>]*>全額<\/span> NT\$ 4,200/);
+  assert.match(html, /<span class="product-price"><span class="price-label" data-zh="訂金"[^>]*>訂金<\/span> <span class="price-num">NT\$ 1,100<\/span>/);
+  assert.match(html, /data-full-price="4200"/);
+  assert.doesNotMatch(html, /<p data-zh="🫧/);
+});
+
+test('priceBlock / 卡片：沒填全額或全額不大於價格 → 只顯示價格、不加標籤', () => {
+  for (const full_price of [null, 0, 980]) {
+    const html = renderProductCards([{ ...sample, full_price }]);
+    assert.doesNotMatch(html, /full-price"/);
+    assert.doesNotMatch(html, /訂金/);
+    assert.match(html, /<span class="product-price"><span class="price-num">NT\$ 980<\/span>/);
+    assert.match(html, /data-full-price=""/);
+  }
+});

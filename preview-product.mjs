@@ -5,7 +5,7 @@
 export const FIELD_SELECTORS = {
   name: '.product-name-link h3',
   desc: '.product-info > p',
-  price: '.product-price',
+  price: '.product-price .price-num',
   badge: '.product-badge',
 };
 

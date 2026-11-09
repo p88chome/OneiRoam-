@@ -5,7 +5,7 @@ import { FIELD_SELECTORS, PRODUCT_KEYS, parseKey, priceText } from '../preview-p
 test('preview-product: field selectors match real card structure', () => {
   assert.deepStrictEqual(FIELD_SELECTORS, {
     name: '.product-name-link h3', desc: '.product-info > p',
-    price: '.product-price', badge: '.product-badge',
+    price: '.product-price .price-num', badge: '.product-badge',
   });
 });
 

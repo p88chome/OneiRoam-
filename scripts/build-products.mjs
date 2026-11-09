@@ -37,6 +37,7 @@ const normalized = products.map(p => {
   const [cat_zh, cat_en] = catLabel(p.category);
   return {
     id: p.id, category: normalizeSlug(p.category), price: p.price,
+    full_price: p.full_price > p.price ? p.full_price : null,  // 只有比訂金大才有意義
     name_zh: p.name_zh, name_en: p.name_en, desc_zh: p.desc_zh, desc_en: p.desc_en,
     badge_zh: p.badge_zh, badge_en: p.badge_en, cat_zh, cat_en,
     status: vs.length && vs.every(v => v.stock <= 0) ? 'sold_out' : p.status,
