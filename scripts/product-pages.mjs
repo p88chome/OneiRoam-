@@ -171,7 +171,7 @@ export function renderProductPage(p) {
               <button type="button" id="pdQtyPlus" aria-label="增加">+</button>
             </div>
             <button id="pdAdd" class="btn-primary"
-                    data-zh="加入訂單" data-en="Add to Order">加入訂單</button>
+                    data-zh="加入購物車" data-en="Add to Cart">加入購物車</button>
             <span id="pdAdded" class="modal-added js-hidden"
                   data-zh="已加入 ✓" data-en="Added ✓">已加入 ✓</span>
           </div>

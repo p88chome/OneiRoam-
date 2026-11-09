@@ -95,20 +95,27 @@ Deno.serve(async (req) => {
 
     const p = computePricing(lineItems.map(l => ({ id: l.id, price: l.price, qty: l.qty })));
 
-    // 折扣碼（選填）：伺服器端驗證＋計算，客人送的折扣數字一律不信任
+    // 折扣碼（選填）：伺服器端驗證＋計算，客人送的折扣數字一律不信任。
+    // 用量檢查＋遞增改走 claim_discount_code 原子 RPC（見 migration 0008），
+    // 避免併發請求同時讀到舊的 used_count 而一起通過上限檢查。
     let discountCode: string | null = null;
     let codeDiscount = 0;
-    let discountUsedCount = 0;
     const rawCode = typeof body.discount_code === 'string' ? body.discount_code.trim().toUpperCase() : '';
     if (rawCode) {
-      const { data: dc } = await sb.from('discount_codes').select('*').eq('code', rawCode).maybeSingle();
-      if (!dc || !dc.active) return json({ error: '折扣碼無效' }, 400);
-      if (dc.expires_at && new Date(dc.expires_at) < new Date()) return json({ error: '折扣碼已過期' }, 400);
-      if (dc.max_uses != null && dc.used_count >= dc.max_uses) return json({ error: '折扣碼已達使用上限' }, 400);
+      const { data: claimed, error: claimErr } = await sb.rpc('claim_discount_code', { p_code: rawCode });
+      if (claimErr) return json({ error: '折扣碼驗證失敗' }, 500);
+      const dc = Array.isArray(claimed) ? claimed[0] : claimed;
+      if (!dc) {
+        // 沒 claim 到：另外查一次現況只是為了給更友善的錯誤訊息，不影響安全判斷
+        const { data: existing } = await sb.from('discount_codes')
+          .select('active,expires_at,max_uses,used_count').eq('code', rawCode).maybeSingle();
+        if (!existing || !existing.active) return json({ error: '折扣碼無效' }, 400);
+        if (existing.expires_at && new Date(existing.expires_at) < new Date()) return json({ error: '折扣碼已過期' }, 400);
+        return json({ error: '折扣碼已達使用上限' }, 400);
+      }
       codeDiscount = dc.percent_off ? Math.round(p.total * dc.percent_off / 100) : (dc.amount_off || 0);
       codeDiscount = Math.min(codeDiscount, p.total);
       discountCode = rawCode;
-      discountUsedCount = dc.used_count;
     }
     const finalTotal = p.total - codeDiscount;
     const payAmount = amountType === 'full' ? finalTotal : Math.round(finalTotal / 2);
@@ -132,14 +139,16 @@ Deno.serve(async (req) => {
       subtotal: p.subtotal, discount: p.discount + codeDiscount, total: finalTotal, pay_amount: payAmount,
       user_id: userId, discount_code: discountCode,
     }).select('id').single();
-    if (oErr) return json({ error: oErr.message }, 500);
+    if (oErr) {
+      if (discountCode) await sb.rpc('release_discount_code', { p_code: discountCode });
+      return json({ error: oErr.message }, 500);
+    }
     const { error: iErr } = await sb.from('order_items').insert(lineItems.map(l => ({
       order_id: order.id, product_id: l.id, name: l.name, size: l.size, price: l.price, qty: l.qty,
     })));
-    if (iErr) return json({ error: iErr.message }, 500);
-    // 折扣碼用量 +1（低流量精品店不會撞併發，非原子遞增可接受）
-    if (discountCode) {
-      await sb.from('discount_codes').update({ used_count: discountUsedCount + 1 }).eq('code', discountCode);
+    if (iErr) {
+      if (discountCode) await sb.rpc('release_discount_code', { p_code: discountCode });
+      return json({ error: iErr.message }, 500);
     }
 
     // PAYUNi UPP 加密參數

@@ -101,17 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('langToggle').addEventListener('click',
     () => { applyLang(currentLang === 'zh' ? 'en' : 'zh'); render(); applyGate(); });
 
-  /* 預售日期閘門 */
+  /* 預售日期閘門 — 無截止日，永久開放下單（僅保留開始日前的擋） */
   const PREORDER_START = '2026-06-23';
-  // TEMP for PAYUNi testing — extended so today falls inside the window.
-  // TODO before go-live: restore the real preorder window (was '2026-06-30').
-  const PREORDER_END = '2026-12-31';
   function preorderStatus(now = new Date()) {
     const day = now.getFullYear() + '-' +
       String(now.getMonth() + 1).padStart(2, '0') + '-' +
       String(now.getDate()).padStart(2, '0');
     if (day < PREORDER_START) return 'before';
-    if (day > PREORDER_END) return 'after';
     return 'open';
   }
   function applyGate() {
@@ -121,9 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (s === 'open') { gate.style.display = 'none'; btn.disabled = false; return; }
     btn.disabled = true;
     gate.style.display = '';
-    gate.textContent = s === 'before'
-      ? (currentLang === 'zh' ? `預售 ${PREORDER_START} 開始，敬請期待` : `Pre-order opens ${PREORDER_START}`)
-      : (currentLang === 'zh' ? '預售已結束' : 'Pre-order has ended');
+    gate.textContent = currentLang === 'zh' ? `預售 ${PREORDER_START} 開始，敬請期待` : `Pre-order opens ${PREORDER_START}`;
   }
 
   /* 渲染清單 */
