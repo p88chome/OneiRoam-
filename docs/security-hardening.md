@@ -45,15 +45,21 @@
 - 確認 `storage.objects` 的 insert/update/delete 只允許 `public.is_admin()`；舊的「authenticated 可寫」policy 若還在 → 任何 Google 註冊者可覆蓋商品/首圖
 - 確認後把 policy 寫進新 migration（`0009_storage_policies.sql`）納入版控
 
-### P1 — Turnstile 正式啟用
+### P1 — Turnstile 正式啟用（2026-11-09 前端已接好，待填 key）
+- ✅ `order.js` 依 `admin.config.js` 的 `TURNSTILE_SITE_KEY` 動態載入 widget；CSP 已加 `challenges.cloudflare.com`。空字串 = 不顯示
+- 剩：Cloudflare 建 widget → 填 site key → `supabase secrets set TURNSTILE_SECRET_KEY=...`
 - `create-order` 只在有 `TURNSTILE_SECRET_KEY` 時才驗證；沒設 = 可無限刷單、暴力猜折扣碼
 - 申請 site key → 前端 `order.html`/`order.js` 加 widget（CSP 需加 `https://challenges.cloudflare.com` 到 script-src / frame-src）→ 設 secret
 
-### P2 — 折扣碼改「付款後」才計用量
+### P2 — 折扣碼改「付款後」才計用量 ✅ 2026-11-09（migration 0011）
+- create-order 只驗證；payuni-notify 在 pending→paid 時 `count_discount_use`，超量 → `needs_review`
+- `orders.discount_counted` 預設 true，舊訂單（下單時已 +1）不重複計
 - 現在下單（pending）就 +1 → 有人可以不付款把限量碼耗盡
 - 做法：create-order 只驗證不扣；payuni-notify 認領 paid 時呼叫 `claim_discount_code`，失敗則 `needs_review`。或保留預扣，訂單轉 failed / 逾時未付時 `release_discount_code`（需排程）
 
-### P2 — CSP inline style 造成的功能 bug（非資安，但順手）
+### P2 — CSP inline style 造成的功能 bug ✅ 2026-11-09
+- 初始隱藏改 `data-hide`（cart.js 載入後轉 style.display）；hero 焦點改 `data-focus`；order-result 容器改 class
+- 剩：order/member 頁 vendor/supabase.js 與 Turnstile 自帶的 inline style 仍會被擋（不影響功能）
 公開頁 CSP `style-src 'self'` 擋掉所有 `style=""` 屬性：
 - 首圖焦點 `object-position`（`preview-render.mjs:25` 產生到 `index.html`）在正式站無效
 - `order-result.html:12` `orderNoLine` 的 `display:none` 無效 → 永遠顯示空的「訂單編號：」

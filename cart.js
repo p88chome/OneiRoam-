@@ -123,6 +123,21 @@
     };
   }
 
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    // 公開頁 CSP 不允許 style="" 屬性：初始隱藏改用 [data-hide]（CSS 隱藏），
+    // 載入後轉成 CSSOM 的 style.display（CSP 允許），既有 JS 用 style.display 切換照舊可用。
+    // hero 圖焦點同理：data-focus → style.objectPosition。
+    const initStyles = () => {
+      document.querySelectorAll('[data-hide]').forEach(el => {
+        el.style.display = 'none'; el.removeAttribute('data-hide');
+      });
+      document.querySelectorAll('img[data-focus]').forEach(img => {
+        img.style.objectPosition = `center ${parseInt(img.dataset.focus, 10) || 0}%`;
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initStyles);
+    else initStyles();
+  }
   if (typeof window !== 'undefined') {
     global.Cart = createCart(window.localStorage);
     global.createCart = createCart;

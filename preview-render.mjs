@@ -22,7 +22,7 @@ const focus = v => { const n = parseInt(v, 10); return n >= 0 && n <= 100 ? n : 
 export function heroImgsHtml(s) {
   const src = pick(s, 'hero_img_1');
   const f = focus(pick(s, 'hero_focus_1'));
-  return `      <img src="${esc(src)}" alt="OneiRoaM" class="hero-img h-img-1" width="1178" height="1178" style="object-position:center ${f}%">`;
+  return `      <img src="${esc(src)}" alt="OneiRoaM" class="hero-img h-img-1" width="1178" height="1178" style="object-position:center ${f}%" data-focus="${f}">`;
 }
 
 function pair(s, base) {

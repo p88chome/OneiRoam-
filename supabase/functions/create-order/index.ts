@@ -110,43 +110,45 @@ Deno.serve(async (req) => {
     if (turnstileSecret) {
       const token = typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
       if (!token) return json({ error: '請完成人機驗證' }, 400);
+      if (token.length > 2048) return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+      // 驗證結果必須來自我們的網域、而且是結帳這個動作（防止別站的 token 拿來用）。
+      // 正式環境不可含 localhost；本機測試可用 TURNSTILE_HOSTNAMES 覆寫。
+      const hostnames = new Set((Deno.env.get('TURNSTILE_HOSTNAMES') || 'oneiroam.com,www.oneiroam.com')
+        .split(',').map(h => h.trim()).filter(Boolean));
+      const remoteip = req.headers.get('cf-connecting-ip') || (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+      const params = new URLSearchParams({ secret: turnstileSecret, response: token });
+      if (remoteip) params.set('remoteip', remoteip);
       const verify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ secret: turnstileSecret, response: token }),
-      }).then(r => r.json()).catch(() => ({ success: false }));
-      if (!verify.success) return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+        signal: AbortSignal.timeout(10_000),
+        body: params,
+      }).then(r => (r.ok ? r.json() : { success: false })).catch(() => ({ success: false }));
+      if (!verify.success || verify.action !== 'checkout' || !hostnames.has(verify.hostname)) {
+        console.error('turnstile rejected', { success: verify.success, action: verify.action, hostname: verify.hostname, codes: verify['error-codes'] });
+        return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+      }
     }
 
     const p = computePricing(lineItems.map(l => ({ id: l.id, price: l.price, qty: l.qty })));
 
     // 折扣碼（選填）：伺服器端驗證＋計算，客人送的折扣數字一律不信任。
-    // 用量檢查＋遞增改走 claim_discount_code 原子 RPC（見 migration 0008），
-    // 避免併發請求同時讀到舊的 used_count 而一起通過上限檢查。
+    // 這裡只驗證、不計用量：用量在 payuni-notify 付款成功時才 +1（migration 0011），
+    // 避免只下單不付款就耗光限量碼。
     let discountCode: string | null = null;
     let codeDiscount = 0;
     const rawCode = typeof body.discount_code === 'string' ? body.discount_code.trim().toUpperCase() : '';
     if (rawCode) {
-      const { data: claimed, error: claimErr } = await sb.rpc('claim_discount_code', { p_code: rawCode });
-      if (claimErr) { console.error('claim_discount_code failed', claimErr); return json({ error: '折扣碼驗證失敗' }, 500); }
-      const dc = Array.isArray(claimed) ? claimed[0] : claimed;
-      if (!dc) {
-        // 沒 claim 到：另外查一次現況只是為了給更友善的錯誤訊息，不影響安全判斷
-        const { data: existing } = await sb.from('discount_codes')
-          .select('active,expires_at,max_uses,used_count').eq('code', rawCode).maybeSingle();
-        if (!existing || !existing.active) return json({ error: '折扣碼無效' }, 400);
-        if (existing.expires_at && new Date(existing.expires_at) < new Date()) return json({ error: '折扣碼已過期' }, 400);
-        return json({ error: '折扣碼已達使用上限' }, 400);
-      }
+      const { data: dc, error: dcErr } = await sb.from('discount_codes')
+        .select('active,expires_at,max_uses,used_count,percent_off,amount_off').eq('code', rawCode).maybeSingle();
+      if (dcErr) { console.error('discount lookup failed', dcErr); return json({ error: '折扣碼驗證失敗' }, 500); }
+      if (!dc || !dc.active) return json({ error: '折扣碼無效' }, 400);
+      if (dc.expires_at && new Date(dc.expires_at) < new Date()) return json({ error: '折扣碼已過期' }, 400);
+      if (dc.max_uses != null && dc.used_count >= dc.max_uses) return json({ error: '折扣碼已達使用上限' }, 400);
       codeDiscount = dc.percent_off ? Math.round(p.total * dc.percent_off / 100) : (dc.amount_off || 0);
       codeDiscount = Math.min(codeDiscount, p.total);
       discountCode = rawCode;
     }
-    const releaseCode = async () => {
-      if (!discountCode) return;
-      try { await sb.rpc('release_discount_code', { p_code: discountCode }); }
-      catch (e) { console.error('release_discount_code failed', discountCode, e); }
-    };
     const finalTotal = p.total - codeDiscount;
     const payAmount = amountType === 'full' ? finalTotal : Math.round(finalTotal / 2);
     const no = orderNo();
@@ -166,11 +168,10 @@ Deno.serve(async (req) => {
       order_no: no, name: cust.name, phone: cust.phone, social: cust.social,
       email: cust.email, notes: cust.notes, amount_type: amountType,
       subtotal: p.subtotal, discount: p.discount + codeDiscount, total: finalTotal, pay_amount: payAmount,
-      user_id: userId, discount_code: discountCode,
+      user_id: userId, discount_code: discountCode, discount_counted: false,
     }).select('id').single();
     if (oErr) {
       console.error('order insert failed', no, oErr);
-      await releaseCode();
       return json({ error: '建立訂單失敗，請稍後再試' }, 500);
     }
     const { error: iErr } = await sb.from('order_items').insert(lineItems.map(l => ({
@@ -179,7 +180,6 @@ Deno.serve(async (req) => {
     if (iErr) {
       console.error('order_items insert failed', no, iErr);
       await sb.from('orders').delete().eq('id', order.id);
-      await releaseCode();
       return json({ error: '建立訂單失敗，請稍後再試' }, 500);
     }
 

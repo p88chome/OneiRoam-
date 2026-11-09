@@ -101,7 +101,7 @@
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
           <path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>
         </svg>
-        <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+        <span class="cart-badge" id="cartBadge" data-hide>0</span>
       </a>
     </div>
   </header>
@@ -211,7 +211,7 @@
             <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
             <select id="modalSize" class="modal-size-select"></select>
             <input id="modalSizeCustom" class="modal-size-custom" type="text"
-                   placeholder="輸入自訂尺寸" style="display:none" maxlength="40">
+                   placeholder="輸入自訂尺寸" data-hide maxlength="40">
             <div class="modal-qty">
               <button type="button" id="modalQtyMinus" aria-label="減少">−</button>
               <span id="modalQty">1</span>
@@ -219,10 +219,10 @@
             </div>
             <button id="modalAdd" class="btn-primary"
                     data-zh="加入購物車" data-en="Add to Cart">加入購物車</button>
-            <span id="modalAdded" class="modal-added" style="display:none"
+            <span id="modalAdded" class="modal-added" data-hide
                   data-zh="已加入 ✓" data-en="Added ✓">已加入 ✓</span>
           </div>
-          <a href="order.html" id="modalCheckout" class="btn-primary modal-checkout" style="display:none"
+          <a href="order.html" id="modalCheckout" class="btn-primary modal-checkout" data-hide
              data-zh="前往結帳 →" data-en="Go to Checkout →">前往結帳 →</a>
           <p class="modal-note" data-zh="✦ 限時預訂，售完即止" data-en="✦ Limited-time pre-order, while stocks last">✦ 限時預訂，售完即止</p>
         </div>

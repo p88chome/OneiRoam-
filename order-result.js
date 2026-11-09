@@ -5,6 +5,6 @@
   const no = new URLSearchParams(location.search).get('order_no') || '';
   if (/^[A-Z0-9]{6,20}$/.test(no)) {
     document.getElementById('orderNo').textContent = no;
-    document.getElementById('orderNoLine').style.display = '';
+    document.getElementById('orderNoLine').removeAttribute('data-hide');
   }
 })();
