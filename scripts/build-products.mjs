@@ -132,6 +132,11 @@ try {
 // 商品獨立頁：每件商品各一頁（SEO／IG／LINE 可直連單品）
 let pageCount = 0;
 for (const p of normalized) {
+  // id 直接進檔名：擋路徑字元（/ \ ..）避免寫出 repo 根目錄以外
+  if (!/^[A-Za-z0-9_-]{1,64}$/.test(String(p.id))) {
+    console.warn(`skip product page: unsafe id ${JSON.stringify(p.id)}`);
+    continue;
+  }
   try {
     const page = applyTheme(renderProductPage(p), settings.theme);
     await writeFile(`product-${p.id}.html`, page);

@@ -54,12 +54,13 @@ h1, h2, .brand, .brand-mark {
 /* ---- 欄位 ---- */
 .field { display: flex; flex-direction: column; gap: .35rem; }
 .field > span { font-size: .82rem; color: var(--ink-soft); }
-input, select {
+input, select, textarea {
   width: 100%; padding: .65rem .8rem; font-size: .95rem; color: var(--ink);
   background: #fcfbfd; border: 1px solid var(--line); border-radius: 10px;
   font-family: inherit; transition: border-color .15s, box-shadow .15s;
 }
-input:focus, select:focus {
+textarea { resize: vertical; min-height: 6.5rem; line-height: 1.6; }
+input:focus, select:focus, textarea:focus {
   outline: none; border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(185, 163, 201, .18);
 }

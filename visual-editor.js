@@ -60,7 +60,7 @@
           <label class="field field-wide"><span>${label}</span>
             <input id="ve_${k}" data-key="${k}" value="${esc(draft[k] || '')}"></label>`).join('')}
         <h3>Hero 圖</h3>
-        <label class="field"><span>更換圖片</span><input id="ve_hero_file" type="file" accept="image/*"></label>
+        <label class="field"><span>更換圖片</span><input id="ve_hero_file" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></label>
         <label class="field"><span>焦點（0-100）</span>
           <input id="ve_s_focus1" data-key="hero_focus_1" type="number" min="0" max="100" value="${esc(draft.hero_focus_1 || '35')}"></label>
         <h3>配色</h3>
@@ -124,8 +124,10 @@
   // ---- 商品面板 ----
   function productFieldsHtml(id) {
     const d = productDrafts[id] || {};
-    const row = ([k, label]) =>
-      `<label class="field field-wide"><span>${label}</span>
+    const row = ([k, label]) => k.startsWith('desc_')
+      ? `<label class="field field-wide"><span>${label}</span>
+        <textarea id="ve_p_${k}" data-pkey="${k}" rows="5">${esc(d[k] ?? '')}</textarea></label>`
+      : `<label class="field field-wide"><span>${label}</span>
         <input id="ve_p_${k}" data-pkey="${k}" ${k === 'price' ? 'type="number" min="0"' : ''} value="${esc(d[k] ?? '')}"></label>`;
     return `
       <div class="ve-panel">

@@ -1,12 +1,26 @@
 (function (global) {
   const KEY = 'oneiRoamCart';
 
+  // localStorage 可被竄改：讀出時強制型別，數字欄位一律是數字、字串欄位一律是字串
+  function normalize(it) {
+    const str = v => (typeof v === 'string' ? v : v == null ? '' : String(v));
+    const out = {
+      id: str(it.id), name: str(it.name), size: str(it.size),
+      price: Math.max(0, Number(it.price) || 0),
+      qty: Math.max(1, parseInt(it.qty, 10) || 1),
+    };
+    if (it.img != null) out.img = str(it.img);
+    const mq = parseInt(it.maxQty, 10);
+    if (mq > 0) out.maxQty = mq;
+    return out;
+  }
+
   function createCart(storage) {
     function read() {
       try {
         const raw = storage.getItem(KEY);
         const data = raw ? JSON.parse(raw) : [];
-        return Array.isArray(data) ? data : [];
+        return Array.isArray(data) ? data.filter(it => it && typeof it === 'object').map(normalize) : [];
       } catch (e) {
         return [];
       }

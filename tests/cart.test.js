@@ -110,3 +110,16 @@ test('addItem 受 maxQty 上限夾擠', () => {
   cart.addItem({ id: 'a', name: 'X', price: 100, size: 'M', qty: 3, maxQty: 1 });
   assert.strictEqual(cart.getItems()[0].qty, 1);
 });
+
+test('getItems normalizes tampered localStorage data', () => {
+  const store = memStorage();
+  store.setItem('oneiRoamCart', JSON.stringify([
+    { id: 'x', name: 'a', size: 'M', price: '<img src=x onerror=alert(1)>', qty: '<svg>', maxQty: 'abc' },
+    null, 'junk',
+  ]));
+  const items = createCart(store).getItems();
+  assert.strictEqual(items.length, 1);
+  assert.strictEqual(items[0].price, 0);
+  assert.strictEqual(items[0].qty, 1);
+  assert.strictEqual(items[0].maxQty, undefined);
+});
