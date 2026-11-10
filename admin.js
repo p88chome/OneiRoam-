@@ -176,7 +176,7 @@ async function renderDashboard() {
   document.getElementById('dashPublish').onclick = () => publishBtn.click();
 }
 
-const PAY_STATUS_LABEL = { pending: '待付款', paid: '已付款', failed: '付款失敗' };
+const PAY_STATUS_LABEL = { pending: '待付款', paid: '已付款', failed: '付款失敗', expired: '已失效' };
 const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨' };
 
 async function renderOrders() {

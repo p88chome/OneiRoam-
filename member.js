@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pending: { cls: 's-pending', zh: '待付款', en: 'Pending' },
     paid:    { cls: 's-paid',    zh: '已付款', en: 'Paid' },
     failed:  { cls: 's-failed',  zh: '付款失敗', en: 'Failed' },
+    expired: { cls: 's-expired', zh: '已失效', en: 'Expired' },
   };
   const FULFILL = {
     unfulfilled: { cls: 's-pending', zh: '未出貨', en: 'Unfulfilled' },

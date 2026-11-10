@@ -11,6 +11,11 @@ function isPaid(inner: Record<string, string>): boolean {
   return inner.Status === 'SUCCESS' && String(inner.TradeStatus) === '1';
 }
 
+// ATM / 超商代碼過期未繳：PAYUNi「訂單失效通知」TradeStatus 固定為 4
+function isExpired(inner: Record<string, string>): boolean {
+  return String(inner.TradeStatus) === '4';
+}
+
 // calibrate against sandbox (Task 7)
 function isFailed(inner: Record<string, string>): boolean {
   // 明確失敗才成立；取號中／處理中（無 Status 或 Status===SUCCESS 但未付）不算失敗，維持 pending。
@@ -108,6 +113,12 @@ Deno.serve(async (req) => {
           }),
         }).catch(() => {});
       }
+    } else if (isExpired(inner)) {
+      // 只有仍在待付款的才標失效；已付款的不動
+      const { error: expErr } = await sb.from('orders').update({ payment_status: 'expired' })
+        .eq('id', order.id)
+        .eq('payment_status', 'pending');
+      if (expErr) console.error('order expired-status update failed', no, expErr);
     } else if (isFailed(inner) && order.payment_status === 'pending') {
       // 明確失敗才標 failed；取號中（未付）維持 pending
       const { error: failErr } = await sb.from('orders').update({ payment_status: 'failed' })

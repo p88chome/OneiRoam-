@@ -1377,6 +1377,7 @@ button { cursor: pointer; }
 .s-pending { background: rgba(232, 210, 170, 0.5); color: #A07030; }
 .s-paid    { background: rgba(180, 220, 180, 0.5); color: #4A8A4A; }
 .s-failed  { background: rgba(220, 180, 180, 0.5); color: #A04A4A; }
+.s-expired { background: rgba(200, 200, 200, 0.4); color: #888; }
 .order-card-date { font-size: .78rem; color: var(--text-light); margin: .2rem 0 .6rem; }
 .order-card-items { list-style: none; font-size: .88rem; color: var(--text-mid); display: flex; flex-direction: column; gap: .25rem; }
 .order-card-sum { margin-top: .6rem; font-size: .9rem; }
@@ -1390,6 +1391,8 @@ button { cursor: pointer; }
 .pay-info { max-width: 22rem; margin: 1.5rem auto; padding: 1.25rem 1.5rem; text-align: left;
   border: 1px solid var(--dusty-rose); border-radius: 12px; line-height: 2; }
 .pay-info .pay-no { font-size: 1.15rem; letter-spacing: .05em; word-break: break-all; }
+.pay-info .pay-next { line-height: 1.7; margin-top: .75rem; }
+.pay-info .pay-member { display: table; margin: 1rem auto 0; }
 .pay-info .pay-hint { font-size: .85rem; opacity: .75; line-height: 1.6; margin-top: .5rem; }
 
 /* ===== 商品多圖（gallery.js / product-pages.mjs） ===== */
