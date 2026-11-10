@@ -5,7 +5,7 @@ import { catLabel, splitProducts, SELECT_EMPTY_HTML, normalizeSlug, SELECT_TEASE
 import { injectBlock } from './inject-block.mjs';
 import { heroImgsHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
 import { renderProductPage } from './product-pages.mjs';
-import { applyTexts, extractTexts, parseTexts } from './site-texts.mjs';
+import { applyTexts, applyLists, extractTexts, parseTexts } from './site-texts.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -31,6 +31,8 @@ try {
 const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
 // 後台「文字內容」覆寫（settings.texts）；套在每一頁的固定文字上
 const texts = parseTexts(settings.texts);
+const textLists = parseTexts(settings.text_lists);
+const withTexts = h => applyTexts(applyLists(h, textLists), texts);
 
 const normalized = products.map(p => {
   const vs = variants.filter(v => v.product_id === p.id);
@@ -96,7 +98,7 @@ const sourceHtml = await readFile('index.html', 'utf8');
   }
   await writeFile('data/texts-catalog.json', JSON.stringify(extractTexts(pages), null, 2));
 }
-const html = applyTexts(sourceHtml, texts);
+const html = withTexts(sourceHtml);
 let out;
 try {
   out = injectBlock(html, 'PRODUCTS', cardsHtml, { required: true });
@@ -121,7 +123,7 @@ await writeFile('index.html', out);
 // 選品獨立頁：完整列表
 try {
   const selPage = await readFile('select.html', 'utf8');
-  let selOut = injectBlock(applyTexts(selPage, texts), 'SELECT', selectHtml);
+  let selOut = injectBlock(withTexts(selPage), 'SELECT', selectHtml);
   selOut = applyTheme(selOut, settings.theme);
   await writeFile('select.html', selOut);
 } catch (err) {
@@ -131,7 +133,7 @@ try {
 // 結帳頁也要跟著主題換色
 try {
   const orderPage = await readFile('order.html', 'utf8');
-  await writeFile('order.html', applyTheme(applyTexts(orderPage, texts), settings.theme));
+  await writeFile('order.html', applyTheme(withTexts(orderPage), settings.theme));
 } catch (err) {
   console.warn(`order.html not updated: ${err.message}`);
 }
@@ -139,7 +141,7 @@ try {
 // 會員專區：主題換色
 try {
   const memberPage = await readFile('member.html', 'utf8');
-  const memberOut = applyTheme(applyTexts(memberPage, texts), settings.theme);
+  const memberOut = applyTheme(withTexts(memberPage), settings.theme);
   await writeFile('member.html', memberOut);
 } catch (err) {
   console.warn(`member.html not updated: ${err.message}`);
@@ -154,7 +156,7 @@ for (const p of normalized) {
     continue;
   }
   try {
-    const page = applyTheme(applyTexts(renderProductPage(p), texts), settings.theme);
+    const page = applyTheme(withTexts(renderProductPage(p)), settings.theme);
     await writeFile(`product-${p.id}.html`, page);
     pageCount++;
   } catch (err) {
