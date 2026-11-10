@@ -1,506 +1,508 @@
-[
-  {
-    "key": "夢游",
-    "zh": "夢游",
-    "en": "Wander Through Dreams",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "首頁",
-    "zh": "首頁",
-    "en": "Home",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "獨立設計",
-    "zh": "獨立設計",
-    "en": "Independent Design",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "澎袖",
-    "zh": "澎袖",
-    "en": "Puff Sleeves",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "領片",
-    "zh": "領片",
-    "en": "Collars",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "套裝",
-    "zh": "套裝",
-    "en": "Sets",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "上衣",
-    "zh": "上衣",
-    "en": "Tops",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "下著",
-    "zh": "下著",
-    "en": "Bottoms",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "其他配件",
-    "zh": "其他配件",
-    "en": "Accessories",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "選品",
-    "zh": "選品",
-    "en": "Select Goods",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "購物須知",
-    "zh": "購物須知",
-    "en": "Shopping Guide",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "關於夢游",
-    "zh": "關於夢游",
-    "en": "About OneiRoaM",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "會員專區",
-    "zh": "會員專區",
-    "en": "My Account",
-    "group": "頁首／選單",
-    "page": "index.html"
-  },
-  {
-    "key": "探索系列",
-    "zh": "探索系列",
-    "en": "Explore Collections",
-    "group": "首頁大圖",
-    "page": "index.html"
-  },
-  {
-    "key": "全部",
-    "zh": "全部",
-    "en": "All",
-    "group": "獨立設計區",
-    "page": "index.html"
-  },
-  {
-    "key": "夢游選品",
-    "zh": "夢游選品",
-    "en": "Curated by OneiRoaM",
-    "group": "選品區",
-    "page": "index.html"
-  },
-  {
-    "key": "查看全部選品 →",
-    "zh": "查看全部選品 →",
-    "en": "View All Select Goods →",
-    "group": "選品區",
-    "page": "index.html"
-  },
-  {
-    "key": "穿搭日記",
-    "zh": "穿搭日記",
-    "en": "Lookbook",
-    "group": "Lookbook",
-    "page": "index.html"
-  },
-  {
-    "key": "夢境裡的她",
-    "zh": "夢境裡的她",
-    "en": "Her in the Dream",
-    "group": "Lookbook",
-    "page": "index.html"
-  },
-  {
-    "key": "← 拖曳瀏覽 →",
-    "zh": "← 拖曳瀏覽 →",
-    "en": "← Drag to explore →",
-    "group": "Lookbook",
-    "page": "index.html"
-  },
-  {
-    "key": "讓夢境成真",
-    "zh": "讓夢境成真",
-    "en": "Make the Dream Real",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "一人品牌，商品分為獨立設計及選品。獨立設計服飾皆由店主本人設計、打版、製作樣衣，並與裁縫合作共同製作商品。",
-    "zh": "一人品牌，商品分為獨立設計及選品。獨立設計服飾皆由店主本人設計、打版、製作樣衣，並與裁縫合作共同製作商品。",
-    "en": "OneiRoaM is a one-person brand offering independent designs and curated picks. Every independently designed piece is designed, pattern-drafted and sampled by me, then made together with a partner tailor.",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "每月不定期開放預購，請夢游者們把握預購期間下單，每款商品不一定再販，且無法隨時接單已結束預售之商品，謝謝體諒。",
-    "zh": "每月不定期開放預購，請夢游者們把握預購期間下單，每款商品不一定再販，且無法隨時接單已結束預售之商品，謝謝體諒。",
-    "en": "Pre-orders open at irregular times each month. Please order during the pre-order window — items may not be restocked, and orders for closed pre-orders cannot be taken. Thank you for understanding.",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "出貨時間為預售截止後起算30-60個工作天，感謝夢游者的耐心等候。",
-    "zh": "出貨時間為預售截止後起算30-60個工作天，感謝夢游者的耐心等候。",
-    "en": "Items ship 30–60 business days after the pre-order closes. Thank you for your patience, dreamer.",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "預購商品皆依比例收取訂金，收到訂金後即進入製作排程，若棄單依法不退訂金。尾款採用貨到付款，出貨前才會將連結發送給夢游者們填寫收件資料。",
-    "zh": "預購商品皆依比例收取訂金，收到訂金後即進入製作排程，若棄單依法不退訂金。尾款採用貨到付款，出貨前才會將連結發送給夢游者們填寫收件資料。",
-    "en": "Pre-orders require a proportional deposit; production is scheduled once the deposit is received. Deposits are non-refundable if an order is abandoned. The balance is paid cash on delivery — a link to fill in your shipping details will be sent before shipping.",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "手作商品難免有手工痕跡及細微差異，每一件都是獨一無二的靈魂。我不是工廠機器也沒有團隊，但我會盡力將最美好的成品交給夢游者們🤍",
-    "zh": "手作商品難免有手工痕跡及細微差異，每一件都是獨一無二的靈魂。我不是工廠機器也沒有團隊，但我會盡力將最美好的成品交給夢游者們🤍",
-    "en": "Handmade pieces may carry small marks and variations — each one has its own soul. I'm not a factory or a team, but I'll do my best to bring you the most beautiful piece I can 🤍",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "立即聯絡",
-    "zh": "立即聯絡",
-    "en": "Contact Us Now",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "加入 LINE 詢問",
-    "zh": "加入 LINE 詢問",
-    "en": "Contact via LINE",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "通常於 24 小時內回覆 · 也歡迎 Instagram DM 洽詢",
-    "zh": "通常於 24 小時內回覆 · 也歡迎 Instagram DM 洽詢",
-    "en": "Usually replies within 24 hours · Instagram DM also welcome",
-    "group": "購物須知與下單流程",
-    "page": "index.html"
-  },
-  {
-    "key": "浮生若夢 • 隨心而游",
-    "zh": "浮生若夢 • 隨心而游",
-    "en": "Life is a dream · Wander as you will",
-    "group": "關於夢游",
-    "page": "index.html"
-  },
-  {
-    "key": "Oneir - 夢境／Roam - 漫遊",
-    "zh": "Oneir - 夢境／Roam - 漫遊",
-    "en": "Oneir - Dream / Roam - Wander",
-    "group": "關於夢游",
-    "page": "index.html"
-  },
-  {
-    "key": "以夢境為起點，將浪漫、幻想與些許奇異融入服裝設計。透過層疊紗料、立體花飾、設計印花與細膩的裝飾細節，探索日常與幻想的邊界。",
-    "zh": "以夢境為起點，將浪漫、幻想與些許奇異融入服裝設計。透過層疊紗料、立體花飾、設計印花與細膩的裝飾細節，探索日常與幻想的邊界。",
-    "en": "Starting from dreams, we weave romance, fantasy and a touch of the uncanny into our designs. Through layered tulle, sculptural florals, original prints and delicate embellishments, we explore the line between the everyday and the fantastical.",
-    "group": "關於夢游",
-    "page": "index.html"
-  },
-  {
-    "key": "華麗不必等待特別的時刻，穿著也不必受限於既定的規則。OneiRoaM 邀請每個人自由穿梭於現實與夢境之間，穿上自己喜歡的模樣，讓生活成為一場隨心而游的夢。",
-    "zh": "華麗不必等待特別的時刻，穿著也不必受限於既定的規則。OneiRoaM 邀請每個人自由穿梭於現實與夢境之間，穿上自己喜歡的模樣，讓生活成為一場隨心而游的夢。",
-    "en": "Splendor needn’t wait for a special occasion, and dressing needn’t follow set rules. OneiRoaM invites everyone to roam freely between reality and dreams, wear who they love to be, and let life become a dream wandered at will.",
-    "group": "關於夢游",
-    "page": "index.html"
-  },
-  {
-    "key": "限時預訂",
-    "zh": "限時預訂",
-    "en": "Limited-time Pre-order",
-    "group": "關於夢游",
-    "page": "index.html"
-  },
-  {
-    "key": "夢境美學",
-    "zh": "夢境美學",
-    "en": "Dream Aesthetic",
-    "group": "關於夢游",
-    "page": "index.html"
-  },
-  {
-    "key": "© 2026 OneiRoaM. 保留所有權利。",
-    "zh": "© 2026 OneiRoaM. 保留所有權利。",
-    "en": "© 2026 OneiRoaM. All rights reserved.",
-    "group": "頁尾",
-    "page": "index.html"
-  },
-  {
-    "key": "全額",
-    "zh": "全額",
-    "en": "Full price",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "單價",
-    "zh": "單價",
-    "en": "Unit",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "小計",
-    "zh": "小計",
-    "en": "Subtotal",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "尺寸",
-    "zh": "尺寸",
-    "en": "Size",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "加入購物車",
-    "zh": "加入購物車",
-    "en": "Add to Cart",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "已加入 ✓",
-    "zh": "已加入 ✓",
-    "en": "Added ✓",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "前往結帳 →",
-    "zh": "前往結帳 →",
-    "en": "Go to Checkout →",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "✦ 限時預訂，售完即止",
-    "zh": "✦ 限時預訂，售完即止",
-    "en": "✦ Limited-time pre-order, while stocks last",
-    "group": "商品彈窗",
-    "page": "index.html"
-  },
-  {
-    "key": "主理人親自挑選的美好物件",
-    "zh": "主理人親自挑選的美好物件",
-    "en": "Lovely things picked by the founder",
-    "group": "選品頁",
-    "page": "select.html"
-  },
-  {
-    "key": "配件",
-    "zh": "配件",
-    "en": "Accessories",
-    "group": "選品頁",
-    "page": "select.html"
-  },
-  {
-    "key": "繼續逛",
-    "zh": "繼續逛",
-    "en": "Keep Shopping",
-    "group": "頁首／選單",
-    "page": "order.html"
-  },
-  {
-    "key": "訂單確認",
-    "zh": "訂單確認",
-    "en": "Your Order",
-    "group": "頁首／選單",
-    "page": "order.html"
-  },
-  {
-    "key": "完成妳的夢境訂購",
-    "zh": "完成妳的夢境訂購",
-    "en": "Complete Your Order",
-    "group": "頁首／選單",
-    "page": "order.html"
-  },
-  {
-    "key": "訂單是空的",
-    "zh": "訂單是空的",
-    "en": "Your order is empty",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "去逛逛",
-    "zh": "去逛逛",
-    "en": "Browse Collections",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "折扣",
-    "zh": "折扣",
-    "en": "Discount",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "合計",
-    "zh": "合計",
-    "en": "Total",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "訂購人資訊",
-    "zh": "訂購人資訊",
-    "en": "Your Info",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "用 Google 登入，自動帶入資料",
-    "zh": "用 Google 登入，自動帶入資料",
-    "en": "Sign in with Google to autofill",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "已登入",
-    "zh": "已登入",
-    "en": "Signed in as",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "登出",
-    "zh": "登出",
-    "en": "Sign out",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "暱稱 / 名字",
-    "zh": "暱稱 / 名字",
-    "en": "Nickname / Name",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "Line名稱或IG帳號",
-    "zh": "Line名稱或IG帳號",
-    "en": "LINE name or IG account",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "Email",
-    "zh": "Email",
-    "en": "Email",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "備註",
-    "zh": "備註",
-    "en": "Notes",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "折扣碼（選填）",
-    "zh": "折扣碼（選填）",
-    "en": "Discount code (optional)",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "送出訂單",
-    "zh": "送出訂單",
-    "en": "Place Order",
-    "group": "結帳頁",
-    "page": "order.html"
-  },
-  {
-    "key": "妳的夢游足跡",
-    "zh": "妳的夢游足跡",
-    "en": "Your OneiRoaM Journey",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "登入後可查看訂單狀態、管理妳的資料",
-    "zh": "登入後可查看訂單狀態、管理妳的資料",
-    "en": "Sign in to view orders and manage your info",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "用 Google 登入",
-    "zh": "用 Google 登入",
-    "en": "Sign in with Google",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "我的訂單",
-    "zh": "我的訂單",
-    "en": "My Orders",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "我的資料",
-    "zh": "我的資料",
-    "en": "My Info",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "姓名",
-    "zh": "姓名",
-    "en": "Name",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "電話",
-    "zh": "電話",
-    "en": "Phone",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "Line 暱稱或 IG 帳號",
-    "zh": "Line 暱稱或 IG 帳號",
-    "en": "LINE nickname or IG",
-    "group": "會員頁",
-    "page": "member.html"
-  },
-  {
-    "key": "儲存",
-    "zh": "儲存",
-    "en": "Save",
-    "group": "會員頁",
-    "page": "member.html"
-  }
-]
+{
+  "texts": [
+    {
+      "key": "夢游",
+      "zh": "夢游",
+      "en": "Wander Through Dreams",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "首頁",
+      "zh": "首頁",
+      "en": "Home",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "獨立設計",
+      "zh": "獨立設計",
+      "en": "Independent Design",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "澎袖",
+      "zh": "澎袖",
+      "en": "Puff Sleeves",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "領片",
+      "zh": "領片",
+      "en": "Collars",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "套裝",
+      "zh": "套裝",
+      "en": "Sets",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "上衣",
+      "zh": "上衣",
+      "en": "Tops",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "下著",
+      "zh": "下著",
+      "en": "Bottoms",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "其他配件",
+      "zh": "其他配件",
+      "en": "Accessories",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "選品",
+      "zh": "選品",
+      "en": "Select Goods",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "購物須知",
+      "zh": "購物須知",
+      "en": "Shopping Guide",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "關於夢游",
+      "zh": "關於夢游",
+      "en": "About OneiRoaM",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "會員專區",
+      "zh": "會員專區",
+      "en": "My Account",
+      "group": "頁首／選單",
+      "page": "index.html"
+    },
+    {
+      "key": "探索系列",
+      "zh": "探索系列",
+      "en": "Explore Collections",
+      "group": "首頁大圖",
+      "page": "index.html"
+    },
+    {
+      "key": "全部",
+      "zh": "全部",
+      "en": "All",
+      "group": "獨立設計區",
+      "page": "index.html"
+    },
+    {
+      "key": "夢游選品",
+      "zh": "夢游選品",
+      "en": "Curated by OneiRoaM",
+      "group": "選品區",
+      "page": "index.html"
+    },
+    {
+      "key": "查看全部選品 →",
+      "zh": "查看全部選品 →",
+      "en": "View All Select Goods →",
+      "group": "選品區",
+      "page": "index.html"
+    },
+    {
+      "key": "穿搭日記",
+      "zh": "穿搭日記",
+      "en": "Lookbook",
+      "group": "Lookbook",
+      "page": "index.html"
+    },
+    {
+      "key": "夢境裡的她",
+      "zh": "夢境裡的她",
+      "en": "Her in the Dream",
+      "group": "Lookbook",
+      "page": "index.html"
+    },
+    {
+      "key": "← 拖曳瀏覽 →",
+      "zh": "← 拖曳瀏覽 →",
+      "en": "← Drag to explore →",
+      "group": "Lookbook",
+      "page": "index.html"
+    },
+    {
+      "key": "讓夢境成真",
+      "zh": "讓夢境成真",
+      "en": "Make the Dream Real",
+      "group": "購物須知",
+      "page": "index.html"
+    },
+    {
+      "key": "立即聯絡",
+      "zh": "立即聯絡",
+      "en": "Contact Us Now",
+      "group": "購物須知",
+      "page": "index.html"
+    },
+    {
+      "key": "加入 LINE 詢問",
+      "zh": "加入 LINE 詢問",
+      "en": "Contact via LINE",
+      "group": "購物須知",
+      "page": "index.html"
+    },
+    {
+      "key": "通常於 24 小時內回覆 · 也歡迎 Instagram DM 洽詢",
+      "zh": "通常於 24 小時內回覆 · 也歡迎 Instagram DM 洽詢",
+      "en": "Usually replies within 24 hours · Instagram DM also welcome",
+      "group": "購物須知",
+      "page": "index.html"
+    },
+    {
+      "key": "浮生若夢 • 隨心而游",
+      "zh": "浮生若夢 • 隨心而游",
+      "en": "Life is a dream · Wander as you will",
+      "group": "關於夢游",
+      "page": "index.html"
+    },
+    {
+      "key": "Oneir - 夢境／Roam - 漫遊",
+      "zh": "Oneir - 夢境／Roam - 漫遊",
+      "en": "Oneir - Dream / Roam - Wander",
+      "group": "關於夢游",
+      "page": "index.html"
+    },
+    {
+      "key": "© 2026 OneiRoaM. 保留所有權利。",
+      "zh": "© 2026 OneiRoaM. 保留所有權利。",
+      "en": "© 2026 OneiRoaM. All rights reserved.",
+      "group": "頁尾",
+      "page": "index.html"
+    },
+    {
+      "key": "全額",
+      "zh": "全額",
+      "en": "Full price",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "單價",
+      "zh": "單價",
+      "en": "Unit",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "小計",
+      "zh": "小計",
+      "en": "Subtotal",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "尺寸",
+      "zh": "尺寸",
+      "en": "Size",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "加入購物車",
+      "zh": "加入購物車",
+      "en": "Add to Cart",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "已加入 ✓",
+      "zh": "已加入 ✓",
+      "en": "Added ✓",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "前往結帳 →",
+      "zh": "前往結帳 →",
+      "en": "Go to Checkout →",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "✦ 限時預訂，售完即止",
+      "zh": "✦ 限時預訂，售完即止",
+      "en": "✦ Limited-time pre-order, while stocks last",
+      "group": "商品彈窗",
+      "page": "index.html"
+    },
+    {
+      "key": "主理人親自挑選的美好物件",
+      "zh": "主理人親自挑選的美好物件",
+      "en": "Lovely things picked by the founder",
+      "group": "選品頁",
+      "page": "select.html"
+    },
+    {
+      "key": "配件",
+      "zh": "配件",
+      "en": "Accessories",
+      "group": "選品頁",
+      "page": "select.html"
+    },
+    {
+      "key": "繼續逛",
+      "zh": "繼續逛",
+      "en": "Keep Shopping",
+      "group": "頁首／選單",
+      "page": "order.html"
+    },
+    {
+      "key": "訂單確認",
+      "zh": "訂單確認",
+      "en": "Your Order",
+      "group": "頁首／選單",
+      "page": "order.html"
+    },
+    {
+      "key": "完成妳的夢境訂購",
+      "zh": "完成妳的夢境訂購",
+      "en": "Complete Your Order",
+      "group": "頁首／選單",
+      "page": "order.html"
+    },
+    {
+      "key": "訂單是空的",
+      "zh": "訂單是空的",
+      "en": "Your order is empty",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "去逛逛",
+      "zh": "去逛逛",
+      "en": "Browse Collections",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "折扣",
+      "zh": "折扣",
+      "en": "Discount",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "合計",
+      "zh": "合計",
+      "en": "Total",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "訂購人資訊",
+      "zh": "訂購人資訊",
+      "en": "Your Info",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "用 Google 登入，自動帶入資料",
+      "zh": "用 Google 登入，自動帶入資料",
+      "en": "Sign in with Google to autofill",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "已登入",
+      "zh": "已登入",
+      "en": "Signed in as",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "登出",
+      "zh": "登出",
+      "en": "Sign out",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "暱稱 / 名字",
+      "zh": "暱稱 / 名字",
+      "en": "Nickname / Name",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "Line名稱或IG帳號",
+      "zh": "Line名稱或IG帳號",
+      "en": "LINE name or IG account",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "Email",
+      "zh": "Email",
+      "en": "Email",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "備註",
+      "zh": "備註",
+      "en": "Notes",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "折扣碼（選填）",
+      "zh": "折扣碼（選填）",
+      "en": "Discount code (optional)",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "送出訂單",
+      "zh": "送出訂單",
+      "en": "Place Order",
+      "group": "結帳頁",
+      "page": "order.html"
+    },
+    {
+      "key": "妳的夢游足跡",
+      "zh": "妳的夢游足跡",
+      "en": "Your OneiRoaM Journey",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "登入後可查看訂單狀態、管理妳的資料",
+      "zh": "登入後可查看訂單狀態、管理妳的資料",
+      "en": "Sign in to view orders and manage your info",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "用 Google 登入",
+      "zh": "用 Google 登入",
+      "en": "Sign in with Google",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "我的訂單",
+      "zh": "我的訂單",
+      "en": "My Orders",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "我的資料",
+      "zh": "我的資料",
+      "en": "My Info",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "姓名",
+      "zh": "姓名",
+      "en": "Name",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "電話",
+      "zh": "電話",
+      "en": "Phone",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "Line 暱稱或 IG 帳號",
+      "zh": "Line 暱稱或 IG 帳號",
+      "en": "LINE nickname or IG",
+      "group": "會員頁",
+      "page": "member.html"
+    },
+    {
+      "key": "儲存",
+      "zh": "儲存",
+      "en": "Save",
+      "group": "會員頁",
+      "page": "member.html"
+    }
+  ],
+  "lists": [
+    {
+      "list": "guide",
+      "group": "購物須知",
+      "page": "index.html",
+      "items": [
+        {
+          "zh": "一人品牌，商品分為獨立設計及選品。獨立設計服飾皆由店主本人設計、打版、製作樣衣，並與裁縫合作共同製作商品。",
+          "en": "OneiRoaM is a one-person brand offering independent designs and curated picks. Every independently designed piece is designed, pattern-drafted and sampled by me, then made together with a partner tailor."
+        },
+        {
+          "zh": "每月不定期開放預購，請夢游者們把握預購期間下單，每款商品不一定再販，且無法隨時接單已結束預售之商品，謝謝體諒。",
+          "en": "Pre-orders open at irregular times each month. Please order during the pre-order window — items may not be restocked, and orders for closed pre-orders cannot be taken. Thank you for understanding."
+        },
+        {
+          "zh": "出貨時間為預售截止後起算30-60個工作天，感謝夢游者的耐心等候。",
+          "en": "Items ship 30–60 business days after the pre-order closes. Thank you for your patience, dreamer."
+        },
+        {
+          "zh": "預購商品皆依比例收取訂金，收到訂金後即進入製作排程，若棄單依法不退訂金。尾款採用貨到付款，出貨前才會將連結發送給夢游者們填寫收件資料。",
+          "en": "Pre-orders require a proportional deposit; production is scheduled once the deposit is received. Deposits are non-refundable if an order is abandoned. The balance is paid cash on delivery — a link to fill in your shipping details will be sent before shipping."
+        },
+        {
+          "zh": "手作商品難免有手工痕跡及細微差異，每一件都是獨一無二的靈魂。我不是工廠機器也沒有團隊，但我會盡力將最美好的成品交給夢游者們🤍",
+          "en": "Handmade pieces may carry small marks and variations — each one has its own soul. I'm not a factory or a team, but I'll do my best to bring you the most beautiful piece I can 🤍"
+        }
+      ]
+    },
+    {
+      "list": "about-paragraphs",
+      "group": "關於夢游",
+      "page": "index.html",
+      "items": [
+        {
+          "zh": "以夢境為起點，將浪漫、幻想與些許奇異融入服裝設計。透過層疊紗料、立體花飾、設計印花與細膩的裝飾細節，探索日常與幻想的邊界。",
+          "en": "Starting from dreams, we weave romance, fantasy and a touch of the uncanny into our designs. Through layered tulle, sculptural florals, original prints and delicate embellishments, we explore the line between the everyday and the fantastical."
+        },
+        {
+          "zh": "華麗不必等待特別的時刻，穿著也不必受限於既定的規則。OneiRoaM 邀請每個人自由穿梭於現實與夢境之間，穿上自己喜歡的模樣，讓生活成為一場隨心而游的夢。",
+          "en": "Splendor needn’t wait for a special occasion, and dressing needn’t follow set rules. OneiRoaM invites everyone to roam freely between reality and dreams, wear who they love to be, and let life become a dream wandered at will."
+        }
+      ]
+    },
+    {
+      "list": "about-tags",
+      "group": "關於夢游",
+      "page": "index.html",
+      "items": [
+        {
+          "zh": "限時預訂",
+          "en": "Limited-time Pre-order"
+        },
+        {
+          "zh": "獨立設計",
+          "en": "Independent Design"
+        },
+        {
+          "zh": "夢境美學",
+          "en": "Dream Aesthetic"
+        }
+      ]
+    }
+  ]
+}
