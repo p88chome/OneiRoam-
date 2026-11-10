@@ -8,9 +8,16 @@
 </head><body data-lang="zh">
   <main class="order-page"><div class="container result-box">
     <p class="success-mark">✦</p>
-    <h2>付款處理中</h2>
+    <h2 id="resultTitle">付款處理中</h2>
     <p id="orderNoLine" data-hide>訂單編號：<strong id="orderNo"></strong></p>
-    <p>我們已收到 PAYUNi 的付款結果，訂單狀態將於確認後更新。</p>
+    <p id="resultMsg">我們已收到 PAYUNi 的付款結果，訂單狀態將於確認後更新。</p>
+    <div id="payInfo" class="pay-info" data-hide>
+      <p id="payBankLine" data-hide>銀行代碼：<strong id="payBank"></strong></p>
+      <p><span id="payNoLabel">轉帳帳號</span>：<strong id="payNo" class="pay-no"></strong></p>
+      <p>應付金額：NT$ <strong id="payAmt"></strong></p>
+      <p>繳費期限：<strong id="payExpire"></strong></p>
+      <p class="pay-hint">請截圖或抄下以上資訊；逾期未繳訂單將自動取消。</p>
+    </div>
     <p>請留意品牌 IG 及 LINE 通知。</p>
     <a href="index.html" class="btn-primary">返回首頁</a>
   </div></main>

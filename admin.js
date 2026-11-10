@@ -181,7 +181,7 @@ const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨' };
 
 async function renderOrders() {
   const { data: orders, error } = await sb.from('orders')
-    .select('id, order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, discount_code, created_at, order_items(name, size, price, qty)')
+    .select('id, order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, discount_code, pay_bank, pay_no, pay_expire, created_at, order_items(name, size, price, qty)')
     .order('created_at', { ascending: false }).limit(200);
   if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
   viewRoot().innerHTML = `
@@ -204,6 +204,7 @@ async function renderOrders() {
           <tr data-detail-row="${esc(o.id)}" style="display:none">
             <td colspan="7" class="order-detail">
               <p><b>Line/IG：</b>${esc(o.social || '—')}　<b>Email：</b>${esc(o.email || '—')}${o.phone ? `　<b>電話：</b>${esc(o.phone)}` : ''}</p>
+              ${o.pay_no ? `<p><b>${o.pay_bank ? `ATM 轉帳：</b>(${esc(o.pay_bank)}) ` : '超商代碼：</b>'}${esc(o.pay_no)}　<b>期限：</b>${esc(o.pay_expire || '—')}</p>` : ''}
               <p class="order-notes"><b>備註：</b>${esc(o.notes || '—')}</p>
               <ul>${(o.order_items || []).map(i =>
                 `<li>${esc(i.name)}${i.size ? `（${esc(i.size)}）` : ''} × ${esc(i.qty)}　NT$ ${esc(Number(i.price * i.qty).toLocaleString('en-US'))}</li>`).join('')}</ul>

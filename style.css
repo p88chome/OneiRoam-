@@ -1387,6 +1387,10 @@ button { cursor: pointer; }
 [data-hide] { display: none !important; }
 .turnstile-box:not(:empty) { margin: .5rem 0 1rem; }
 .result-box { text-align: center; padding: 4rem 1rem; }
+.pay-info { max-width: 22rem; margin: 1.5rem auto; padding: 1.25rem 1.5rem; text-align: left;
+  border: 1px solid var(--dusty-rose); border-radius: 12px; line-height: 2; }
+.pay-info .pay-no { font-size: 1.15rem; letter-spacing: .05em; word-break: break-all; }
+.pay-info .pay-hint { font-size: .85rem; opacity: .75; line-height: 1.6; margin-top: .5rem; }
 
 /* ===== 商品多圖（gallery.js / product-pages.mjs） ===== */
 .gallery { display: flex; flex-direction: column; gap: .6rem; min-width: 0; }

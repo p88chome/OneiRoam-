@@ -130,7 +130,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    const p = computePricing(lineItems.map(l => ({ id: l.id, price: l.price, qty: l.qty })));
+    // 自動優惠（2 件 9 折 / 組合價）已停用；折扣只剩折扣碼。threshold=Infinity → total = subtotal
+    const p = computePricing(lineItems.map(l => ({ id: l.id, price: l.price, qty: l.qty })), { discountThreshold: Infinity });
 
     // 折扣碼（選填）：伺服器端驗證＋計算，客人送的折扣數字一律不信任。
     // 這裡只驗證、不計用量：用量在 payuni-notify 付款成功時才 +1（migration 0011），
@@ -193,6 +194,8 @@ Deno.serve(async (req) => {
       Timestamp: String(Math.floor(Date.now() / 1000)),
       ReturnURL: `${pickReturnBase(req.headers.get('origin') || '', site)}/order-result.html?order_no=${no}`,
       NotifyURL: `${supaUrl}/functions/v1/payuni-notify`,
+      // 帶入客人 Email：PAYUNi 付款頁預填，ATM / 超商代碼取號資訊也會寄到這個信箱
+      ...(cust.email ? { UsrMail: cust.email } : {}),
     };
     const encryptInfo = buildEncryptInfo(inner, hashKey, hashIV);
     const hashInfo = buildHashInfo(encryptInfo, hashKey, hashIV);
