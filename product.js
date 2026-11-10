@@ -22,23 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ------------------------------------------
-     ANNOUNCEMENT BANNER
-     ------------------------------------------ */
-  const announceBar = document.getElementById('announce-bar');
-  const announceClose = document.getElementById('announceClose');
-  const BANNER_KEY = 'oneiRoamBannerClosed';
-  if (sessionStorage.getItem(BANNER_KEY)) {
-    announceBar.classList.add('hidden');
-  } else {
-    document.body.classList.add('has-banner');
-  }
-  announceClose.addEventListener('click', () => {
-    announceBar.classList.add('hidden');
-    document.body.classList.remove('has-banner');
-    sessionStorage.setItem(BANNER_KEY, '1');
-  });
-
-  /* ------------------------------------------
      STICKY HEADER
      ------------------------------------------ */
   const header = document.getElementById('header');
