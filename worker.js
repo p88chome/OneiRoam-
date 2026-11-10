@@ -35,8 +35,8 @@ async function payCodePage(req, env, url) {
   let rw = new HTMLRewriter()
     .on('#resultTitle', text(isAtm ? '請完成 ATM 轉帳' : '請至超商繳費'))
     .on('#resultMsg', text(isAtm
-      ? '訂單已成立，請於期限內轉帳至以下虛擬帳號，完成後訂單狀態會自動更新。'
-      : '訂單已成立，請於期限內至超商以下列代碼繳費，完成後訂單狀態會自動更新。'))
+      ? '訂單已成立，請於期限內轉帳至以下虛擬帳號。'
+      : '訂單已成立，請於期限內至超商以下列代碼繳費。'))
     .on('#payInfo', show)
     .on('#payNoLabel', text(isAtm ? '轉帳帳號' : '繳費代碼'))
     .on('#payNo', text(d.payNo))

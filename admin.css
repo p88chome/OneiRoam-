@@ -144,6 +144,7 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .badge-pending  { background: #f7eed8; color: #a07030; }
 .badge-paid     { background: #e2f0ea; color: #437a64; }
 .badge-failed   { background: #f7e6e9; color: #a85a67; }
+.badge-expired  { background: #eeeeee; color: #888888; }
 
 /* ---- 表單 ---- */
 .form-card { padding: 1.5rem; }
