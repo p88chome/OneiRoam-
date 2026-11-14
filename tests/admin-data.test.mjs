@@ -49,3 +49,19 @@ test('admin-data.saveProduct throws on error', async () => {
   const adminData = await loadAdminData(sb);
   await assert.rejects(() => adminData.saveProduct('x', {}), /rls/);
 });
+
+test('admin-data.fitSize: 縮到寬 2000 / 高 2800 內、等比例、不放大', async () => {
+  const adminData = await loadAdminData({});
+  assert.deepStrictEqual(adminData.fitSize(4284, 5712), { w: 2000, h: 2667 });
+  assert.deepStrictEqual(adminData.fitSize(1000, 4000), { w: 700, h: 2800 });
+  assert.deepStrictEqual(adminData.fitSize(800, 600), { w: 800, h: 600 });
+});
+
+test('admin-data.compressImage: 環境不支援時回原檔；非圖片拒絕', async () => {
+  const adminData = await loadAdminData({});
+  const file = { name: 'a.png', type: 'image/png', size: 10 };
+  const r = await adminData.compressImage(file);
+  assert.strictEqual(r.blob, file);
+  assert.strictEqual(r.ext, 'png');
+  await assert.rejects(() => adminData.compressImage({ type: 'image/svg+xml' }), /只接受/);
+});

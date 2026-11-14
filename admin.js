@@ -608,15 +608,14 @@ async function saveProduct(isNew) {
   const urls = [];
   for (const [i, im] of productImgs.entries()) {
     if (!im.file) { urls.push(im.url); continue; }
-    saveBtn.textContent = `上傳圖片 ${i + 1}/${productImgs.length}…`;
-    const ext = window.adminData.imageExt(im.file);
-    const path = `${row.id}-${Date.now()}-${i}.${ext}`;
-    const up = await sb.storage.from('product-images').upload(path, im.file, { upsert: true });
-    if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
-    const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
+    saveBtn.textContent = `壓縮並上傳圖片 ${i + 1}/${productImgs.length}…`;
+    let url;
+    try {
+      url = await window.adminData.uploadCompressed(im.file, `${row.id}-${Date.now()}-${i}`);
+    } catch (e) { return fail('圖片上傳失敗：' + friendlyErr(e)); }
     URL.revokeObjectURL(im.preview);
-    productImgs[i] = { url: pub.publicUrl };
-    urls.push(pub.publicUrl);
+    productImgs[i] = { url };
+    urls.push(url);
   }
   const { error: delErr } = await sb.from('product_images').delete().eq('product_id', row.id);
   if (delErr) return fail(friendlyErr(delErr));
