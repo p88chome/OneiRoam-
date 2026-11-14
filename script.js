@@ -188,11 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 尺寸選項
     const sizeSel = document.getElementById('modalSize');
     const sizes = (card.dataset.sizes || 'S,M,L,XL').split(',');
-    const customLabel = lang === 'zh' ? '自訂' : 'Custom';
-    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('')
-      + `<option value="__custom">${customLabel}</option>`;
-    document.getElementById('modalSizeCustom').style.display = 'none';
-    document.getElementById('modalSizeCustom').value = '';
+    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
     document.getElementById('modalQty').textContent = '1';
     document.getElementById('modalAdded').style.display = 'none';
     document.getElementById('modalAdd').style.display = '';
@@ -235,11 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
   modalBackdrop.addEventListener('click', closeModal);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // 尺寸：選「自訂」顯示文字框
-  document.getElementById('modalSize').addEventListener('change', e => {
-    document.getElementById('modalSizeCustom').style.display =
-      e.target.value === '__custom' ? '' : 'none';
-  });
   // 數量加減
   const qtyEl = document.getElementById('modalQty');
   document.getElementById('modalQtyMinus').addEventListener('click', () => {
@@ -253,11 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 加入訂單
   document.getElementById('modalAdd').addEventListener('click', () => {
     const sel = document.getElementById('modalSize');
-    let size = sel.value;
-    if (size === '__custom') {
-      size = document.getElementById('modalSizeCustom').value.trim();
-      if (!size) { document.getElementById('modalSizeCustom').focus(); return; }
-    }
+    const size = sel.value;
     Cart.addItem({
       id: modal.dataset.curId,
       name: modal.dataset.curName,

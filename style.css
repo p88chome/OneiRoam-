@@ -1234,7 +1234,7 @@ button { cursor: pointer; }
 
 /* ===== MODAL ORDER ===== */
 .modal-order { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: 1rem 0; }
-.modal-size-select, .modal-size-custom { padding: .45rem .6rem; border: 1px solid var(--blush-deep); border-radius: 4px; font: inherit; }
+.modal-size-select { padding: .45rem .6rem; border: 1px solid var(--blush-deep); border-radius: 4px; font: inherit; }
 .modal-qty { display: inline-flex; align-items: center; border: 1px solid var(--blush-deep); border-radius: 999px; overflow: hidden; background: var(--ivory); }
 .modal-qty button { width: 30px; height: 32px; border: none; background: none; font-size: 1.1rem; cursor: pointer; transition: color var(--trans); }
 .modal-qty span { min-width: 24px; text-align: center; }
@@ -1448,16 +1448,18 @@ button { cursor: pointer; }
 .product-prices, .pd-prices { display: flex; flex-direction: column; gap: .15rem; }
 .product-prices { margin: .35rem 0 .5rem; }
 .product-prices .product-price { margin-bottom: 0; }
-.product-full-price, .pd-full-price {
-  font-size: .72rem;
-  font-weight: 300;
-  color: var(--text-light);
-  letter-spacing: .03em;
+/* 全額用標題同款襯線字（.product-info h3），Cormorant 視覺偏小所以字級略大 */
+.product-full-price, .pd-full-price, .modal-full-price {
+  font-family: var(--serif);
+  font-size: .9rem;
+  font-weight: 400;
+  color: var(--text-mid);
+  letter-spacing: .05em;
 }
-.pd-full-price { font-size: .9rem; }
+.pd-full-price { font-size: 1.05rem; }
 .pd-prices { margin-bottom: 1.4rem; }
 .pd-prices .pd-price { margin-bottom: 0; }
 .price-label { font-size: .78em; font-weight: 400; color: var(--text-mid); margin-right: .15em; }
 .product-full-price .price-label, .pd-full-price .price-label { color: inherit; font-size: 1em; }
-.modal-full-price { margin: .6rem 0 -.4rem; font-size: .85rem; color: var(--text-light); }
+.modal-full-price { margin: .6rem 0 -.4rem; font-size: .95rem; }
 .modal-full-price .mp-label { font-size: .85rem; }

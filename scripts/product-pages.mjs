@@ -178,8 +178,6 @@ export function renderProductPage(p) {
           <div class="modal-order">
             <label class="modal-size-label" data-zh="尺寸" data-en="Size">尺寸</label>
             <select id="pdSize" class="modal-size-select"></select>
-            <input id="pdSizeCustom" class="modal-size-custom js-hidden" type="text"
-                   placeholder="輸入自訂尺寸" maxlength="40">
             <div class="modal-qty">
               <button type="button" id="pdQtyMinus" aria-label="減少">−</button>
               <span id="pdQty">1</span>
