@@ -186,6 +186,48 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
   });
 
+  /* ---- 購物車校正：用資料庫現況檢查（下架、尺寸改了、售完、數量超過、價格變動） ---- */
+  const noticeEl = document.getElementById('cartNotice');
+  const NOTE_TEXT = {
+    not_available: (n) => currentLang === 'zh' ? `「${n.name}」已下架或暫停販售，已從購物車移除。` : `"${n.name}" is no longer available and was removed.`,
+    size_missing: (n) => currentLang === 'zh' ? `「${n.name}」的尺寸「${n.size}」已不提供，已從購物車移除，請回商品頁重新選擇尺寸。` : `Size "${n.size}" of "${n.name}" is no longer offered and was removed — please choose a size again.`,
+    sold_out: (n) => currentLang === 'zh' ? `「${n.name}」（${n.size}）已售完，已從購物車移除。` : `"${n.name}" (${n.size}) is sold out and was removed.`,
+    qty_reduced: (n) => currentLang === 'zh' ? `「${n.name}」數量已依庫存／限購調整為 ${n.value}。` : `Quantity of "${n.name}" was reduced to ${n.value} (stock / purchase limit).`,
+    price_changed: (n) => currentLang === 'zh' ? `「${n.name}」價格已更新為 NT$ ${Number(n.value).toLocaleString()}。` : `Price of "${n.name}" was updated to NT$ ${Number(n.value).toLocaleString()}.`,
+  };
+  function showNotes(notes) {
+    if (!noticeEl) return;
+    if (!notes.length) { noticeEl.style.display = 'none'; noticeEl.textContent = ''; return; }
+    noticeEl.textContent = '';
+    for (const n of notes) {
+      const p = document.createElement('p');
+      p.textContent = (NOTE_TEXT[n.reason] || (() => ''))(n);
+      noticeEl.appendChild(p);
+    }
+    noticeEl.style.display = '';
+  }
+  // 回傳是否有變動；查詢失敗就略過（伺服器仍會把關）
+  async function validateCart() {
+    const items = Cart.getItems();
+    if (!sbClient || !items.length || !window.reconcileCart) return false;
+    try {
+      const ids = [...new Set(items.map(it => it.id))];
+      const [{ data: products, error: pErr }, { data: variants, error: vErr }] = await Promise.all([
+        sbClient.from('products').select('id,status,price,full_price').in('id', ids),
+        sbClient.from('product_variants').select('product_id,size,stock,max_qty').in('product_id', ids),
+      ]);
+      if (pErr || vErr) return false;
+      const { items: fixed, notes } = window.reconcileCart(items, products, variants);
+      showNotes(notes);
+      if (!notes.length) return false;
+      Cart.replace(fixed);
+      render();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   /* ---- 人機驗證（Cloudflare Turnstile）：有設 site key 才載入 ---- */
   const turnstile = { id: null, token: '' };
   if (window.TURNSTILE_SITE_KEY) {
@@ -232,7 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }),
     });
     const data = await res.json();
-    if (!res.ok || data.error) throw new Error(data.error || 'create-order failed');
+    if (!res.ok || data.error) {
+      const err = new Error(data.error || 'create-order failed');
+      err.code = data.code;
+      throw err;
+    }
     if (!data.action || !data.params) throw new Error('create-order response malformed');
     await saveProfile({ name: payload.name, social: payload.social, email: payload.email });
     const form = document.createElement('form');
@@ -280,10 +326,26 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       await submitOrder(payload, items);   // 成功則頁面已跳轉 PAYUNi
     } catch (err) {
-      // 折扣碼/驗證類錯誤直接顯示伺服器訊息，方便客人修正重試；其餘一律顯示通用訊息避免洩漏內部細節
-      const passthrough = ['折扣碼無效', '折扣碼已過期', '折扣碼已達使用上限', '請完成人機驗證', '人機驗證失敗，請重新整理再試一次'];
-      formError.textContent = passthrough.includes(err.message) ? err.message
-        : (currentLang === 'zh' ? '建立訂單失敗，請改用 LINE 聯絡我們。' : 'Failed. Contact us via LINE.');
+      // 依伺服器回傳的 code 顯示具體原因；購物車類問題先自動校正購物車
+      const zh = currentLang === 'zh';
+      const CART_CODES = ['not_available', 'size_missing', 'out_of_stock', 'over_limit'];
+      const MSG = {
+        discount_invalid: ['折扣碼無效', 'Invalid discount code'],
+        discount_expired: ['折扣碼已過期', 'Discount code has expired'],
+        discount_used_up: ['折扣碼已達使用上限', 'Discount code has reached its limit'],
+        turnstile_missing: ['請完成人機驗證', 'Please complete the verification'],
+        turnstile_failed: ['人機驗證失敗，請重新整理再試一次', 'Verification failed — please reload and try again'],
+        bad_email: ['Email 格式不正確', 'Invalid email address'],
+        empty_cart: ['購物車是空的', 'Your cart is empty'],
+      };
+      if (CART_CODES.includes(err.code)) {
+        await validateCart();
+        formError.textContent = zh ? '購物車已依最新庫存更新，請確認上方內容後再送出。' : 'Your cart was updated to match current stock — please review and submit again.';
+      } else if (MSG[err.code]) {
+        formError.textContent = MSG[err.code][zh ? 0 : 1];
+      } else {
+        formError.textContent = zh ? '建立訂單失敗，請稍後再試，或改用 LINE 聯絡我們。' : 'Failed to create the order. Please try again later or contact us via LINE.';
+      }
       formError.style.display = '';
       resetTurnstile();
       submitBtn.disabled = false;
@@ -294,4 +356,5 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLang(currentLang);
   render();
   applyGate();
+  validateCart();
 });

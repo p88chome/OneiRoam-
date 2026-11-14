@@ -53,20 +53,25 @@ Deno.serve(async (req) => {
     }
 
     const sb = createClient(supaUrl, serviceKey);
+    // 4xx 一律記原因（Supabase function logs 查得到），並回傳 code 讓前端顯示具體訊息
+    const reject = (status: number, code: string, error: string, extra: Record<string, unknown> = {}) => {
+      console.warn('create-order rejected', JSON.stringify({ code, error, ...extra }));
+      return json({ error, code, ...extra }, status);
+    };
 
     const body = await req.json();
     const rawItems = Array.isArray(body.items) ? body.items : [];
     // 一律收全額（照商品頁面價格 / 折扣後合計）；不再區分訂金/尾款
     const amountType = 'full';
-    if (!rawItems.length) return json({ error: '購物車是空的' }, 400);
-    if (rawItems.length > 50) return json({ error: '品項過多' }, 400);
+    if (!rawItems.length) return reject(400, 'empty_cart', '購物車是空的');
+    if (rawItems.length > 50) return reject(400, 'too_many_items', '品項過多');
 
     // 同款同尺寸合併成一列再檢查庫存/限購（否則重複送同一列可繞過 max_qty 與庫存）
     const merged = new Map<string, { id: string; size: string; qty: number }>();
     for (const it of rawItems) {
       const id = typeof it?.id === 'string' ? it.id : '';
       const size = typeof it?.size === 'string' ? it.size : '';
-      if (!id || !size) return json({ error: '商品資料錯誤' }, 400);
+      if (!id || !size) return reject(400, 'bad_item', '商品資料錯誤');
       const qty = Math.max(1, parseInt(it.qty, 10) || 1);
       const k = JSON.stringify([id, size]);
       const prev = merged.get(k);
@@ -81,7 +86,7 @@ Deno.serve(async (req) => {
       name: field(c.name, 50), phone: field(c.phone, 30), social: field(c.social, 100),
       email: field(c.email, 254), notes: field(c.notes, 1000),
     };
-    if (cust.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cust.email)) return json({ error: 'Email 格式不正確' }, 400);
+    if (cust.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cust.email)) return reject(400, 'bad_email', 'Email 格式不正確');
 
     // 伺服器重算：讀現價 + 庫存
     const ids = [...new Set(reqItems.map((i: any) => i.id))];
@@ -96,12 +101,12 @@ Deno.serve(async (req) => {
     const lineItems: any[] = [];
     for (const it of reqItems) {
       const price = priceOf(it.id);
-      if (price == null) return json({ error: `商品不存在：${it.id}` }, 400);
+      if (price == null) return reject(400, 'not_available', '商品已下架或暫停販售', { item: { id: it.id, size: it.size } });
       const v = variants?.find(x => x.product_id === it.id && x.size === it.size);
-      if (!v) return json({ error: `尺寸不存在：${it.id}/${it.size}` }, 400);
+      if (!v) return reject(400, 'size_missing', '商品尺寸已更新，請重新選擇', { item: { id: it.id, size: it.size } });
       const qty = it.qty;
-      if (qty > v.stock) return json({ error: `庫存不足：${it.id}/${it.size}` }, 409);
-      if (v.max_qty && qty > v.max_qty) return json({ error: `超過限購：${it.id}/${it.size}` }, 409);
+      if (qty > v.stock) return reject(409, 'out_of_stock', '庫存不足', { item: { id: it.id, size: it.size }, available: Math.max(0, v.stock) });
+      if (v.max_qty && qty > v.max_qty) return reject(409, 'over_limit', '超過每人限購數量', { item: { id: it.id, size: it.size }, available: v.max_qty });
       lineItems.push({ id: it.id, size: it.size, qty, price, name: buyable.find(p => p.id === it.id)!.name_zh });
     }
 
@@ -109,8 +114,8 @@ Deno.serve(async (req) => {
     const turnstileSecret = Deno.env.get('TURNSTILE_SECRET_KEY');
     if (turnstileSecret) {
       const token = typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
-      if (!token) return json({ error: '請完成人機驗證' }, 400);
-      if (token.length > 2048) return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+      if (!token) return reject(400, 'turnstile_missing', '請完成人機驗證');
+      if (token.length > 2048) return reject(400, 'turnstile_failed', '人機驗證失敗，請重新整理再試一次');
       // 驗證結果必須來自我們的網域、而且是結帳這個動作（防止別站的 token 拿來用）。
       // 正式環境不可含 localhost；本機測試可用 TURNSTILE_HOSTNAMES 覆寫。
       const hostnames = new Set((Deno.env.get('TURNSTILE_HOSTNAMES') || 'oneiroam.com,www.oneiroam.com')
@@ -126,7 +131,7 @@ Deno.serve(async (req) => {
       }).then(r => (r.ok ? r.json() : { success: false })).catch(() => ({ success: false }));
       if (!verify.success || verify.action !== 'checkout' || !hostnames.has(verify.hostname)) {
         console.error('turnstile rejected', { success: verify.success, action: verify.action, hostname: verify.hostname, codes: verify['error-codes'] });
-        return json({ error: '人機驗證失敗，請重新整理再試一次' }, 400);
+        return reject(400, 'turnstile_failed', '人機驗證失敗，請重新整理再試一次');
       }
     }
 
@@ -143,9 +148,9 @@ Deno.serve(async (req) => {
       const { data: dc, error: dcErr } = await sb.from('discount_codes')
         .select('active,expires_at,max_uses,used_count,percent_off,amount_off').eq('code', rawCode).maybeSingle();
       if (dcErr) { console.error('discount lookup failed', dcErr); return json({ error: '折扣碼驗證失敗' }, 500); }
-      if (!dc || !dc.active) return json({ error: '折扣碼無效' }, 400);
-      if (dc.expires_at && new Date(dc.expires_at) < new Date()) return json({ error: '折扣碼已過期' }, 400);
-      if (dc.max_uses != null && dc.used_count >= dc.max_uses) return json({ error: '折扣碼已達使用上限' }, 400);
+      if (!dc || !dc.active) return reject(400, 'discount_invalid', '折扣碼無效');
+      if (dc.expires_at && new Date(dc.expires_at) < new Date()) return reject(400, 'discount_expired', '折扣碼已過期');
+      if (dc.max_uses != null && dc.used_count >= dc.max_uses) return reject(400, 'discount_used_up', '折扣碼已達使用上限');
       codeDiscount = dc.percent_off ? Math.round(p.total * dc.percent_off / 100) : (dc.amount_off || 0);
       codeDiscount = Math.min(codeDiscount, p.total);
       discountCode = rawCode;

@@ -66,6 +66,7 @@
       count() { return read().reduce((n, it) => n + it.qty, 0); },
       total() { return read().reduce((n, it) => n + it.price * it.qty, 0); },
       clear() { write([]); },
+      replace(items) { write(items.map(normalize)); },
     };
   }
 
@@ -125,6 +126,33 @@
     };
   }
 
+  // 結帳前用資料庫現況校正購物車（客人購物車存在自己瀏覽器，商品改尺寸/下架/售完不會跟著變）。
+  // products：[{ id, status, price, full_price }]（公開讀取，hidden 讀不到 → 視為下架）
+  // variants：[{ product_id, size, stock, max_qty }]
+  // 回傳 { items, notes }；notes：[{ name, size, reason, value }]
+  function reconcileCart(items, products, variants) {
+    const notes = [];
+    const out = [];
+    for (const it of items) {
+      const p = (products || []).find(x => x.id === it.id);
+      const base = { name: it.name, size: it.size };
+      if (!p || (p.status !== 'preorder' && p.status !== 'active')) {
+        notes.push({ ...base, reason: 'not_available' }); continue;
+      }
+      const v = (variants || []).find(x => x.product_id === it.id && x.size === it.size);
+      if (!v) { notes.push({ ...base, reason: 'size_missing' }); continue; }
+      if (!(v.stock > 0)) { notes.push({ ...base, reason: 'sold_out' }); continue; }
+      const cap = Math.min(v.stock, v.max_qty > 0 ? v.max_qty : Infinity);
+      const next = { ...it, maxQty: cap };
+      if (it.qty > cap) { next.qty = cap; notes.push({ ...base, reason: 'qty_reduced', value: cap }); }
+      if (Number(p.price) !== it.price) { next.price = Number(p.price); notes.push({ ...base, reason: 'price_changed', value: next.price }); }
+      const fp = Number(p.full_price);
+      if (fp > next.price) next.fullPrice = fp; else delete next.fullPrice;
+      out.push(next);
+    }
+    return { items: out, notes };
+  }
+
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     // 公開頁 CSP 不允許 style="" 屬性：初始隱藏改用 [data-hide]（CSS 隱藏），
     // 載入後轉成 CSSOM 的 style.display（CSP 允許），既有 JS 用 style.display 切換照舊可用。
@@ -145,8 +173,9 @@
     global.createCart = createCart;
     global.makeOrderNo = makeOrderNo;
     global.computePricing = computePricing;
+    global.reconcileCart = reconcileCart;
   }
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { createCart, makeOrderNo, computePricing };
+    module.exports = { createCart, makeOrderNo, computePricing, reconcileCart };
   }
 })(typeof window !== 'undefined' ? window : globalThis);
