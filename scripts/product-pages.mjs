@@ -168,7 +168,7 @@ export function renderProductPage(p) {
         <a href="index.html#collections" data-zh="獨立設計" data-en="Independent Design">獨立設計</a> ／
         <span data-zh="${esc(p.name_zh)}" data-en="${esc(p.name_en)}">${esc(p.name_zh)}</span>
       </nav>
-      <div class="pd-grid" data-id="${esc(p.id)}" data-sizes="${esc(p.sizes.join(','))}" data-max-qty="${esc(p.max_qty)}" data-price="${esc(p.price)}">
+      <div class="pd-grid" data-id="${esc(p.id)}" data-sizes="${esc(p.sizes.join(','))}" data-max-qty="${esc(p.max_qty)}" data-price="${esc(p.price)}" data-full-price="${esc(p.full_price > p.price ? p.full_price : '')}">
         ${galleryHtml(p)}
         <div class="pd-info">
           <p class="section-label" data-zh="${esc(p.cat_zh)}" data-en="${esc(p.cat_en)}">${esc(p.cat_zh)}</p>

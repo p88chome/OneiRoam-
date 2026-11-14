@@ -123,3 +123,14 @@ test('getItems normalizes tampered localStorage data', () => {
   assert.strictEqual(items[0].qty, 1);
   assert.strictEqual(items[0].maxQty, undefined);
 });
+
+test('fullPrice 只在大於 price 時保留（顯示用）', () => {
+  const cart = createCart(memStorage());
+  cart.addItem({ id: 'a', name: 'x', price: 1080, size: 'M', qty: 1, fullPrice: 3980 });
+  cart.addItem({ id: 'b', name: 'y', price: 980, size: 'M', qty: 1, fullPrice: 500 });
+  cart.addItem({ id: 'c', name: 'z', price: 980, size: 'M', qty: 1 });
+  const [a, b, c] = cart.getItems();
+  assert.strictEqual(a.fullPrice, 3980);
+  assert.strictEqual(b.fullPrice, undefined);
+  assert.strictEqual(c.fullPrice, undefined);
+});

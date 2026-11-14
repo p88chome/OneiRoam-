@@ -142,7 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="cart-row-info">
           <span class="cart-row-name">${esc(it.name)}</span>
           <span class="cart-row-size">${currentLang === 'zh' ? '尺寸' : 'Size'}: ${esc(it.size)}</span>
-          <span class="cart-row-price">NT$ ${it.price.toLocaleString()}</span>
+          <span class="cart-row-price">${it.fullPrice
+            ? `${currentLang === 'zh' ? '全額' : 'Full'} NT$ ${esc(it.fullPrice.toLocaleString())} · ${currentLang === 'zh' ? '訂金' : 'Deposit'} NT$ ${esc(it.price.toLocaleString())}`
+            : `NT$ ${esc(it.price.toLocaleString())}`}</span>
         </div>
         <div class="cart-row-qty">
           <button type="button" class="qminus" aria-label="減少">−</button>

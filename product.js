@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
       qty: parseInt(qtyEl.textContent, 10),
       maxQty: parseInt(grid.dataset.maxQty, 10) || undefined,
       img: img ? img.getAttribute('src') : '',
+      fullPrice: parseInt(grid.dataset.fullPrice, 10) || undefined,
     });
     updateCartBadge();
     document.getElementById('pdAdd').style.display = 'none';
