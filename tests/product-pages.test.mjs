@@ -34,11 +34,11 @@ test('renderProductPage: 沒圖 fallback favicon 當 og:image', () => {
 
 test('renderProductPage: 初始隱藏用 class 不用行內 style（CSP style-src 無 unsafe-inline，行內 style 會被瀏覽器忽略）', () => {
   const html = renderProductPage(sample);
-  assert.match(html, /id="pdSizeCustom" class="modal-size-custom js-hidden"/);
+  assert.doesNotMatch(html, /pdSizeCustom|__custom/); // 「自訂」尺寸已移除（後端本來就不收非變體尺寸）
   assert.match(html, /id="pdAdded" class="modal-added js-hidden"/);
   assert.match(html, /id="pdCheckout" class="btn-primary modal-checkout js-hidden"/);
-  // 這三個 id 本身不能再帶行內 style（cartBadge 等共用 header 元素不在本測試範圍內）
-  for (const id of ['pdSizeCustom', 'pdAdded', 'pdCheckout']) {
+  // 這兩個 id 本身不能再帶行內 style（cartBadge 等共用 header 元素不在本測試範圍內）
+  for (const id of ['pdAdded', 'pdCheckout']) {
     const tagMatch = html.match(new RegExp(`<[a-z]+ [^>]*id="${id}"[^>]*>`));
     assert.ok(tagMatch, `${id} tag not found`);
     assert.doesNotMatch(tagMatch[0], /style=/, `${id} should not use inline style`);

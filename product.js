@@ -92,17 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const sizeSel = document.getElementById('pdSize');
   const sizes = (grid.dataset.sizes || 'S,M,L,XL').split(',');
   function fillSizes() {
-    const customLabel = currentLang === 'zh' ? '自訂' : 'Custom';
-    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('')
-      + `<option value="__custom">${customLabel}</option>`;
+    const cur = sizeSel.value;
+    sizeSel.innerHTML = sizes.map(s => `<option value="${escHtml(s)}">${escHtml(s)}</option>`).join('');
+    if (sizes.includes(cur)) sizeSel.value = cur;
   }
   fillSizes();
   document.getElementById('langToggle').addEventListener('click', fillSizes);
   if (mobileToggle) mobileToggle.addEventListener('click', fillSizes);
-
-  sizeSel.addEventListener('change', e => {
-    document.getElementById('pdSizeCustom').classList.toggle('js-hidden', e.target.value !== '__custom');
-  });
 
   const qtyEl = document.getElementById('pdQty');
   document.getElementById('pdQtyMinus').addEventListener('click', () => {
@@ -115,11 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.Gallery) Gallery.wire(document.querySelector('.pd-gallery'));
 
   document.getElementById('pdAdd').addEventListener('click', () => {
-    let size = sizeSel.value;
-    if (size === '__custom') {
-      size = document.getElementById('pdSizeCustom').value.trim();
-      if (!size) { document.getElementById('pdSizeCustom').focus(); return; }
-    }
+    const size = sizeSel.value;
     const img = grid.querySelector('.gallery-slide'); // 第一張＝封面
     const h1 = document.querySelector('h1');
     Cart.addItem({
