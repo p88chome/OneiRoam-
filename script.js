@@ -10,9 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
      LOADING SCREEN
      ------------------------------------------ */
   const loader = document.getElementById('loader');
+  let loaderDone = false;
   function hideLoader() {
     loader.classList.add('hidden');
     document.body.style.overflow = '';
+    if (loaderDone) return;
+    loaderDone = true;
+    // 載入動畫期間 body 鎖捲動，瀏覽器原生的 #錨點 跳轉會失效（例如從結帳頁點「購物須知」連到 index.html#order）
+    // → 動畫結束後補捲一次。用 getElementById 避免把網址 hash 當 selector 解析
+    let id = '';
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { /* 壞掉的 hash 就不捲 */ }
+    const target = id && document.getElementById(id);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   document.body.style.overflow = 'hidden';
   // Hide after page load (min 1.2s for effect)
