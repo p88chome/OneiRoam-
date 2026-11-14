@@ -51,12 +51,14 @@
       <div id="cartArea">
         <div id="cartList" class="cart-list"></div>
         <div class="cart-summary">
-          <div class="sum-row"><span data-zh="小計" data-en="Subtotal">小計</span>
-            <span>NT$ <span id="sumSubtotal">0</span></span></div>
           <div class="sum-row" id="sumDiscountRow"><span data-zh="折扣" data-en="Discount">折扣</span>
             <span>− NT$ <span id="sumDiscount">0</span></span></div>
-          <div class="sum-row sum-total"><span data-zh="合計" data-en="Total">合計</span>
+          <div class="sum-row sum-total"><span id="sumTotalLabel" data-zh="本次應付" data-en="Due now">本次應付</span>
             <span>NT$ <span id="sumTotal">0</span></span></div>
+          <p class="sum-balance js-hidden" id="sumBalanceRow">
+            <span data-zh="尾款" data-en="Balance">尾款</span> NT$ <span id="sumBalance">0</span>
+            <span data-zh="於商品完成後貨到付款" data-en="paid cash on delivery once your piece is ready">於商品完成後貨到付款</span>
+          </p>
         </div>
 
         <form id="orderForm" class="order-form" novalidate>

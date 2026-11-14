@@ -1269,6 +1269,7 @@ button { cursor: pointer; }
 }
 .sum-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .95rem; color: var(--text-light); }
 .sum-row.sum-total { font-size: 1.1rem; color: inherit; font-weight: 500; border-top: 1px solid var(--ivory-warm); padding-top: .7rem; margin-top: .3rem; }
+.sum-balance { font-size: .82rem; color: var(--text-light); text-align: right; line-height: 1.6; }
 .sum-row.sum-deposit { font-size: 1.1rem; color: var(--dusty-rose); font-weight: 600; }
 .preorder-gate { text-align: center; font-size: .95rem; color: var(--dusty-rose); background: var(--ivory-warm); border-radius: 6px; padding: .8rem; }
 .success-deposit { font-size: .9rem; color: var(--text-light); margin-top: 1rem; }
