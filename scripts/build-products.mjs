@@ -6,6 +6,7 @@ import { injectBlock } from './inject-block.mjs';
 import { heroImgsHtml, eyebrowHtml, heroDescHtml, applyTheme } from './site-settings.mjs';
 import { renderProductPage } from './product-pages.mjs';
 import { applyTexts, applyLists, extractTexts, parseTexts } from './site-texts.mjs';
+import { createMirror } from './mirror-images.mjs';
 
 const BASE_URL = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
@@ -33,6 +34,20 @@ const settings = Object.fromEntries(settingsRows.map(s => [s.key, s.value]));
 const texts = parseTexts(settings.texts);
 const textLists = parseTexts(settings.text_lists);
 const withTexts = h => applyTexts(applyLists(h, textLists), texts);
+
+// 圖片改走 Cloudflare：把 Supabase Storage 的圖片下載到 media/ 跟網站一起部署，
+// 客人瀏覽不再吃 Supabase egress。只抓上架中商品的圖與網站設定裡的圖；失敗的保留原網址。
+{
+  const visible = new Set(products.map(p => p.id));
+  images = images.filter(i => visible.has(i.product_id));
+  const mirror = createMirror({ base: BASE_URL });
+  const settingUrls = Object.values(settings).filter(v => typeof v === 'string' && v.includes('/storage/v1/object/public/'));
+  const urlMap = await mirror.mirrorAll([...images.map(i => i.url), ...settingUrls]);
+  for (const i of images) i.url = urlMap.get(i.url) ?? i.url;
+  for (const [k, v] of Object.entries(settings)) if (urlMap.has(v)) settings[k] = urlMap.get(v);
+  const { mirrored, failed, bytes } = mirror.stats;
+  console.log(`mirrored ${mirrored} images to media/ (${(bytes / 1048576).toFixed(1)} MB), ${failed} failed`);
+}
 
 const normalized = products.map(p => {
   const vs = variants.filter(v => v.product_id === p.id);
