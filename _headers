@@ -28,3 +28,7 @@
 
 /admin
   X-Robots-Tag: noindex, nofollow
+
+# 鏡像的商品圖：檔名含上傳時間戳，內容不會變 → 長快取
+/media/*
+  Cache-Control: public, max-age=31536000, immutable

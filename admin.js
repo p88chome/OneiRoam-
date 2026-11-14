@@ -178,7 +178,18 @@ async function renderDashboard() {
 }
 
 const PAY_STATUS_LABEL = { pending: '待付款', paid: '已付款', failed: '付款失敗', expired: '已失效' };
-const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨' };
+const FULFILL_LABEL = { unfulfilled: '未出貨', shipped: '已出貨', cancelled: '已取消' };
+
+// 刪除（未付款）/ 取消（已付款）按鈕；規則見 order-rules.js 與 migration 0016
+function orderActionHtml(o) {
+  if (window.orderRules.cancellable(o))
+    return `<button class="btn btn-sm btn-ghost" data-cancel="${esc(o.id)}" data-no="${esc(o.order_no)}">取消訂單</button>`;
+  if (o.payment_status === 'paid') return '';
+  const d = window.orderRules.deletable(o);
+  return d.ok
+    ? `<button class="btn btn-sm btn-danger" data-del="${esc(o.id)}" data-no="${esc(o.order_no)}">刪除</button>`
+    : `<button class="btn btn-sm btn-danger" disabled title="${esc(d.reason)}">刪除</button>`;
+}
 
 async function renderOrders() {
   const { data: orders, error } = await sb.from('orders')
@@ -198,9 +209,10 @@ async function renderOrders() {
             <td><span class="badge badge-${esc(o.payment_status)}">${esc(PAY_STATUS_LABEL[o.payment_status] || o.payment_status)}</span></td>
             <td><span class="badge">${esc(FULFILL_LABEL[o.fulfillment_status] || o.fulfillment_status)}</span></td>
             <td class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</td>
-            <td><button class="btn btn-sm" data-detail="${esc(o.id)}">明細</button>
-              ${o.fulfillment_status !== 'shipped'
-              ? `<button class="btn btn-sm" data-ship="${esc(o.id)}">標記已出貨</button>` : ''}</td>
+            <td class="order-actions"><button class="btn btn-sm" data-detail="${esc(o.id)}">明細</button>
+              ${o.fulfillment_status === 'unfulfilled'
+              ? `<button class="btn btn-sm" data-ship="${esc(o.id)}">標記已出貨</button>` : ''}
+              ${orderActionHtml(o)}</td>
           </tr>
           <tr data-detail-row="${esc(o.id)}" style="display:none">
             <td colspan="7" class="order-detail">
@@ -217,6 +229,31 @@ async function renderOrders() {
   viewRoot().querySelectorAll('[data-detail]').forEach(b => b.onclick = () => {
     const row = viewRoot().querySelector(`[data-detail-row="${b.dataset.detail}"]`);
     row.style.display = row.style.display === 'none' ? '' : 'none';
+  });
+  viewRoot().querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+    if (!confirm(`確定刪除訂單 ${b.dataset.no}？
+
+刪除後無法復原。`)) return;
+    b.disabled = true; b.textContent = '刪除中…';
+    // RLS 擋下時 delete 不會報錯、只是刪 0 筆 → 用 select 確認真的刪到
+    const { data, error } = await sb.from('orders').delete().eq('id', b.dataset.del).select('id');
+    if (error || !data || !data.length) {
+      b.disabled = false; b.textContent = '刪除';
+      alert('刪除失敗：' + (error ? error.message : '此訂單目前不可刪除（可能已付款或仍在繳費期限內），請重新整理再看'));
+      return;
+    }
+    renderOrders();
+  });
+  viewRoot().querySelectorAll('[data-cancel]').forEach(b => b.onclick = async () => {
+    if (!confirm(`確定取消訂單 ${b.dataset.no}？
+
+• 系統不會自動退款，請另外處理退款
+• 不會自動補回庫存，需要的話請到商品頁調整
+• 會員專區會顯示「已取消」`)) return;
+    b.disabled = true; b.textContent = '處理中…';
+    const { error } = await sb.from('orders').update({ fulfillment_status: 'cancelled' }).eq('id', b.dataset.cancel);
+    if (error) { b.disabled = false; b.textContent = '取消訂單'; alert('取消失敗：' + error.message); return; }
+    renderOrders();
   });
   viewRoot().querySelectorAll('[data-ship]').forEach(b => b.onclick = async () => {
     b.disabled = true; b.textContent = '處理中…';
@@ -571,15 +608,14 @@ async function saveProduct(isNew) {
   const urls = [];
   for (const [i, im] of productImgs.entries()) {
     if (!im.file) { urls.push(im.url); continue; }
-    saveBtn.textContent = `上傳圖片 ${i + 1}/${productImgs.length}…`;
-    const ext = window.adminData.imageExt(im.file);
-    const path = `${row.id}-${Date.now()}-${i}.${ext}`;
-    const up = await sb.storage.from('product-images').upload(path, im.file, { upsert: true });
-    if (up.error) return fail('圖片上傳失敗：' + friendlyErr(up.error));
-    const { data: pub } = sb.storage.from('product-images').getPublicUrl(path);
+    saveBtn.textContent = `壓縮並上傳圖片 ${i + 1}/${productImgs.length}…`;
+    let url;
+    try {
+      url = await window.adminData.uploadCompressed(im.file, `${row.id}-${Date.now()}-${i}`);
+    } catch (e) { return fail('圖片上傳失敗：' + friendlyErr(e)); }
     URL.revokeObjectURL(im.preview);
-    productImgs[i] = { url: pub.publicUrl };
-    urls.push(pub.publicUrl);
+    productImgs[i] = { url };
+    urls.push(url);
   }
   const { error: delErr } = await sb.from('product_images').delete().eq('product_id', row.id);
   if (delErr) return fail(friendlyErr(delErr));

@@ -27,3 +27,6 @@ docs/superpowers/
 .wrangler
 .dev.vars*
 !.dev.vars.example
+
+# 發布時從 Supabase Storage 鏡像下來的圖片（build 產物）
+media/

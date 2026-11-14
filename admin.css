@@ -218,3 +218,9 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .list-item { display: grid; gap: .5rem; padding: .6rem .8rem; border: 1px solid var(--line, #eee); border-radius: 8px; }
 .list-item textarea, .list-item input { width: 100%; }
 .text-list > [data-add] { justify-self: start; }
+
+/* ---- 訂單操作按鈕 ---- */
+.order-actions { white-space: nowrap; }
+.order-actions .btn + .btn { margin-left: .3rem; }
+.order-actions .btn-danger { margin-left: .3rem; }
+.order-actions .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }

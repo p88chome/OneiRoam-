@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const FULFILL = {
     unfulfilled: { cls: 's-pending', zh: '未出貨', en: 'Unfulfilled' },
     shipped:     { cls: 's-paid',    zh: '已出貨', en: 'Shipped' },
+    cancelled:   { cls: 's-failed',  zh: '已取消', en: 'Cancelled' },
   };
   let orders = [];
 
