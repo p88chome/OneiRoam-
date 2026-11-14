@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="cart-row-name">${esc(it.name)}</span>
           <span class="cart-row-size">${currentLang === 'zh' ? '尺寸' : 'Size'}: ${esc(it.size)}</span>
           <span class="cart-row-price">${it.fullPrice
-            ? `${currentLang === 'zh' ? '全額' : 'Full'} NT$ ${esc(it.fullPrice.toLocaleString())} · ${currentLang === 'zh' ? '訂金' : 'Deposit'} NT$ ${esc(it.price.toLocaleString())}`
+            ? `<span class="cart-row-line">${currentLang === 'zh' ? '全額' : 'Full'} NT$ ${esc(it.fullPrice.toLocaleString())}</span><span class="cart-row-line">${currentLang === 'zh' ? '訂金' : 'Deposit'} NT$ ${esc(it.price.toLocaleString())}</span>`
             : `NT$ ${esc(it.price.toLocaleString())}`}</span>
         </div>
         <div class="cart-row-qty">

@@ -1254,6 +1254,7 @@ button { cursor: pointer; }
 .cart-row-info { flex: 1; display: flex; flex-direction: column; gap: .2rem; }
 .cart-row-name { font-weight: 500; }
 .cart-row-size, .cart-row-price { font-size: .85rem; color: var(--text-light); }
+.cart-row-line { display: block; white-space: nowrap; } /* 全額、訂金各一行，金額不被拆開 */
 .cart-row-img {
   width: 56px; height: 68px; object-fit: cover; border-radius: 8px;
   flex-shrink: 0; display: block;
