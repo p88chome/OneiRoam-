@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalUnit').textContent = (parseInt(modal.dataset.curPrice, 10) || 0).toLocaleString();
     // 有全額 → 多一行「全額」，單價標籤改「訂金」
     const full = parseInt(card.dataset.fullPrice, 10) || 0;
+    modal.dataset.curFullPrice = full ? String(full) : '';
     document.getElementById('modalFullRow').classList.toggle('js-hidden', !full);
     document.getElementById('modalFull').textContent = full ? full.toLocaleString() : '';
     const unitLabel = document.getElementById('modalUnitLabel');
@@ -253,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
       qty: parseInt(qtyEl.textContent, 10),
       maxQty: parseInt(modal.dataset.curMaxQty, 10) || undefined,
       img: modal.dataset.curImg || '',
+      fullPrice: parseInt(modal.dataset.curFullPrice, 10) || undefined,
     });
     updateCartBadge();
     document.getElementById('modalAdd').style.display = 'none';

@@ -1269,6 +1269,7 @@ button { cursor: pointer; }
 }
 .sum-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .95rem; color: var(--text-light); }
 .sum-row.sum-total { font-size: 1.1rem; color: inherit; font-weight: 500; border-top: 1px solid var(--ivory-warm); padding-top: .7rem; margin-top: .3rem; }
+.sum-balance { font-size: .82rem; color: var(--text-light); text-align: right; line-height: 1.6; }
 .sum-row.sum-deposit { font-size: 1.1rem; color: var(--dusty-rose); font-weight: 600; }
 .preorder-gate { text-align: center; font-size: .95rem; color: var(--dusty-rose); background: var(--ivory-warm); border-radius: 6px; padding: .8rem; }
 .success-deposit { font-size: .9rem; color: var(--text-light); margin-top: 1rem; }
@@ -1460,6 +1461,27 @@ button { cursor: pointer; }
 .pd-prices { margin-bottom: 1.4rem; }
 .pd-prices .pd-price { margin-bottom: 0; }
 .price-label { font-size: .78em; font-weight: 400; color: var(--text-mid); margin-right: .15em; }
-.product-full-price .price-label, .pd-full-price .price-label { color: inherit; font-size: 1em; }
+.product-full-price .price-label, .pd-full-price .price-label { color: inherit; font-family: var(--sans); }
 .modal-full-price { margin: .6rem 0 -.4rem; font-size: .95rem; }
 .modal-full-price .mp-label { font-size: .85rem; }
+
+/* ===== 頁尾 隱私權政策連結 ===== */
+.footer-legal { font-size: 0.68rem; letter-spacing: 0.05em; margin-top: .4rem; }
+.footer-legal a { color: rgba(250,250,247,0.4); text-decoration: underline; text-underline-offset: 3px; transition: color 0.3s; }
+.footer-legal a:hover { color: var(--ivory); }
+
+/* ===== 結帳同意勾選 ===== */
+.order-form .agree-row { display: flex; flex-direction: row; align-items: flex-start; gap: .55rem; font-size: .85rem; line-height: 1.6; color: var(--text-mid); cursor: pointer; }
+.order-form .agree-row input { width: 1rem; height: 1rem; margin: .25rem 0 0; flex: 0 0 auto; accent-color: var(--gold); }
+.order-form .agree-row a { color: var(--text-dark); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===== 隱私權政策頁 ===== */
+.legal-page { padding: 120px 0 80px; }
+.legal-body { max-width: 720px; margin: 0 auto; color: var(--text-mid); font-size: .9rem; line-height: 1.95; }
+.legal-body h3 { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; color: var(--text-dark); margin: 2.2rem 0 .7rem; letter-spacing: .05em; }
+.legal-body p { margin-bottom: .9rem; }
+.legal-body ul { padding-left: 1.3rem; margin-bottom: .9rem; }
+.legal-body li + li { margin-top: .35rem; }
+.legal-body strong { color: var(--text-dark); font-weight: 500; }
+.legal-body a { color: var(--text-dark); text-decoration: underline; text-underline-offset: 3px; }
+.legal-updated { font-size: .78rem; color: var(--text-light); }

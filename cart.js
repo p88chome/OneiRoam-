@@ -12,6 +12,8 @@
     if (it.img != null) out.img = str(it.img);
     const mq = parseInt(it.maxQty, 10);
     if (mq > 0) out.maxQty = mq;
+    const fp = parseInt(it.fullPrice, 10);
+    if (fp > out.price) out.fullPrice = fp; // 只做顯示（全額/訂金）；實際金額一律後端重算
     return out;
   }
 
@@ -34,12 +36,12 @@
 
     return {
       getItems() { return read(); },
-      addItem({ id, name, price, size, qty, maxQty, img }) {
+      addItem({ id, name, price, size, qty, maxQty, img, fullPrice }) {
         const items = read();
         const i = findIndex(items, id, size);
         const cap = maxQty || Infinity;
         if (i >= 0) items[i].qty = Math.min(items[i].qty + qty, cap);
-        else items.push({ id, name, price, size, qty: Math.min(qty, cap), maxQty, img });
+        else items.push({ id, name, price, size, qty: Math.min(qty, cap), maxQty, img, fullPrice });
         write(items);
       },
       updateQty(id, size, qty) {

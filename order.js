@@ -142,7 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="cart-row-info">
           <span class="cart-row-name">${esc(it.name)}</span>
           <span class="cart-row-size">${currentLang === 'zh' ? '尺寸' : 'Size'}: ${esc(it.size)}</span>
-          <span class="cart-row-price">NT$ ${it.price.toLocaleString()}</span>
+          <span class="cart-row-price">${it.fullPrice
+            ? `${currentLang === 'zh' ? '全額' : 'Full'} NT$ ${esc(it.fullPrice.toLocaleString())} · ${currentLang === 'zh' ? '訂金' : 'Deposit'} NT$ ${esc(it.price.toLocaleString())}`
+            : `NT$ ${esc(it.price.toLocaleString())}`}</span>
         </div>
         <div class="cart-row-qty">
           <button type="button" class="qminus" aria-label="減少">−</button>
@@ -153,10 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
         <button type="button" class="cart-row-del" aria-label="刪除">×</button>
       </div>`).join('');
     const p = computePricing(Cart.getItems(), { discountThreshold: Infinity });
-    document.getElementById('sumSubtotal').textContent = fmt(p.subtotal);
     document.getElementById('sumDiscount').textContent = fmt(p.discount);
     document.getElementById('sumDiscountRow').style.display = p.discount > 0 ? '' : 'none';
     document.getElementById('sumTotal').textContent = fmt(p.total);
+    // 預購：全部品項都有全額 → 標「本次應付訂金」；尾款＝(全額−訂金)×數量，貨到付款（僅顯示用）
+    const allDeposit = items.length > 0 && items.every(it => it.fullPrice);
+    const label = document.getElementById('sumTotalLabel');
+    label.dataset.zh = allDeposit ? '本次應付訂金' : '本次應付';
+    label.dataset.en = allDeposit ? 'Deposit due now' : 'Due now';
+    const balance = items.reduce((n, it) => n + (it.fullPrice ? (it.fullPrice - it.price) * it.qty : 0), 0);
+    document.getElementById('sumBalance').textContent = fmt(balance);
+    document.getElementById('sumBalanceRow').classList.toggle('js-hidden', balance <= 0);
     applyLang(currentLang);
   }
 
