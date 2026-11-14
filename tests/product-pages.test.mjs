@@ -70,3 +70,7 @@ test('renderProductPage: 有全額 → 顯示全額＋訂金', () => {
   assert.match(html, /class="pd-full-price">.*全額<\/span> NT\$ 4,200/);
   assert.match(html, /class="pd-price">.*訂金<\/span> <span class="price-num">NT\$ 1,100/);
 });
+
+test('renderProductPage: 頁尾有隱私權政策連結', () => {
+  assert.match(renderProductPage(sample), /<p class="footer-legal"><a href="privacy\.html"/);
+});

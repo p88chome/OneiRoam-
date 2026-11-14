@@ -82,6 +82,13 @@
             <textarea name="notes" maxlength="500"></textarea></label>
           <label><span data-zh="折扣碼（選填）" data-en="Discount code (optional)">折扣碼（選填）</span>
             <input name="discount_code" maxlength="30" class="discount-code-input"></label>
+          <label class="agree-row">
+            <input type="checkbox" name="agree" required>
+            <span><span data-zh="我已詳閱並同意" data-en="I have read and agree to the">我已詳閱並同意</span>
+              <a href="index.html#order" target="_blank" rel="noopener" data-zh="購物須知" data-en="Shopping Guide">購物須知</a>
+              <span data-zh="及" data-en="and">及</span>
+              <a href="privacy.html" target="_blank" rel="noopener" data-zh="隱私權政策" data-en="Privacy Policy">隱私權政策</a></span>
+          </label>
           <div id="turnstileBox" class="turnstile-box"></div>
           <p id="preorderGate" class="preorder-gate" data-hide></p>
           <button type="submit" id="submitBtn" class="btn-primary"
@@ -96,6 +103,7 @@
   <footer id="footer">
     <div class="footer-inner">
       <p class="footer-copy" data-zh="© 2026 OneiRoaM. 保留所有權利。" data-en="© 2026 OneiRoaM. All rights reserved.">© 2026 OneiRoaM. 保留所有權利。</p>
+      <p class="footer-legal"><a href="privacy.html" data-zh="隱私權政策" data-en="Privacy Policy">隱私權政策</a></p>
     </div>
   </footer>
 
