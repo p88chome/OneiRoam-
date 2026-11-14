@@ -79,3 +79,15 @@ create policy "admin write product-images" on storage.objects
 - [ ] Sandbox 帶折扣碼下單＋付款：付款前 `used_count` 不變，付款後 +1，訂單轉 `paid`
 
 完成後回報第 1 步的結果和第 4 步的 policy 清單。其餘資安待辦見 `docs/security-hardening.md`。
+
+## 追加（2026-11-15）：0016 訂單刪除／取消
+
+執行 `supabase/migrations/0016_order_delete_and_cancel.sql`，確認：
+
+```sql
+select exists (select 1 from pg_policies where tablename = 'orders'
+               and policyname = 'admin delete unpaid orders') as m0016_policy,
+       exists (select 1 from pg_proc where proname = 'order_deletable') as m0016_fn;
+```
+
+沒跑之前：後台「刪除」會顯示「此訂單目前不可刪除」，「取消訂單」會出現 check constraint 錯誤，不會壞資料。
