@@ -2,6 +2,19 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { verifyNotify } from '../_shared/payuni-crypto.mjs';
 
 const ok200 = (msg = 'OK') => new Response(msg, { status: 200, headers: { 'Content-Type': 'text/plain' } });
+// 驗章已通過但我方 DB 讀寫失敗 → 回 500 讓 PAYUNi 重送（流程冪等，重送安全）。
+// 回 200 會讓 PAYUNi 以為送達，已付款的訂單就永遠卡在待付款。
+const retry500 = () => new Response('retry', { status: 500, headers: { 'Content-Type': 'text/plain' } });
+
+// 已付款卻找不到訂單（例如被刪掉）→ 寄信給店主人工處理，不能只留 log
+async function alertOwner(subject: string, fields: Record<string, unknown>) {
+  const w3 = Deno.env.get('WEB3FORMS_KEY');
+  if (!w3) return;
+  await fetch('https://api.web3forms.com/submit', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ access_key: w3, subject, ...fields }),
+  }).catch(() => {});
+}
 
 // PAYUNi 成功/失敗判定：只可信任「內層」解密後欄位（verifyNotify 的 AES-GCM 認證僅涵蓋這段）。
 // 外層 body.Status 未經 HashInfo/AES-GCM 驗證，任何人都能在重送時竄改，故一律禁止用於狀態決策。
@@ -14,6 +27,14 @@ function isPaid(inner: Record<string, string>): boolean {
 // ATM / 超商代碼過期未繳：PAYUNi「訂單失效通知」TradeStatus 固定為 4
 function isExpired(inner: Record<string, string>): boolean {
   return String(inner.TradeStatus) === '4';
+}
+
+// ATM / 超商取號成功（尚未付款）：TradeStatus 0 且帶繳費代碼。
+// 平常由 payuni-return（客人瀏覽器導回）寫入；若 PAYUNi 也送取號通知，這裡補寫，
+// 客人取號後直接關頁面也不會漏記代碼。
+function isPayCode(inner: Record<string, string>): boolean {
+  return inner.Status === 'SUCCESS' && String(inner.TradeStatus) === '0' && !!inner.PayNo &&
+    (String(inner.PaymentType) === '2' || String(inner.PaymentType) === '3');
 }
 
 // calibrate against sandbox (Task 7)
@@ -43,8 +64,18 @@ Deno.serve(async (req) => {
     const no = inner.MerTradeNo;
     if (!no) { console.error('notify missing MerTradeNo'); return ok200(); }
 
-    const { data: order } = await sb.from('orders').select('id,payment_status,pay_amount,discount_code,discount_counted').eq('order_no', no).single();
-    if (!order) { console.error('order not found', no); return ok200(); }
+    const { data: order, error: orderErr } = await sb.from('orders').select('id,payment_status,pay_amount,discount_code,discount_counted').eq('order_no', no).maybeSingle();
+    if (orderErr) { console.error('order lookup failed', no, orderErr); return retry500(); }
+    if (!order) {
+      console.error('order not found', no);
+      if (isPaid(inner)) {
+        await alertOwner(`⚠ 收到付款但找不到訂單 ${no}`, {
+          order_no: no, amount: inner.TradeAmt, method: inner.PaymentType, trade_no: inner.TradeNo,
+          message: 'PAYUNi 通知此筆已付款，但資料庫查無訂單（可能已被刪除）。請到 PAYUNi 後台核對並聯絡客人。',
+        });
+      }
+      return ok200();
+    }
 
     if (isPaid(inner)) {
       // 縱深防禦：金額與商店代號必須和我方訂單一致，不符不標已付款，改人工核對
@@ -72,7 +103,7 @@ Deno.serve(async (req) => {
 
       if (claimErr) {
         console.error('order claim update failed', no, claimErr);
-        return ok200();
+        return retry500();
       }
       if (!claimed || claimed.length === 0) {
         // 已被先前/同時的 notify 認領過，幂等略過，不重複扣庫存。
@@ -103,32 +134,30 @@ Deno.serve(async (req) => {
         if (reviewErr) console.error('needs_review update failed', no, reviewErr);
       }
 
-      const w3 = Deno.env.get('WEB3FORMS_KEY');
-      if (w3) {
-        await fetch('https://api.web3forms.com/submit', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            access_key: w3, subject: `付款成功 ${no}`,
-            order_no: no, amount: inner.TradeAmt, method: inner.PaymentType,
-          }),
-        }).catch(() => {});
-      }
+      await alertOwner(`付款成功 ${no}`, { order_no: no, amount: inner.TradeAmt, method: inner.PaymentType });
+    } else if (isPayCode(inner)) {
+      const { error: codeErr } = await sb.from('orders')
+        .update({ pay_bank: String(inner.PaymentType) === '2' ? String(inner.BankType || '') : null,
+                  pay_no: String(inner.PayNo), pay_expire: String(inner.ExpireDate || '') })
+        .eq('id', order.id)
+        .eq('payment_status', 'pending');
+      if (codeErr) { console.error('pay code save failed', no, codeErr); return retry500(); }
     } else if (isExpired(inner)) {
       // 只有仍在待付款的才標失效；已付款的不動
       const { error: expErr } = await sb.from('orders').update({ payment_status: 'expired' })
         .eq('id', order.id)
         .eq('payment_status', 'pending');
-      if (expErr) console.error('order expired-status update failed', no, expErr);
+      if (expErr) { console.error('order expired-status update failed', no, expErr); return retry500(); }
     } else if (isFailed(inner) && order.payment_status === 'pending') {
       // 明確失敗才標 failed；取號中（未付）維持 pending
       const { error: failErr } = await sb.from('orders').update({ payment_status: 'failed' })
         .eq('id', order.id)
         .eq('payment_status', 'pending');
-      if (failErr) console.error('order failed-status update failed', no, failErr);
+      if (failErr) { console.error('order failed-status update failed', no, failErr); return retry500(); }
     }
     return ok200();
   } catch (e) {
     console.error('notify error', e);
-    return ok200();
+    return retry500();
   }
 });

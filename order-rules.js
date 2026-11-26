@@ -2,7 +2,9 @@
    必須與 supabase/migrations/0016 的 public.order_deletable() 一致；資料庫才是真正的防線，
    這裡只決定後台顯示哪個按鈕。 */
 (function (global) {
-  const HOUR = 60 * 60 * 1000;
+  const DAY = 24 * 60 * 60 * 1000;
+  // 沒有繳費代碼的待付款訂單要等這麼久才可刪（客人可能取號後關頁面，代碼沒記到）
+  const NO_CODE_WAIT = 8 * DAY;
 
   // PAYUNi 繳費期限 'YYYY-MM-DD HH:MI:SS'（台灣時間 UTC+8）→ Date；格式不對回 null
   function parseTaipei(s) {
@@ -19,9 +21,9 @@
     if (st === 'pending') {
       if (!o.pay_no) {
         const created = new Date(o.created_at);
-        return now - created > HOUR
+        return now - created > NO_CODE_WAIT
           ? { ok: true, reason: '' }
-          : { ok: false, reason: '建立未滿 1 小時，客人可能還在付款' };
+          : { ok: false, reason: '建立未滿 8 天：客人可能已取號但系統沒記到繳費代碼，仍可能付款' };
       }
       const exp = parseTaipei(o.pay_expire);
       if (!exp) return { ok: false, reason: '繳費期限不明，暫不可刪除' };
