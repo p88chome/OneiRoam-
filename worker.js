@@ -12,8 +12,17 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const text = s => ({ element(el) { el.setInnerContent(s); } });
 const show = { element(el) { el.removeAttribute('data-hide'); } };
 
+// PAYUNi 的回傳是幾 KB 的表單；不像的請求直接 303，不轉呼叫 Supabase（避免被灌爆 Function 額度）
+const MAX_BODY = 16 * 1024;
+
 async function payCodePage(req, env, url) {
+  const type = req.headers.get('content-type') || '';
+  if (!type.startsWith('application/x-www-form-urlencoded') && !type.startsWith('multipart/form-data')) return null;
+  // 瀏覽器送表單一定帶 Content-Length；沒帶或太大就不處理
+  const len = Number(req.headers.get('content-length'));
+  if (!len || len > MAX_BODY) return null;
   const form = await req.formData();
+  if (!form.get('EncryptInfo') || !form.get('HashInfo')) return null;
   const r = await fetch(RETURN_FN, {
     method: 'POST',
     headers: { Authorization: `Bearer ${ANON_KEY}`, apikey: ANON_KEY },

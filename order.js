@@ -333,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         discount_invalid: ['折扣碼無效', 'Invalid discount code'],
         discount_expired: ['折扣碼已過期', 'Discount code has expired'],
         discount_used_up: ['折扣碼已達使用上限', 'Discount code has reached its limit'],
+        zero_amount: ['折扣後金額需至少 NT$1，此折扣碼無法用於這筆訂單', 'The total after discount must be at least NT$1 — this code can’t be used here'],
         turnstile_missing: ['請完成人機驗證', 'Please complete the verification'],
         turnstile_failed: ['人機驗證失敗，請重新整理再試一次', 'Verification failed — please reload and try again'],
         bad_email: ['Email 格式不正確', 'Invalid email address'],

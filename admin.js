@@ -48,9 +48,13 @@ const adminApp = document.getElementById('adminApp');
 
 async function refreshAuth() {
   const { data } = await sb.auth.getSession();
-  const ok = !!data.session;
+  // 會員（Google 登入）跟後台同網域、共用 session：有 session 不代表是管理員。
+  // 這裡只決定顯示哪個畫面；資料權限仍由 RLS（is_admin）把關。
+  const session = data.session;
+  const ok = !!session && session.user?.app_metadata?.role === 'admin';
   loginView.hidden = ok;
   adminApp.hidden = !ok;
+  if (session && !ok) loginError.textContent = '目前登入的帳號不是管理員，請改用管理員帳號登入。';
   if (ok) renderDashboard();
 }
 
@@ -193,7 +197,7 @@ function orderActionHtml(o) {
 
 async function renderOrders() {
   const { data: orders, error } = await sb.from('orders')
-    .select('id, order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, discount_code, pay_bank, pay_no, pay_expire, created_at, order_items(name, size, price, qty)')
+    .select('id, order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, needs_review, discount_code, pay_bank, pay_no, pay_expire, created_at, order_items(name, size, price, qty)')
     .order('created_at', { ascending: false }).limit(200);
   if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
   viewRoot().innerHTML = `
@@ -208,7 +212,8 @@ async function renderOrders() {
             <td>${esc(o.order_no)}${o.discount_code ? ` <span class="muted">(${esc(o.discount_code)})</span>` : ''}</td>
             <td>${esc(o.name)}${o.social ? `<br><span class="muted">${esc(o.social)}</span>` : ''}</td>
             <td>NT$ ${esc(Number(o.pay_amount).toLocaleString('en-US'))}<br><span class="muted">合計 ${esc(Number(o.total).toLocaleString('en-US'))}</span></td>
-            <td><span class="badge badge-${esc(o.payment_status)}">${esc(PAY_STATUS_LABEL[o.payment_status] || o.payment_status)}</span></td>
+            <td><span class="badge badge-${esc(o.payment_status)}">${esc(PAY_STATUS_LABEL[o.payment_status] || o.payment_status)}</span>${
+              o.needs_review ? '<br><span class="badge badge-review" title="金額不符、超賣、折扣碼超量或付款狀態異常，請看明細">⚠ 需核對</span>' : ''}</td>
             <td><span class="badge">${esc(FULFILL_LABEL[o.fulfillment_status] || o.fulfillment_status)}</span></td>
             <td class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</td>
             <td class="order-actions"><button class="btn btn-sm" data-detail="${esc(o.id)}">明細</button>
@@ -218,6 +223,9 @@ async function renderOrders() {
           </tr>
           <tr data-detail-row="${esc(o.id)}" style="display:none">
             <td colspan="7" class="order-detail">
+              ${o.needs_review ? `<p class="review-note">⚠ 系統標記需要人工核對（金額不符、庫存不足、折扣碼超量，或失敗／失效後才收到付款）。
+                請到 PAYUNi 後台確認款項與庫存，處理完按
+                <button class="btn btn-sm" data-reviewed="${esc(o.id)}">已核對</button></p>` : ''}
               <p><b>Line/IG：</b>${esc(o.social || '—')}　<b>Email：</b>${esc(o.email || '—')}${o.phone ? `　<b>電話：</b>${esc(o.phone)}` : ''}</p>
               ${o.pay_no ? `<p><b>${o.pay_bank ? `ATM 轉帳：</b>(${esc(o.pay_bank)}) ` : '超商代碼：</b>'}${esc(o.pay_no)}　<b>期限：</b>${esc(o.pay_expire || '—')}</p>` : ''}
               <p class="order-notes"><b>備註：</b>${esc(o.notes || '—')}</p>
@@ -256,6 +264,12 @@ async function renderOrders() {
     b.disabled = true; b.textContent = '處理中…';
     const { error } = await sb.from('orders').update({ fulfillment_status: 'cancelled' }).eq('id', b.dataset.cancel);
     if (error) { b.disabled = false; b.textContent = '取消訂單'; alert('取消失敗：' + error.message); return; }
+    renderOrders();
+  });
+  viewRoot().querySelectorAll('[data-reviewed]').forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const { error } = await sb.from('orders').update({ needs_review: false }).eq('id', b.dataset.reviewed);
+    if (error) { b.disabled = false; alert('更新失敗：' + error.message); return; }
     renderOrders();
   });
   viewRoot().querySelectorAll('[data-ship]').forEach(b => b.onclick = async () => {
@@ -344,7 +358,7 @@ async function exportOrders() {
     const all = [];
     for (let from = 0; ; from += 1000) {
       const { data, error } = await sb.from('orders')
-        .select('order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, discount_code, pay_bank, pay_no, pay_expire, created_at, order_items(name, size, qty)')
+        .select('order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, needs_review, discount_code, pay_bank, pay_no, pay_expire, created_at, order_items(name, size, qty)')
         .order('created_at', { ascending: false }).range(from, from + 999);
       if (error) throw error;
       all.push(...data);

@@ -14,7 +14,7 @@
     return t.slice(0, 10) + ' ' + t.slice(11, 16);
   }
 
-  const HEADER = ['訂單編號', '下單時間', '付款狀態', '出貨狀態', '姓名', '電話', 'Line/IG', 'Email',
+  const HEADER = ['訂單編號', '下單時間', '付款狀態', '需核對', '出貨狀態', '姓名', '電話', 'Line/IG', 'Email',
     '商品明細', '件數', '商品合計', '本次付款', '折扣碼', '繳費代碼', '繳費期限', '備註'];
 
   function orderRows(orders) {
@@ -23,7 +23,8 @@
       const items = o.order_items || [];
       rows.push([
         o.order_no, taipeiTime(o.created_at),
-        PAY[o.payment_status] || o.payment_status, FULFILL[o.fulfillment_status] || o.fulfillment_status,
+        PAY[o.payment_status] || o.payment_status, o.needs_review ? '⚠ 需核對' : '',
+        FULFILL[o.fulfillment_status] || o.fulfillment_status,
         o.name, o.phone, o.social, o.email,
         items.map(i => `${i.name}${i.size ? `（${i.size}）` : ''} ×${i.qty}`).join('\n'),
         items.reduce((n, i) => n + (Number(i.qty) || 0), 0),
@@ -56,7 +57,7 @@
       if (typeof v === 'number' && isFinite(v)) return `<c r="${ref}"${style}><v>${v}</v></c>`;
       return `<c r="${ref}" t="inlineStr"${style}><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
     }).join('')}</row>`).join('');
-    const widths = [16, 17, 10, 10, 12, 13, 16, 24, 36, 6, 10, 10, 12, 22, 18, 30];
+    const widths = [16, 17, 10, 10, 10, 12, 13, 16, 24, 36, 6, 10, 10, 12, 22, 18, 30];
     const cols = widths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join('');
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
       '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +

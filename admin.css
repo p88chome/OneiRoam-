@@ -136,7 +136,7 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .muted { color: var(--muted); }
 
 /* ---- 狀態徽章 ---- */
-.badge { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .75rem; }
+.badge { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .75rem; white-space: nowrap; }
 .badge-preorder { background: #ece4f3; color: #7a5e95; }
 .badge-active   { background: #e2f0ea; color: #437a64; }
 .badge-sold_out { background: #f7e6e9; color: #a85a67; }
@@ -145,6 +145,7 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .badge-paid     { background: #e2f0ea; color: #437a64; }
 .badge-failed   { background: #f7e6e9; color: #a85a67; }
 .badge-expired  { background: #eeeeee; color: #888888; }
+.badge-review   { background: #fbe3c7; color: #9a4f10; font-weight: 600; margin-top: .3rem; }
 
 /* ---- 表單 ---- */
 .form-card { padding: 1.5rem; }
@@ -186,6 +187,7 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .order-detail { background: #fbfafd; font-size: .88rem; line-height: 1.7; }
 .order-detail p { margin: 0 0 .3rem; }
 .order-detail ul { margin: .3rem 0 0; padding-left: 1.2rem; }
+.order-detail .review-note { background: #fdf1e2; color: #7a4310; padding: .5rem .75rem; border-radius: 8px; margin-bottom: .5rem; }
 .order-notes { white-space: pre-wrap; }
 
 /* ---- 商品多圖 ---- */

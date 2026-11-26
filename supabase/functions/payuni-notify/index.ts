@@ -29,6 +29,14 @@ function isExpired(inner: Record<string, string>): boolean {
   return String(inner.TradeStatus) === '4';
 }
 
+// mark_order_paid 回傳的人工核對原因 → 通知信文字
+const REVIEW_LABEL: Record<string, string> = {
+  paid_after_failed: '原本標為付款失敗，之後收到付款',
+  paid_after_expired: '原本標為已失效，之後收到付款',
+  discount_over_limit: '折扣碼超過使用上限或已刪除',
+  stock_short: '庫存不足（可能超賣）',
+};
+
 // ATM / 超商取號成功（尚未付款）：TradeStatus 0 且帶繳費代碼。
 // 平常由 payuni-return（客人瀏覽器導回）寫入；若 PAYUNi 也送取號通知，這裡補寫，
 // 客人取號後直接關頁面也不會漏記代碼。
@@ -84,57 +92,28 @@ Deno.serve(async (req) => {
       const merOk = !merId || !inner.MerID || inner.MerID === merId;
       if (!amtOk || !merOk) {
         console.error('PAYUNi notify mismatch', no, { tradeAmt: inner.TradeAmt, payAmount: order.pay_amount, merOk });
-        await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
+        const { error: reviewErr } = await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
+        if (reviewErr) { console.error('needs_review update failed', no, reviewErr); return retry500(); }
+        await alertOwner(`⚠ 付款金額或商店代號不符 ${no}`, {
+          order_no: no, paid_amount: inner.TradeAmt, order_amount: order.pay_amount, mer_id_ok: merOk,
+          message: '此筆未標為已付款，請到 PAYUNi 後台核對後再處理。',
+        });
         return ok200();
       }
-      // 原子「認領」：只有 pending→paid 這個 row-level 條件更新會成功且恰好一次；
-      // 併發/重送的 notify 若晚到，這裡 affected rows 會是 0，直接視為已處理（幂等），不再扣庫存。
-      const { data: claimed, error: claimErr } = await sb
-        .from('orders')
-        .update({
-          payment_status: 'paid',
-          gateway_trade_no: inner.TradeNo || '',
-          payment_method: inner.PaymentType || '',
-          paid_at: new Date().toISOString(),
-        })
-        .eq('id', order.id)
-        .eq('payment_status', 'pending')
-        .select('id');
+      // 認領已付款＋計折扣碼＋扣庫存＋標人工核對，在 DB 同一個交易完成（migration 0018）。
+      // 出錯整筆 rollback → 回 500 讓 PAYUNi 重送；重送時若已是 paid 會回 claimed=false，不重複扣庫存。
+      const { data: r, error: paidErr } = await sb.rpc('mark_order_paid', {
+        p_order_id: order.id, p_trade_no: inner.TradeNo || '', p_method: inner.PaymentType || '',
+      });
+      if (paidErr) { console.error('mark_order_paid failed', no, paidErr); return retry500(); }
+      if (!r?.claimed) return ok200();
 
-      if (claimErr) {
-        console.error('order claim update failed', no, claimErr);
-        return retry500();
-      }
-      if (!claimed || claimed.length === 0) {
-        // 已被先前/同時的 notify 認領過，幂等略過，不重複扣庫存。
-        return ok200();
-      }
-
-      // 折扣碼用量在付款成功這一刻才 +1（只會跑一次：上面的 pending→paid 認領已保證幂等）。
-      // discount_counted=true 代表下單時已算過（0011 之前的舊訂單），不重複計。
-      if (order.discount_code && !order.discount_counted) {
-        const { data: withinLimit, error: dcErr } = await sb.rpc('count_discount_use', { p_code: order.discount_code });
-        if (dcErr) console.error('count_discount_use failed', no, dcErr);
-        else await sb.from('orders').update({ discount_counted: true }).eq('id', order.id);
-        if (dcErr || withinLimit !== true) {
-          // 計數失敗、碼已刪除，或多張 pending 同時付款超過上限 → 店主人工判斷
-          const { error: reviewErr } = await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
-          if (reviewErr) console.error('needs_review update failed', no, reviewErr);
-        }
-      }
-
-      const { data: stockOk, error: rpcErr } = await sb.rpc('decrement_stock', { p_order_id: order.id });
-      if (rpcErr) {
-        // RPC 本身失敗 ≠ 庫存不足；扣庫存並未執行，需要人工核對。
-        console.error('decrement_stock rpc failed', no, rpcErr);
-        const { error: reviewErr } = await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
-        if (reviewErr) console.error('needs_review update failed', no, reviewErr);
-      } else if (stockOk === false) {
-        const { error: reviewErr } = await sb.from('orders').update({ needs_review: true }).eq('id', order.id);
-        if (reviewErr) console.error('needs_review update failed', no, reviewErr);
-      }
-
-      await alertOwner(`付款成功 ${no}`, { order_no: no, amount: inner.TradeAmt, method: inner.PaymentType });
+      const review: string[] = Array.isArray(r.review) ? r.review : [];
+      if (review.length) console.warn('paid order needs review', no, review);
+      await alertOwner(review.length ? `⚠ 付款成功（需人工核對）${no}` : `付款成功 ${no}`, {
+        order_no: no, amount: inner.TradeAmt, method: inner.PaymentType,
+        ...(review.length ? { review: review.map(k => REVIEW_LABEL[k] || k).join('、') } : {}),
+      });
     } else if (isPayCode(inner)) {
       const { error: codeErr } = await sb.from('orders')
         .update({ pay_bank: String(inner.PaymentType) === '2' ? String(inner.BankType || '') : null,

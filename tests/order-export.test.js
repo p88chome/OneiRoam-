@@ -23,10 +23,10 @@ test('orderRows: 表頭＋每筆訂單一列', () => {
   assert.strictEqual(r[0], '20261115123456');
   assert.strictEqual(r[1], '2026-11-15 20:30');
   assert.strictEqual(r[2], '已付款');
-  assert.strictEqual(r[5], '0912345678');
-  assert.strictEqual(r[8], '洋裝（M） ×1\n襪 ×2');
-  assert.strictEqual(r[9], 3);
-  assert.strictEqual(r[13], 'ATM (822) 1234567890');
+  assert.strictEqual(r[6], '0912345678');
+  assert.strictEqual(r[9], '洋裝（M） ×1\n襪 ×2');
+  assert.strictEqual(r[10], 3);
+  assert.strictEqual(r[14], 'ATM (822) 1234567890');
   assert.strictEqual(rows[0].length, r.length);
 });
 
@@ -55,8 +55,8 @@ test('makeXlsx: 字串存成文字、數字存成數字、跳脫 XML、公式不
   const buf = makeXlsx('訂單', orderRows([ORDER]));
   assert.strictEqual(buf[0], 0x50); assert.strictEqual(buf[1], 0x4b);
   const xml = readEntry(buf, 'xl/worksheets/sheet1.xml');
-  assert.ok(xml.includes('<c r="F2" t="inlineStr" s="2"><is><t xml:space="preserve">0912345678</t>'));
-  assert.ok(xml.includes('<c r="J2" s="2"><v>3</v></c>'));
+  assert.ok(xml.includes('<c r="G2" t="inlineStr" s="2"><is><t xml:space="preserve">0912345678</t>'));
+  assert.ok(xml.includes('<c r="K2" s="2"><v>3</v></c>'));
   assert.ok(xml.includes('=HYPERLINK(&quot;x&quot;)'));
   assert.ok(!xml.includes('<f>'));
   assert.ok(readEntry(buf, '[Content_Types].xml'));

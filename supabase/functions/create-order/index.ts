@@ -158,6 +158,8 @@ Deno.serve(async (req) => {
     }
     const finalTotal = p.total - codeDiscount;
     const payAmount = amountType === 'full' ? finalTotal : Math.round(finalTotal / 2);
+    // 0 元（例如 100% 折扣碼）送 PAYUNi 會失敗，只會留下一筆永遠待付款的單
+    if (payAmount < 1) return reject(400, 'zero_amount', '折扣後金額需至少 NT$1，此折扣碼無法用於這筆訂單');
     const no = orderNo();
 
     // 帶使用者 token 就把訂單掛帳號；anon key / 無效 token = 訪客結帳（null）

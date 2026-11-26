@@ -4,9 +4,10 @@ const { deletable, cancellable, parseTaipei } = require('../order-rules.js');
 
 const NOW = new Date('2026-11-15T12:00:00Z'); // 台灣 20:00
 
-test('付款失敗 / 已失效 → 可刪', () => {
-  assert.ok(deletable({ payment_status: 'failed' }, NOW).ok);
+test('已失效 → 可刪；付款失敗 → 建立滿 1 天才可刪（客人可能重試）', () => {
   assert.ok(deletable({ payment_status: 'expired' }, NOW).ok);
+  assert.strictEqual(deletable({ payment_status: 'failed', created_at: '2026-11-14T12:30:00Z' }, NOW).ok, false);
+  assert.ok(deletable({ payment_status: 'failed', created_at: '2026-11-14T11:30:00Z' }, NOW).ok);
 });
 
 test('已付款 → 不可刪、可取消；已取消就不能再取消', () => {

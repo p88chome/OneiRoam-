@@ -79,3 +79,24 @@
 ### 注意
 - `data/storefront.json`（公開）含銀行帳號 — 目前判定為刻意公開（匯款用），若不是要移除
 - 開發機環境變數 `NODE_TLS_REJECT_UNAUTHORIZED=0` 會關掉 Node 的 TLS 驗證，非刻意請移除
+
+## 3. 2026-11-15 / 11-26 複查（兩次 agent 審查，後者依 OWASP Top 10 / ASVS L1 / API Top 10）
+
+已修：
+- 0017：待付款、無繳費代碼的訂單 8 天後才可刪；移除 product-images 公開 SELECT policy（可列出所有檔名）
+- 0018：`mark_order_paid()` 單一交易完成認領＋折扣計數＋扣庫存＋needs_review；接受 failed/expired → paid 並標核對；
+  付款失敗訂單 1 天後才可刪；後台（authenticated）只能 update `fulfillment_status`、`needs_review`；折扣碼數值 CHECK
+- payuni-notify：DB 錯誤回 500 讓 PAYUNi 重送；付款但查無訂單／金額不符／需核對都寄信給店主；也從 notify 記繳費代碼
+- create-order：Turnstile 移到第一次查 DB 之前；0 元訂單拒絕（`zero_amount`）
+- 後台：訂單列表與 Excel 顯示「需核對」，可按「已核對」；非 admin 的 session 不顯示後台
+- worker：不像 PAYUNi 回傳的 POST（非表單、缺 EncryptInfo/HashInfo、> 16KB）直接 303，不轉呼叫 Supabase
+- trigger-deploy：hook 網址限 `https://api.cloudflare.com/client/v4/`；500 不回內部錯誤
+- `.assetsignore`：`.github`、`.dev.vars*`
+
+仍待辦：
+- 付款回傳頁可被重送給別人看（真網域釣魚）：建單時設短效 cookie，worker 比對後才顯示帳號
+- Supabase Auth 關 email 註冊、admin 開 MFA（Dashboard）
+- CSP `connect-src https://*.supabase.co` 改成指定專案網域
+- `customer_profiles` 欄位長度 CHECK
+- Cloudflare WAF：`POST /order-result.html` rate limit
+- PAYUNi 對非 200 回應的重送策略、取號是否送 notify：待 sandbox 確認

@@ -40,10 +40,14 @@ Deno.serve(async (req) => {
     const { data, error } = await sb.from('settings').select('value').eq('key', key).single();
     if (error || !data?.value) return json({ error: 'hook not configured' }, 500);
 
+    // 只允許打 Cloudflare API（deploy hook）；settings 被改成別的網址也不會被拿來對任意主機發請求
+    if (!String(data.value).startsWith('https://api.cloudflare.com/client/v4/'))
+      return json({ error: 'hook not configured' }, 500);
     const r = await fetch(data.value, { method: 'POST' });
     if (!r.ok) return json({ error: `hook returned ${r.status}` }, 502);
     return json({ ok: true, target });
   } catch (e) {
-    return json({ error: String((e as Error)?.message || e) }, 500);
+    console.error('trigger-deploy error', e);
+    return json({ error: 'internal error' }, 500);
   }
 });
