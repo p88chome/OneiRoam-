@@ -1,5 +1,5 @@
 /* order-rules.js — 後台訂單「可刪除 / 可取消」判斷。
-   必須與 supabase/migrations/0016 的 public.order_deletable() 一致；資料庫才是真正的防線，
+   必須與 supabase/migrations/0018 的 public.order_deletable() 一致；資料庫才是真正的防線，
    這裡只決定後台顯示哪個按鈕。 */
 (function (global) {
   const DAY = 24 * 60 * 60 * 1000;
@@ -16,7 +16,13 @@
   // 回傳 { ok, reason }：ok=false 時 reason 給後台按鈕 tooltip
   function deletable(o, now = new Date()) {
     const st = o.payment_status;
-    if (st === 'failed' || st === 'expired') return { ok: true, reason: '' };
+    if (st === 'expired') return { ok: true, reason: '' };
+    if (st === 'failed') {
+      // 客人可能用同一筆訂單重試付款
+      return now - new Date(o.created_at) > DAY
+        ? { ok: true, reason: '' }
+        : { ok: false, reason: '付款失敗未滿 1 天，客人可能還會重試付款' };
+    }
     if (st === 'paid') return { ok: false, reason: '已付款訂單不可刪除，請改用「取消訂單」' };
     if (st === 'pending') {
       if (!o.pay_no) {
