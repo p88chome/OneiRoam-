@@ -197,7 +197,9 @@ async function renderOrders() {
     .order('created_at', { ascending: false }).limit(200);
   if (error) { viewRoot().innerHTML = `<p class="err">讀取失敗：${esc(error.message)}</p>`; return; }
   viewRoot().innerHTML = `
-    <div class="view-head"><h2>訂單管理</h2></div>
+    <div class="view-head"><h2>訂單管理</h2>
+      <span><span id="exportMsg" class="muted" role="status"></span>
+      <button id="exportBtn" class="btn">匯出 Excel</button></span></div>
     <div class="card">
       <table class="data-table">
         <thead><tr><th>訂單編號</th><th>客人</th><th>金額</th><th>付款</th><th>出貨</th><th>時間</th><th></th></tr></thead>
@@ -226,6 +228,7 @@ async function renderOrders() {
         </tbody>
       </table>
     </div>`;
+  document.getElementById('exportBtn').onclick = exportOrders;
   viewRoot().querySelectorAll('[data-detail]').forEach(b => b.onclick = () => {
     const row = viewRoot().querySelector(`[data-detail-row="${b.dataset.detail}"]`);
     row.style.display = row.style.display === 'none' ? '' : 'none';
@@ -332,6 +335,37 @@ async function renderDiscounts() {
   });
 }
 
+// 匯出全部訂單（不受列表 200 筆限制）成 .xlsx；格式見 order-export.js
+async function exportOrders() {
+  const btn = document.getElementById('exportBtn');
+  const msg = document.getElementById('exportMsg');
+  btn.disabled = true; msg.textContent = '匯出中…';
+  try {
+    const all = [];
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await sb.from('orders')
+        .select('order_no, name, phone, social, email, notes, total, pay_amount, payment_status, fulfillment_status, discount_code, pay_bank, pay_no, pay_expire, created_at, order_items(name, size, qty)')
+        .order('created_at', { ascending: false }).range(from, from + 999);
+      if (error) throw error;
+      all.push(...data);
+      if (data.length < 1000) break;
+    }
+    const day = window.orderExport.taipeiTime(new Date().toISOString()).slice(0, 10).replace(/-/g, '');
+    const blob = new Blob([window.orderExport.makeXlsx('訂單', window.orderExport.orderRows(all))],
+      { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `oneiroam-orders-${day}.xlsx`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    msg.textContent = `✓ 已匯出 ${all.length} 筆`;
+  } catch (err) {
+    msg.textContent = '匯出失敗：' + (err.message || err);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 const STATUS_LABEL = { preorder: '預購中', active: '現貨', sold_out: '售罄', hidden: '隱藏' };
 
 async function renderProducts() {
@@ -342,15 +376,20 @@ async function renderProducts() {
       <h2>商品管理</h2>
       <button id="newBtn" class="btn btn-primary">＋ 新增商品</button>
     </div>
+    <p class="muted inline-hint">排序、狀態可直接在列表修改，會自動儲存；改完按右上「發布到網站」才會更新到前台。
+      <span id="inlineMsg" role="status"></span></p>
     <div class="card">
       <table class="data-table">
         <thead><tr><th>排序</th><th>名稱</th><th>價格</th><th>狀態</th><th></th></tr></thead>
         <tbody>${products.map(p => `
           <tr>
-            <td class="muted">${esc(p.sort_order)}</td>
+            <td class="cell-tight"><input class="inline-sort" type="number" inputmode="numeric" data-id="${esc(p.id)}"
+                  value="${esc(p.sort_order)}" aria-label="排序"></td>
             <td>${esc(p.name_zh)}</td>
             <td>NT$ ${esc(Number(p.price).toLocaleString('en-US'))}</td>
-            <td><span class="badge badge-${esc(p.status)}">${esc(STATUS_LABEL[p.status] || p.status)}</span></td>
+            <td class="cell-tight"><select class="inline-status badge badge-${esc(p.status)}" data-id="${esc(p.id)}" aria-label="狀態">${
+              Object.entries(STATUS_LABEL).map(([v, l]) =>
+                `<option value="${v}" ${v === p.status ? 'selected' : ''}>${l}</option>`).join('')}</select></td>
             <td><button class="btn btn-sm" data-edit="${esc(p.id)}">編輯</button></td>
           </tr>`).join('')}
         </tbody>
@@ -359,6 +398,38 @@ async function renderProducts() {
   document.getElementById('newBtn').onclick = () => productForm(null);
   viewRoot().querySelectorAll('[data-edit]').forEach(b =>
     b.onclick = () => productForm(products.find(p => p.id === b.dataset.edit)));
+  bindInlineEdit(products);
+}
+
+// 商品列表就地改排序 / 狀態：change 時存一個欄位，失敗就還原
+function bindInlineEdit(products) {
+  const msg = document.getElementById('inlineMsg');
+  const save = async (el, field, value, revert) => {
+    const p = products.find(x => x.id === el.dataset.id);
+    el.disabled = true;
+    msg.textContent = '儲存中…';
+    const { error } = await sb.from('products').update({ [field]: value }).eq('id', p.id);
+    el.disabled = false;
+    if (error) {
+      revert(p[field]);
+      msg.textContent = `✗ 「${p.name_zh}」儲存失敗：${error.message}`;
+      return;
+    }
+    p[field] = value;
+    msg.textContent = `✓ 已儲存「${p.name_zh}」，記得按「發布到網站」`;
+  };
+  viewRoot().querySelectorAll('.inline-sort').forEach(el => el.onchange = () => {
+    const n = parseInt(el.value, 10);
+    if (!Number.isFinite(n)) { el.value = products.find(x => x.id === el.dataset.id).sort_order; return; }
+    el.value = n;
+    save(el, 'sort_order', n, v => { el.value = v; });
+  });
+  viewRoot().querySelectorAll('.inline-status').forEach(el => el.onchange = () => {
+    if (!STATUS_LABEL[el.value]) return;
+    const paint = v => { el.className = `inline-status badge badge-${v}`; };
+    paint(el.value);
+    save(el, 'status', el.value, v => { el.value = v; paint(v); });
+  });
 }
 
 // 與 scripts/site-settings.mjs 的 THEMES 同步

@@ -17,9 +17,10 @@ test('已付款 → 不可刪、可取消；已取消就不能再取消', () => 
   assert.strictEqual(cancellable({ payment_status: 'pending', fulfillment_status: 'unfulfilled' }), false);
 });
 
-test('待付款、沒有繳費代碼 → 滿 1 小時才可刪', () => {
-  assert.strictEqual(deletable({ payment_status: 'pending', created_at: '2026-11-15T11:30:00Z' }, NOW).ok, false);
-  assert.ok(deletable({ payment_status: 'pending', created_at: '2026-11-15T10:30:00Z' }, NOW).ok);
+test('待付款、沒有繳費代碼 → 滿 8 天才可刪（客人可能取號後關頁面，代碼沒記到）', () => {
+  assert.strictEqual(deletable({ payment_status: 'pending', created_at: '2026-11-15T10:30:00Z' }, NOW).ok, false);
+  assert.strictEqual(deletable({ payment_status: 'pending', created_at: '2026-11-07T12:30:00Z' }, NOW).ok, false);
+  assert.ok(deletable({ payment_status: 'pending', created_at: '2026-11-07T11:30:00Z' }, NOW).ok);
 });
 
 test('待付款、有繳費代碼 → 過了繳費期限（台灣時間）才可刪', () => {

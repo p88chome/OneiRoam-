@@ -88,28 +88,7 @@ Deno.serve(async (req) => {
     };
     if (cust.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cust.email)) return reject(400, 'bad_email', 'Email 格式不正確');
 
-    // 伺服器重算：讀現價 + 庫存
-    const ids = [...new Set(reqItems.map((i: any) => i.id))];
-    const { data: products, error: pErr } = await sb.from('products').select('id,name_zh,price,status').in('id', ids);
-    if (pErr) return json({ error: '讀取商品資料失敗' }, 500);
-    const { data: variants, error: vErr } = await sb.from('product_variants').select('product_id,size,stock,max_qty').in('product_id', ids);
-    if (vErr) return json({ error: '讀取商品資料失敗' }, 500);
-    // 只有上架中（preorder / active）的商品能下單；hidden / sold_out 一律視為不存在
-    const buyable = (products || []).filter(p => p.status === 'preorder' || p.status === 'active');
-    const priceOf = (id: string) => buyable.find(p => p.id === id)?.price ?? null;
-
-    const lineItems: any[] = [];
-    for (const it of reqItems) {
-      const price = priceOf(it.id);
-      if (price == null) return reject(400, 'not_available', '商品已下架或暫停販售', { item: { id: it.id, size: it.size } });
-      const v = variants?.find(x => x.product_id === it.id && x.size === it.size);
-      if (!v) return reject(400, 'size_missing', '商品尺寸已更新，請重新選擇', { item: { id: it.id, size: it.size } });
-      const qty = it.qty;
-      if (qty > v.stock) return reject(409, 'out_of_stock', '庫存不足', { item: { id: it.id, size: it.size }, available: Math.max(0, v.stock) });
-      if (v.max_qty && qty > v.max_qty) return reject(409, 'over_limit', '超過每人限購數量', { item: { id: it.id, size: it.size }, available: v.max_qty });
-      lineItems.push({ id: it.id, size: it.size, qty, price, name: buyable.find(p => p.id === it.id)!.name_zh });
-    }
-
+    // 人機驗證放在第一次查資料庫之前：沒過驗證的請求不會消耗 DB 查詢（前端每次失敗都會重置 token）
     // 防機器人（選填）：只有設定了 TURNSTILE_SECRET_KEY 才強制驗證，避免還沒申請 site key 前擋掉所有結帳
     const turnstileSecret = Deno.env.get('TURNSTILE_SECRET_KEY');
     if (turnstileSecret) {
@@ -133,6 +112,28 @@ Deno.serve(async (req) => {
         console.error('turnstile rejected', { success: verify.success, action: verify.action, hostname: verify.hostname, codes: verify['error-codes'] });
         return reject(400, 'turnstile_failed', '人機驗證失敗，請重新整理再試一次');
       }
+    }
+
+    // 伺服器重算：讀現價 + 庫存
+    const ids = [...new Set(reqItems.map((i: any) => i.id))];
+    const { data: products, error: pErr } = await sb.from('products').select('id,name_zh,price,status').in('id', ids);
+    if (pErr) return json({ error: '讀取商品資料失敗' }, 500);
+    const { data: variants, error: vErr } = await sb.from('product_variants').select('product_id,size,stock,max_qty').in('product_id', ids);
+    if (vErr) return json({ error: '讀取商品資料失敗' }, 500);
+    // 只有上架中（preorder / active）的商品能下單；hidden / sold_out 一律視為不存在
+    const buyable = (products || []).filter(p => p.status === 'preorder' || p.status === 'active');
+    const priceOf = (id: string) => buyable.find(p => p.id === id)?.price ?? null;
+
+    const lineItems: any[] = [];
+    for (const it of reqItems) {
+      const price = priceOf(it.id);
+      if (price == null) return reject(400, 'not_available', '商品已下架或暫停販售', { item: { id: it.id, size: it.size } });
+      const v = variants?.find(x => x.product_id === it.id && x.size === it.size);
+      if (!v) return reject(400, 'size_missing', '商品尺寸已更新，請重新選擇', { item: { id: it.id, size: it.size } });
+      const qty = it.qty;
+      if (qty > v.stock) return reject(409, 'out_of_stock', '庫存不足', { item: { id: it.id, size: it.size }, available: Math.max(0, v.stock) });
+      if (v.max_qty && qty > v.max_qty) return reject(409, 'over_limit', '超過每人限購數量', { item: { id: it.id, size: it.size }, available: v.max_qty });
+      lineItems.push({ id: it.id, size: it.size, qty, price, name: buyable.find(p => p.id === it.id)!.name_zh });
     }
 
     // 自動優惠（2 件 9 折 / 組合價）已停用；折扣只剩折扣碼。threshold=Infinity → total = subtotal
