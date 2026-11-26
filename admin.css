@@ -224,3 +224,18 @@ input[type=file] { padding: .45rem; background: #fcfbfd; }
 .order-actions .btn + .btn { margin-left: .3rem; }
 .order-actions .btn-danger { margin-left: .3rem; }
 .order-actions .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* 商品列表就地編輯（排序 / 狀態） */
+.inline-hint { margin: -.5rem 0 1rem; font-size: .85rem; }
+.inline-hint #inlineMsg { margin-left: .5rem; color: var(--ink); }
+.data-table td.cell-tight { padding-left: .4rem; padding-right: .4rem; }
+.data-table .inline-sort { width: 2.8rem; padding: .35rem .2rem; text-align: center; -moz-appearance: textfield; }
+.data-table .inline-sort::-webkit-inner-spin-button, .data-table .inline-sort::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.data-table .inline-status {
+  width: auto; border: 0; cursor: pointer; white-space: nowrap; font: inherit; font-size: .78rem;
+  padding: .3rem 1.2rem .3rem .55rem; appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right .7rem center, right .45rem center;
+  background-size: .25rem .25rem; background-repeat: no-repeat;
+}
+#exportMsg { margin-right: .5rem; font-size: .85rem; }
